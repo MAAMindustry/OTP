@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONE TOUCH MILLION</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#FFD700;--gold2:#FFA500;--dark:#0a0a14;--panel:#12121f;--border:#2a2a4a;--green:#00ff88;--red:#ff4455;--blue:#4488ff;--text:#e0e0ff}
+body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+
+/* ── OVERLAY MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#12121f;border:1px solid #2a2a4a;border-radius:18px;padding:28px 24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-logo{font-family:'Black Ops One',cursive;font-size:22px;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:6px;letter-spacing:2px}
+.modal-title{font-size:15px;color:#8888aa;text-align:center;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px}
+.modal-section{font-size:13px;color:#8888aa;line-height:1.8;margin-bottom:14px;background:#0a0a14;border-radius:10px;padding:12px 14px;border:0.5px solid #1e1e35;max-height:200px;overflow-y:auto}
+.modal-section strong{color:#aaaacc}
+.modal-section h4{color:#FFD700;margin-bottom:6px;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:13px;color:#aaaacc;line-height:1.6;cursor:pointer}
+.checkbox-row input{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--gold);cursor:pointer}
+.btn-modal{width:100%;padding:13px;font-family:'Black Ops One',cursive;font-size:14px;letter-spacing:2px;border:none;border-radius:10px;cursor:pointer;margin-top:8px;transition:filter .15s}
+.btn-modal:disabled{opacity:.4;cursor:not-allowed}
+.btn-accept{background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14}
+.btn-accept:not(:disabled):hover{filter:brightness(1.1)}
+.btn-blue{background:linear-gradient(135deg,#4488ff,#2255cc);color:#fff}
+.btn-blue:not(:disabled):hover{filter:brightness(1.15)}
+.age-big{font-family:'Black Ops One',cursive;font-size:64px;text-align:center;color:#FFD700;margin:14px 0}
+.age-sub{text-align:center;font-size:14px;color:#8888aa;margin-bottom:20px}
+.age-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.btn-no{background:linear-gradient(135deg,#ff4455,#cc2233);color:#fff;padding:13px;font-family:'Black Ops One',cursive;font-size:14px;border:none;border-radius:10px;cursor:pointer}
+.age-block{text-align:center;padding:20px 0;color:#ff4455}
+.age-block h2{font-size:22px;margin-bottom:8px}
+
+/* ── AUTH TABS ── */
+.auth-tabs{display:flex;gap:2px;margin-bottom:20px;background:#0a0a14;border-radius:10px;padding:3px}
+.auth-tab{flex:1;padding:9px;text-align:center;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;cursor:pointer;border-radius:8px;color:#6666aa;transition:all .2s;border:none;background:transparent}
+.auth-tab.active{background:#1e1e35;color:#FFD700;border:0.5px solid #2a2a4a}
+.form-input{width:100%;padding:11px 14px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:10px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border .2s;margin-bottom:10px}
+.form-input:focus{border-color:#4488ff}
+.forgot-link{text-align:right;font-size:12px;color:#4488ff;cursor:pointer;margin-bottom:12px;margin-top:-6px}
+.forgot-link:hover{text-decoration:underline}
+.auth-switch{text-align:center;font-size:13px;color:#6666aa;margin-top:14px}
+.auth-switch span{color:#4488ff;cursor:pointer}
+.auth-switch span:hover{text-decoration:underline}
+.divider{border:none;border-top:0.5px solid #1e1e35;margin:16px 0}
+
+/* ── HEADER ── */
+.header{text-align:center;margin-bottom:24px;padding-top:8px}
+.logo{font-family:'Black Ops One',cursive;font-size:36px;background:linear-gradient(135deg,#FFD700,#FFA500,#FF6B35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:3px}
+.subtitle{font-size:13px;color:#8888aa;margin-top:6px;letter-spacing:3px;text-transform:uppercase}
+.conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff4455;margin-right:6px;transition:background .3s}
+.conn-dot.ok{background:#00ff88}
+.user-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.user-name{color:#FFD700;font-weight:700;font-size:14px}
+.logout-btn{color:#6666aa;cursor:pointer;font-size:12px;background:none;border:none;font-family:'Rajdhani',sans-serif}
+.logout-btn:hover{color:#ff4455}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:12px 14px;text-align:center}
+.stat-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
+.stat-value{font-size:22px;font-weight:700;color:var(--gold);margin-top:4px}
+.group-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px}
+.group-title{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:2px 10px;font-size:11px;color:#6666aa}
+.groups-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.group-pill{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;color:#8888cc;transition:all .3s}
+.group-pill.active{background:#0d1f0d;border-color:#00ff88;color:#00ff88;font-weight:700}
+.group-pill.full{background:#111;border-color:#333;color:#333}
+.progress-note{font-size:12px;color:#6666aa;text-align:center;margin-top:10px}
+
+/* ── PAIEMENT ── */
+.pay-panel{background:#12121f;border:0.5px solid #FFD700;border-radius:12px;padding:18px;margin-bottom:18px;text-align:center}
+.pay-title{font-size:14px;color:#FFD700;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.pay-amount{font-family:'Black Ops One',cursive;font-size:40px;color:#FFD700;margin:8px 0}
+.pay-sub{font-size:13px;color:#8888aa;margin-bottom:16px}
+.btn-pay{width:100%;padding:16px;font-family:'Black Ops One',cursive;font-size:18px;letter-spacing:2px;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14;transition:filter .15s}
+.btn-pay:not(:disabled):hover{filter:brightness(1.1)}
+.btn-pay:disabled{opacity:.5;cursor:not-allowed}
+.pay-methods{display:flex;gap:10px;justify-content:center;margin-top:12px;font-size:12px;color:#6666aa}
+.pay-badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:3px 10px}
+
+/* ── ARENA ── */
+.arena{background:#12121f;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
+.arena-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,#181830 0%,#0a0a14 70%)}
+.arena-content{position:relative;z-index:1}
+.round-label{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.timer{font-family:'Black Ops One',cursive;font-size:72px;color:#fff;line-height:1;user-select:none;transition:color .3s}
+.timer.danger{color:#ff4455;animation:blink .5s infinite alternate}
+.timer.active{color:var(--gold)}
+@keyframes blink{from{opacity:1}to{opacity:.4}}
+.tbar-wrap{background:#1e1e35;border-radius:4px;height:8px;margin:14px 0}
+.tbar{height:100%;border-radius:4px;background:linear-gradient(90deg,#00ff88,#FFD700,#ff4455);transition:width .05s linear}
+.phase-msg{font-size:15px;color:#aaaacc;margin-top:10px;min-height:24px;font-weight:600}
+.big-btn{width:100%;padding:20px;font-family:'Black Ops One',cursive;font-size:24px;letter-spacing:3px;border:none;border-radius:14px;cursor:pointer;transition:all .08s;margin-top:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.big-btn:disabled{cursor:not-allowed;opacity:.5}
+.btn-click{background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14}
+.btn-click:not(:disabled):active{transform:scale(.95)}
+.btn-click:not(:disabled):hover{filter:brightness(1.1)}
+
+/* ── WINNERS ── */
+.winners-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:16px}
+.winners-title{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.wlist{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.witem{display:flex;align-items:center;gap:12px;padding:7px 12px;background:#1a1a2e;border-radius:8px;font-size:13px}
+.wrank{font-family:'Black Ops One',cursive;font-size:13px;min-width:32px}
+.wrank.g{color:#FFD700}.wrank.s{color:#C0C0C0}.wrank.b{color:#CD7F32}.wrank.o{color:#555588}
+.wname{flex:1;color:#ccccee}
+.wtime{color:#00ff88;font-size:12px;min-width:48px;text-align:right}
+.wprize{color:#FFD700;font-weight:700;font-size:12px;min-width:100px;text-align:right}
+.rules{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#8888aa;line-height:1.8}
+.rules strong{color:#aaaacc}
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:14px 24px;color:#00ff88;font-size:15px;font-weight:700;z-index:999;display:none;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;white-space:normal;text-align:center}
+.confetti-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998;overflow:hidden}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.hidden{display:none!important}
+.error-msg{color:#ff4455;font-size:12px;text-align:center;margin-top:6px;min-height:18px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     OVERLAY 1 — VÉRIFICATION D'ÂGE
+══════════════════════════════════════════════════════ -->
+<div class="overlay" id="overlayAge">
+  <div class="modal">
+    <div class="modal-logo">ONE TOUCH MILLION</div>
+    <div class="modal-title">Vérification d'âge requise</div>
+    <div class="age-big">21+</div>
+    <div class="age-sub">Ce jeu est réservé aux personnes majeures de <strong>21 ans et plus</strong>.<br>Confirmez votre âge pour continuer.</div>
+    <div id="ageForms">
+      <div class="age-btns">
+        <button class="btn-modal btn-accept" onclick="confirmAge(true)">J'AI 21 ANS OU PLUS</button>
+        <button class="btn-no" onclick="confirmAge(false)">J'AI MOINS DE 21 ANS</button>
+      </div>
+    </div>
+    <div id="ageBlocked" class="age-block hidden">
+      <h2>⛔ Accès refusé</h2>
+      <p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.<br>Vous devez quitter cette page.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     OVERLAY 2 — POLITIQUE DE CONFIDENTIALITÉ + CGU
+══════════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="overlayPolicy">
+  <div class="modal">
+    <div class="modal-logo">ONE TOUCH MILLION</div>
+    <div class="modal-title">Conditions d'utilisation</div>
+
+    <div class="modal-section">
+      <h4>🔒 Politique de Confidentialité</h4>
+      <p>ONE TOUCH MILLION collecte votre nom, numéro de téléphone, email et données de paiement uniquement pour le bon fonctionnement du jeu et le versement de vos gains.</p>
+      <br>
+      <p>Vos données ne sont <strong>jamais vendues</strong> à des tiers. Les informations de paiement sont traitées exclusivement par <strong>NotchPay</strong>, un prestataire de paiement certifié. Nous conservons vos données 12 mois après votre dernière session.</p>
+      <br>
+      <p>Vous pouvez demander la suppression de votre compte à tout moment en contactant : <strong>support@onetouchmillion.cm</strong></p>
+    </div>
+
+    <div class="modal-section">
+      <h4>📜 Conditions Générales d'Utilisation</h4>
+      <p><strong>1. Jeu d'argent réel :</strong> La mise d'entrée de 500 FCFA est débitée de votre Mobile Money. Les gains sont versés directement sur votre numéro enregistré.</p>
+      <br>
+      <p><strong>2. Âge minimum :</strong> Vous confirmez avoir 21 ans ou plus. Toute fraude entraîne l'annulation des gains et la suppression du compte.</p>
+      <br>
+      <p><strong>3. Jeu responsable :</strong> Ce jeu implique des risques financiers. Ne jouez que les sommes que vous pouvez vous permettre de perdre. En cas de dépendance au jeu, contactez un professionnel de santé.</p>
+      <br>
+      <p><strong>4. Résultats :</strong> Le classement est déterminé par la vitesse de réaction. ONE TOUCH MILLION n'est pas responsable des aléas de connexion Internet.</p>
+      <br>
+      <p><strong>5. Gains :</strong> Les gains sont transférés sous 24h ouvrées. En cas d'erreur technique, le support traite les réclamations sous 48h.</p>
+      <br>
+      <p><strong>6. Juridiction :</strong> Ce service est soumis au droit camerounais. Tout litige sera traité devant les juridictions compétentes de Yaoundé, Cameroun.</p>
+    </div>
+
+    <div class="checkbox-row" onclick="toggleCheck('chkPolicy')">
+      <input type="checkbox" id="chkPolicy" onclick="event.stopPropagation();checkConsents()">
+      <span>J'ai lu et j'accepte la <strong>Politique de Confidentialité</strong> et le traitement de mes données personnelles.</span>
+    </div>
+    <div class="checkbox-row" onclick="toggleCheck('chkCgu')">
+      <input type="checkbox" id="chkCgu" onclick="event.stopPropagation();checkConsents()">
+      <span>J'ai lu et j'accepte les <strong>Conditions Générales d'Utilisation</strong> et je comprends que ce jeu implique de l'argent réel.</span>
+    </div>
+    <div class="checkbox-row" onclick="toggleCheck('chkAge21')">
+      <input type="checkbox" id="chkAge21" onclick="event.stopPropagation();checkConsents()">
+      <span>Je confirme avoir <strong>21 ans ou plus</strong> et être en droit de participer à ce jeu dans mon pays de résidence.</span>
+    </div>
+
+    <button class="btn-modal btn-accept" id="btnAcceptPolicy" onclick="acceptPolicy()" disabled>ACCEPTER ET CONTINUER</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     OVERLAY 3 — CONNEXION / INSCRIPTION / MOT DE PASSE
+══════════════════════════════════════════════════════ -->
+<div class="overlay hidden" id="overlayAuth">
+  <div class="modal">
+    <div class="modal-logo">ONE TOUCH MILLION</div>
+
+    <!-- TABS -->
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">CONNEXION</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">INSCRIPTION</button>
+    </div>
+
+    <!-- PANEL LOGIN -->
+    <div id="panelLogin">
+      <input class="form-input" id="loginEmail" placeholder="Votre email" type="email" autocomplete="email">
+      <input class="form-input" id="loginPass" placeholder="Mot de passe" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="forgot-link" onclick="switchTab('forgot')">Mot de passe oublié ?</div>
+      <div class="error-msg" id="loginErr"></div>
+      <button class="btn-modal btn-blue" id="btnLogin" onclick="doLogin()">SE CONNECTER</button>
+      <div class="auth-switch">Pas encore de compte ? <span onclick="switchTab('register')">S'inscrire</span></div>
+    </div>
+
+    <!-- PANEL REGISTER -->
+    <div id="panelRegister" class="hidden">
+      <input class="form-input" id="regName" placeholder="Pseudo (ex: Champion237)" maxlength="20" autocomplete="nickname">
+      <input class="form-input" id="regPhone" placeholder="Numéro Mobile Money (6XXXXXXXX)" type="tel" autocomplete="tel">
+      <input class="form-input" id="regEmail" placeholder="Votre email" type="email" autocomplete="email">
+      <input class="form-input" id="regPass" placeholder="Mot de passe (min 6 caractères)" type="password" autocomplete="new-password">
+      <input class="form-input" id="regPass2" placeholder="Confirmer le mot de passe" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()">
+      <div class="error-msg" id="regErr"></div>
+      <button class="btn-modal btn-accept" id="btnRegister" onclick="doRegister()">CRÉER MON COMPTE</button>
+      <div class="auth-switch">Déjà un compte ? <span onclick="switchTab('login')">Se connecter</span></div>
+    </div>
+
+    <!-- PANEL MOT DE PASSE OUBLIÉ -->
+    <div id="panelForgot" class="hidden">
+      <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Entrez votre email. Vous recevrez un lien pour réinitialiser votre mot de passe.</p>
+      <input class="form-input" id="forgotEmail" placeholder="Votre email" type="email" autocomplete="email" onkeydown="if(event.key==='Enter')doForgot()">
+      <div class="error-msg" id="forgotErr"></div>
+      <button class="btn-modal btn-blue" id="btnForgot" onclick="doForgot()">ENVOYER LE LIEN</button>
+      <div class="auth-switch"><span onclick="switchTab('login')">← Retour à la connexion</span></div>
+    </div>
+
+    <!-- PANEL RESET PASSWORD (via token URL) -->
+    <div id="panelReset" class="hidden">
+      <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Créez votre nouveau mot de passe.</p>
+      <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 caractères)" type="password" autocomplete="new-password">
+      <input class="form-input" id="resetPass2" placeholder="Confirmer le nouveau mot de passe" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
+      <div class="error-msg" id="resetErr"></div>
+      <button class="btn-modal btn-accept" id="btnReset" onclick="doReset()">CHANGER LE MOT DE PASSE</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CONTENU PRINCIPAL
+══════════════════════════════════════════════════════ -->
+<div class="container" id="mainContent" style="display:none">
+  <div class="header">
+    <div class="logo">ONE TOUCH MILLION</div>
+    <div class="subtitle"><span class="conn-dot" id="dot"></span>La minute d'or</div>
+  </div>
+
+  <!-- Barre utilisateur connecté -->
+  <div class="user-bar" id="userBar">
+    <div><span style="color:#6666aa;font-size:12px">Connecté : </span><span class="user-name" id="displayName">—</span></div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <div class="rules">
+    <strong>Règles :</strong> Connectez-vous → payez la mise de <strong>500 FCFA</strong> via Orange Money ou MTN MoMo →
+    au signal, cliquez le bouton avant les autres.
+    Les <strong>50 premiers</strong> remportent jusqu'à <strong>5 000 000 FCFA</strong> versés directement sur votre Mobile Money.
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Joueurs inscrits</div><div class="stat-value" id="totalPlayers">0</div></div>
+    <div class="stat-card"><div class="stat-label">Groupes actifs</div><div class="stat-value" id="totalGroups">0</div></div>
+    <div class="stat-card"><div class="stat-label">Mise d'entrée</div><div class="stat-value" style="color:#00ff88">500F</div></div>
+  </div>
+
+  <!-- PAIEMENT -->
+  <div class="pay-panel hidden" id="payPanel">
+    <div class="pay-title">Payer la mise pour jouer</div>
+    <div class="pay-amount">500 FCFA</div>
+    <div class="pay-sub">Paiement sécurisé via NotchPay · Gagner jusqu'à 5 000 000 FCFA</div>
+    <button class="btn-pay" id="payBtn" onclick="payNow()">PAYER AVEC MOBILE MONEY</button>
+    <div class="pay-methods">
+      <span class="pay-badge">Orange Money</span>
+      <span class="pay-badge">MTN MoMo</span>
+    </div>
+  </div>
+
+  <!-- Bouton rejoindre partie -->
+  <div id="joinPanel" class="pay-panel hidden" style="border-color:#4488ff">
+    <div class="pay-title" style="color:#4488ff">Rejoindre une partie</div>
+    <div style="font-size:13px;color:#8888aa;margin-bottom:14px">Rejoignez la file d'attente et payez pour jouer</div>
+    <button class="btn-modal btn-blue" style="width:100%;padding:14px;font-size:16px" onclick="joinGame()">REJOINDRE LE JEU</button>
+  </div>
+
+  <!-- GROUPES -->
+  <div class="group-bar">
+    <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
+    <div class="groups-grid" id="grpGrid"></div>
+    <div class="progress-note" id="grpNote">Rejoignez une partie pour intégrer un groupe</div>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena">
+    <div class="arena-bg"></div>
+    <div class="arena-content">
+      <div class="round-label">Groupe actif · Round <span id="roundNum">—</span></div>
+      <div class="timer" id="timer">--:--</div>
+      <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
+      <div class="phase-msg" id="phaseMsg">Rejoignez une partie et payez pour jouer</div>
+      <button class="big-btn btn-click" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>TOUCHER POUR GAGNER</button>
+    </div>
+  </div>
+
+  <!-- WINNERS -->
+  <div class="winners-panel" id="winPanel" style="display:none">
+    <div class="winners-title"><span>Tableau — Top 50 gagnants</span><span class="badge" id="wCount">0/50</span></div>
+    <div class="wlist" id="wList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="confetti-box" id="cbox"></div>
+
+<script>
+const BASE    = window.location.origin;
+const WS_BASE = BASE.replace(/^http/, 'ws');
+
+// ─── ÉTAT ──────────────────────────────────────────────────────────────────
+const s = {
+  accountId: null, myName: null,
+  playerId: null, myGrp: -1, paid: false,
+  phase: 'idle', round: 1, roundDuration: 30,
+  roundStart: null, remaining: 30,
+  winners: [], myRank: -1, clicked: false,
+  players: 0, groups: Array(10).fill(0),
+  ws: null, tickIv: null
+};
+
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString('fr-FR');
+
+// ─── UTILITAIRES ──────────────────────────────────────────────────────────
+function toast(msg, col = '#00ff88') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.style.borderColor = col;
+  t.style.color = col;
+  t.style.display = 'block';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.style.display = 'none', 3500);
+}
+
+function setLoading(btnId, loading, label) {
+  const b = $(btnId);
+  if (!b) return;
+  b.disabled = loading;
+  if (label) b.textContent = loading ? '...' : label;
+}
+
+function showOverlay(id) {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+  const el = $(id);
+  if (el) el.classList.remove('hidden');
+}
+function hideAllOverlays() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+  $('mainContent').style.display = 'block';
+}
+
+// ─── ÉTAPE 1 : VÉRIFICATION D'ÂGE ────────────────────────────────────────
+function confirmAge(yes) {
+  if (!yes) {
+    $('ageForms').classList.add('hidden');
+    $('ageBlocked').classList.remove('hidden');
+    return;
+  }
+  localStorage.setItem('otm_age_ok', '1');
+  showOverlay('overlayPolicy');
+}
+
+// ─── ÉTAPE 2 : POLITIQUE DE CONFIDENTIALITÉ ───────────────────────────────
+function toggleCheck(id) {
+  const cb = $(id);
+  cb.checked = !cb.checked;
+  checkConsents();
+}
+function checkConsents() {
+  const ok = $('chkPolicy').checked && $('chkCgu').checked && $('chkAge21').checked;
+  $('btnAcceptPolicy').disabled = !ok;
+}
+function acceptPolicy() {
+  localStorage.setItem('otm_policy_ok', '1');
+  // Vérifier token de reset dans l'URL
+  const p = new URLSearchParams(window.location.search);
+  const resetToken = p.get('reset_token');
+  if (resetToken) {
+    showOverlay('overlayAuth');
+    switchTab('reset');
+    window._resetToken = resetToken;
+    history.replaceState({}, '', '/');
+    return;
+  }
+  // Vérifier session sauvegardée
+  const saved = localStorage.getItem('otm_account');
+  if (saved) {
+    try {
+      const acc = JSON.parse(saved);
+      s.accountId = acc.id;
+      s.myName = acc.name;
+      afterLogin(acc);
+      return;
+    } catch(e) {}
+  }
+  showOverlay('overlayAuth');
+}
+
+// ─── ÉTAPE 3 : AUTH ───────────────────────────────────────────────────────
+function switchTab(tab) {
+  ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p => $(p).classList.add('hidden'));
+  ['tabLogin','tabRegister'].forEach(t => $(t)?.classList.remove('active'));
+
+  if (tab === 'login') {
+    $('panelLogin').classList.remove('hidden');
+    $('tabLogin').classList.add('active');
+  } else if (tab === 'register') {
+    $('panelRegister').classList.remove('hidden');
+    $('tabRegister').classList.add('active');
+  } else if (tab === 'forgot') {
+    $('panelForgot').classList.remove('hidden');
+  } else if (tab === 'reset') {
+    $('panelReset').classList.remove('hidden');
+  }
+}
+
+async function doLogin() {
+  const email = $('loginEmail').value.trim().toLowerCase();
+  const pass  = $('loginPass').value;
+  $('loginErr').textContent = '';
+  if (!email || !pass) { $('loginErr').textContent = 'Email et mot de passe requis'; return; }
+
+  setLoading('btnLogin', true, 'SE CONNECTER');
+  try {
+    const r = await fetch(BASE + '/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email, password: pass})
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Erreur');
+    afterLogin({id: d.account_id, name: d.name, email: d.email});
+  } catch(e) {
+    $('loginErr').textContent = e.message;
+  }
+  setLoading('btnLogin', false, 'SE CONNECTER');
+}
+
+async function doRegister() {
+  const name  = $('regName').value.trim();
+  const phone = $('regPhone').value.trim();
+  const email = $('regEmail').value.trim().toLowerCase();
+  const pass  = $('regPass').value;
+  const pass2 = $('regPass2').value;
+  $('regErr').textContent = '';
+
+  if (!name) { $('regErr').textContent = 'Pseudo requis'; return; }
+  if (!phone) { $('regErr').textContent = 'Numéro Mobile Money requis'; return; }
+  if (!email || !email.includes('@')) { $('regErr').textContent = 'Email invalide'; return; }
+  if (pass.length < 6) { $('regErr').textContent = 'Mot de passe trop court (min 6 car.)'; return; }
+  if (pass !== pass2) { $('regErr').textContent = 'Les mots de passe ne correspondent pas'; return; }
+
+  setLoading('btnRegister', true, 'CRÉER MON COMPTE');
+  try {
+    const r = await fetch(BASE + '/api/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({name, phone, email, password: pass})
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Erreur');
+    afterLogin({id: d.account_id, name: d.name, email: d.email});
+    toast('Compte créé ! Bienvenue ' + d.name, '#00ff88');
+  } catch(e) {
+    $('regErr').textContent = e.message;
+  }
+  setLoading('btnRegister', false, 'CRÉER MON COMPTE');
+}
+
+async function doForgot() {
+  const email = $('forgotEmail').value.trim().toLowerCase();
+  $('forgotErr').textContent = '';
+  if (!email) { $('forgotErr').textContent = 'Email requis'; return; }
+
+  setLoading('btnForgot', true, 'ENVOYER LE LIEN');
+  try {
+    await fetch(BASE + '/api/auth/forgot-password', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email})
+    });
+    toast('Si cet email existe, un lien de réinitialisation a été envoyé.', '#4488ff');
+    switchTab('login');
+  } catch(e) {
+    $('forgotErr').textContent = 'Erreur réseau. Réessayez.';
+  }
+  setLoading('btnForgot', false, 'ENVOYER LE LIEN');
+}
+
+async function doReset() {
+  const pass  = $('resetPass').value;
+  const pass2 = $('resetPass2').value;
+  $('resetErr').textContent = '';
+  if (pass.length < 6) { $('resetErr').textContent = 'Mot de passe trop court (min 6 car.)'; return; }
+  if (pass !== pass2) { $('resetErr').textContent = 'Les mots de passe ne correspondent pas'; return; }
+
+  setLoading('btnReset', true, 'CHANGER LE MOT DE PASSE');
+  try {
+    const r = await fetch(BASE + '/api/auth/reset-password', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: window._resetToken, password: pass})
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Lien invalide ou expiré');
+    toast('Mot de passe modifié avec succès !', '#00ff88');
+    switchTab('login');
+  } catch(e) {
+    $('resetErr').textContent = e.message;
+  }
+  setLoading('btnReset', false, 'CHANGER LE MOT DE PASSE');
+}
+
+function afterLogin(acc) {
+  s.accountId = acc.id;
+  s.myName = acc.name;
+  localStorage.setItem('otm_account', JSON.stringify({id: acc.id, name: acc.name, email: acc.email}));
+  hideAllOverlays();
+  $('displayName').textContent = acc.name;
+  $('joinPanel').classList.remove('hidden');
+  initGame();
+}
+
+function logout() {
+  localStorage.removeItem('otm_account');
+  localStorage.removeItem('otm_session');
+  if (s.ws) s.ws.close();
+  location.reload();
+}
+
+// ─── REJOINDRE UNE PARTIE ────────────────────────────────────────────────
+async function joinGame() {
+  try {
+    const r = await fetch(BASE + '/api/join', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({account_id: s.accountId})
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail);
+    s.playerId = d.player_id;
+    s.myGrp = d.group;
+    applyState(d.state);
+    localStorage.setItem('otm_session', JSON.stringify({playerId: d.player_id, accountId: s.accountId, name: s.myName, group: d.group}));
+    $('joinPanel').classList.add('hidden');
+    $('payPanel').classList.remove('hidden');
+    $('grpNote').textContent = d.group_label + ' — payez pour jouer';
+    toast('Groupe assigné : ' + d.group_label, '#4488ff');
+  } catch(e) {
+    toast(e.message || 'Erreur', '#ff4455');
+  }
+}
+
+// ─── PAIEMENT ────────────────────────────────────────────────────────────
+async function payNow() {
+  $('payBtn').disabled = true;
+  $('payBtn').textContent = 'Chargement...';
+  try {
+    const r = await fetch(BASE + '/api/payment/init', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({player_id: s.playerId})
+    });
+    const d = await r.json();
+    if (d.already_paid) { afterPaid(); return; }
+    if (d.authorization_url) {
+      window.location.href = d.authorization_url;
+    } else {
+      throw new Error('URL de paiement non reçue');
+    }
+  } catch(e) {
+    toast(e.message || 'Erreur paiement', '#ff4455');
+    $('payBtn').disabled = false;
+    $('payBtn').textContent = 'PAYER AVEC MOBILE MONEY';
+  }
+}
+
+function afterPaid() {
+  s.paid = true;
+  $('payPanel').classList.add('hidden');
+  $('phaseMsg').textContent = 'Paiement confirmé — attendez le signal !';
+  toast('Vous êtes prêt à jouer !', '#00ff88');
+  connectWS();
+}
+
+// ─── WEBSOCKET ────────────────────────────────────────────────────────────
+function connectWS() {
+  if (!s.playerId) return;
+  if (s.ws && s.ws.readyState < 2) return;
+  const ws = new WebSocket(WS_BASE + '/ws/' + s.playerId);
+  s.ws = ws;
+  ws.binaryType = 'arraybuffer';
+  ws.onopen = () => {
+    $('dot').classList.add('ok');
+    // Ping léger toutes les 20s pour garder la connexion vivante
+    s._ping = setInterval(() => ws.readyState === 1 && ws.send(JSON.stringify({action:'ping'})), 20000);
+  };
+  ws.onmessage = e => handleMsg(JSON.parse(e.data));
+  ws.onclose = () => {
+    $('dot').classList.remove('ok');
+    clearInterval(s._ping);
+    setTimeout(() => connectWS(), 3000);
+  };
+}
+
+// ─── CLIC ULTRA-RAPIDE ────────────────────────────────────────────────────
+// Double méthode : ontouchstart (mobile) + onclick (desktop)
+// Évite le délai de 300ms des navigateurs mobiles
+let _clickSent = false;
+
+function fastClick(e) {
+  // Déclenché immédiatement au toucher sur mobile
+  e.preventDefault();
+  if (s.phase !== 'active' || s.clicked || _clickSent) return;
+  if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
+  _sendClick();
+}
+
+function doClick() {
+  if (_clickSent) return; // déjà envoyé via fastClick
+  if (s.phase !== 'active' || s.clicked) return;
+  if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
+  _sendClick();
+}
+
+function _sendClick() {
+  _clickSent = true;
+  s.clicked = true;
+  $('clickBtn').disabled = true;
+  $('clickBtn').textContent = '⚡';
+  // Envoi WebSocket immédiat (pas de fetch — latence minimale)
+  if (s.ws && s.ws.readyState === 1) {
+    s.ws.send(JSON.stringify({action:'click'}));
+  } else {
+    // Fallback HTTP si WS non dispo
+    fetch(BASE + '/api/click', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({player_id: s.playerId})
+    }).then(r=>r.json()).then(d => handleMsg({type:'click_result',...d})).catch(()=>{});
+  }
+  setTimeout(() => { _clickSent = false; }, 500); // reset après 500ms
+}
+
+function handleMsg(msg) {
+  switch(msg.type) {
+    case 'connected':
+      applyState(msg.state);
+      if (msg.paid) afterPaid();
+      break;
+    case 'pong': break;
+    case 'payment_confirmed':
+      afterPaid();
+      break;
+    case 'prize_sent':
+      toast(msg.message, '#00ff88');
+      break;
+    case 'prize_error':
+      toast(msg.message, '#ff4455');
+      break;
+    case 'countdown':
+      s.phase = 'countdown'; s.round = msg.round;
+      $('roundNum').textContent = msg.round;
+      $('timer').textContent = '00:0' + msg.seconds;
+      $('timer').className = 'timer active';
+      $('phaseMsg').textContent = 'Lancement dans ' + msg.seconds + 's — préparez-vous !';
+      $('clickBtn').disabled = true;
+      break;
+    case 'round_start':
+      s.phase = 'active'; s.round = msg.round; s.roundDuration = msg.duration;
+      s.roundStart = performance.now(); s.remaining = msg.duration;
+      s.clicked = false; _clickSent = false;
+      s.winners = []; s.myRank = -1;
+      $('winPanel').style.display = 'block';
+      $('wList').innerHTML = ''; $('wCount').textContent = '0/50';
+      $('clickBtn').disabled = !s.paid;
+      $('clickBtn').textContent = s.paid ? 'TOUCHER POUR GAGNER' : 'PAYEZ POUR JOUER';
+      $('clickBtn').style.background = 'linear-gradient(135deg,#FFD700,#FFA500)';
+      startLocalTick();
+      break;
+    case 'tick':
+      s.remaining = msg.remaining;
+      renderTimer(msg.remaining);
+      $('phaseMsg').textContent = msg.winners_count < 50
+        ? msg.winners_count + ' gagnant' + (msg.winners_count > 1 ? 's' : '') + ' — soyez rapide !'
+        : '50 gagnants confirmés !';
+      break;
+    case 'winner_added':
+      addWinner(msg.winner);
+      break;
+    case 'round_end':
+      s.phase = 'ended';
+      clearInterval(s.tickIv);
+      $('timer').textContent = '00:0'; $('timer').className = 'timer';
+      $('clickBtn').disabled = true;
+      $('phaseMsg').textContent = s.myRank > 0
+        ? 'Félicitations ! Rang #' + s.myRank + ' — gain en cours d\'envoi !'
+        : 'Round ' + msg.round + ' terminé. ' + msg.total_winners + ' gagnants.';
+      // Réafficher bouton paiement pour le prochain round
+      if (s.paid) {
+        setTimeout(() => {
+          s.paid = false; _clickSent = false;
+          $('joinPanel').classList.remove('hidden');
+        }, 8000);
+      }
+      break;
+    case 'click_result':
+      if (msg.ok) {
+        s.myRank = msg.rank;
+        toast('GAGNÉ ! Rang #' + msg.rank + ' — ' + fmt(msg.prize) + ' FCFA envoyé !', '#FFD700');
+        confetti();
+        $('clickBtn').textContent = '✓ #' + msg.rank;
+        $('clickBtn').style.background = 'linear-gradient(135deg,#00ff88,#00aa55)';
+        $('clickBtn').disabled = true;
+      } else if (msg.reason === 'not_paid') {
+        s.clicked = false; _clickSent = false;
+        toast('Payez la mise d\'abord !', '#ff4455');
+        $('payPanel').classList.remove('hidden');
+        $('clickBtn').disabled = false;
+        $('clickBtn').textContent = 'TOUCHER POUR GAGNER';
+      } else if (msg.reason === 'too_late') {
+        toast('Trop tard ! 50 gagnants déjà trouvés.', '#ff4455');
+      } else if (msg.reason === 'round_not_active') {
+        s.clicked = false; _clickSent = false;
+        $('clickBtn').disabled = false;
+        $('clickBtn').textContent = 'TOUCHER POUR GAGNER';
+      }
+      break;
+  }
+}
+
+function startLocalTick() {
+  clearInterval(s.tickIv);
+  // 16ms = ~60fps pour le timer ultra-fluide
+  s.tickIv = setInterval(() => {
+    if (s.phase !== 'active') return;
+    const rem = Math.max(0, s.roundDuration - (performance.now() - s.roundStart) / 1000);
+    renderTimer(rem);
+    if (rem <= 0) clearInterval(s.tickIv);
+  }, 16);
+}
+
+function renderTimer(rem) {
+  const ss = Math.floor(rem), ds = Math.floor((rem - ss) * 10);
+  $('timer').textContent = (ss < 10 ? '0' : '') + ss + ':' + ds;
+  $('tbar').style.width = ((rem / (s.roundDuration || 30)) * 100) + '%';
+  $('timer').className = 'timer' + (rem <= 10 ? ' danger' : ' active');
+}
+
+function addWinner(w) {
+  s.winners.push(w);
+  const li = document.createElement('div'); li.className = 'witem';
+  const isMe = s.myName && w.name.startsWith(s.myName);
+  if (isMe) { li.style.background = '#0d1f0d'; li.style.border = '0.5px solid #00ff88'; }
+  const rc = w.rank===1?'g':w.rank===2?'s':w.rank===3?'b':'o';
+  li.innerHTML = '<span class="wrank ' + rc + '">#' + w.rank + '</span>'
+    + '<span class="wname">' + w.name + '</span>'
+    + '<span class="wtime">+' + (+w.time).toFixed(3) + 's</span>'
+    + '<span class="wprize">' + fmt(w.prize) + ' F</span>';
+  $('wList').appendChild(li); $('wList').scrollTop = 9999;
+  $('wCount').textContent = s.winners.length + '/50';
+}
+
+function buildGrid() {
+  const g = $('grpGrid'); g.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement('div');
+    d.id = 'gp' + i;
+    d.className = 'group-pill' + (i === s.myGrp ? ' active' : '');
+    d.innerHTML = 'G-' + (i+1) + '<br><span style="font-size:9px;color:' + (i===s.myGrp?'#00ff88':'#444') + '">' + fmt(s.groups[i]) + '</span>';
+    g.appendChild(d);
+  }
+}
+
+function refreshStats() {
+  $('totalPlayers').textContent = fmt(s.players);
+  const ag = Math.max(1, Math.ceil(s.players / 100000));
+  $('totalGroups').textContent = ag;
+  $('grpBadge').textContent = ag + ' groupe' + (ag > 1 ? 's' : '');
+  for (let i = 0; i < 10; i++) {
+    const d = $('gp' + i); if (!d) continue;
+    const me = i === s.myGrp;
+    d.className = 'group-pill' + (me ? ' active' : s.groups[i] >= 100000 ? ' full' : '');
+    d.innerHTML = 'G-' + (i+1) + '<br><span style="font-size:9px;color:' + (me?'#00ff88':s.groups[i]>=100000?'#333':'#444') + '">' + fmt(s.groups[i]) + '</span>';
+  }
+}
+
+function applyState(st) {
+  s.players = st.total_players; s.groups = st.groups; s.round = st.round;
+  $('roundNum').textContent = st.round;
+  refreshStats();
+}
+
+function confetti() {
+  const box = $('cbox');
+  const cols = ['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement('div'); const sz = Math.random()*9+4;
+    p.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';
+    box.appendChild(p); setTimeout(()=>p.remove(),4500);
+  }
+}
+
+// ─── INIT JEU ─────────────────────────────────────────────────────────────
+async function initGame() {
+  buildGrid();
+  try {
+    const r = await fetch(BASE + '/api/state');
+    applyState(await r.json());
+  } catch(e) {}
+
+  // Restaurer session de jeu active
+  const sess = localStorage.getItem('otm_session');
+  if (sess) {
+    try {
+      const sd = JSON.parse(sess);
+      if (sd.accountId === s.accountId && sd.playerId) {
+        s.playerId = sd.playerId;
+        s.myGrp    = sd.group;
+        $('joinPanel').classList.add('hidden');
+        $('payPanel').classList.remove('hidden');
+      }
+    } catch(e) {}
+  }
+
+  // Callback paiement
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('payment') === 'success') {
+    history.replaceState({}, '', '/');
+    const sess2 = localStorage.getItem('otm_session');
+    if (sess2) {
+      try {
+        const sd = JSON.parse(sess2);
+        s.playerId = sd.playerId;
+        s.myGrp    = sd.group;
+        s.paid = true;
+        afterPaid();
+      } catch(e) {}
+    }
+    toast('Paiement confirmé ! Prêt à jouer.', '#00ff88');
+  } else if (p.get('payment') === 'failed') {
+    history.replaceState({}, '', '/');
+    toast('Paiement échoué. Réessayez.', '#ff4455');
+  }
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────
+(function boot() {
+  const ageOk    = localStorage.getItem('otm_age_ok');
+  const policyOk = localStorage.getItem('otm_policy_ok');
+  const p        = new URLSearchParams(window.location.search);
+  const resetTok = p.get('reset_token');
+
+  if (resetTok) {
+    window._resetToken = resetTok;
+    history.replaceState({}, '', '/');
+    showOverlay('overlayAuth');
+    switchTab('reset');
+    return;
+  }
+
+  if (!ageOk) {
+    showOverlay('overlayAge');
+    return;
+  }
+  if (!policyOk) {
+    showOverlay('overlayPolicy');
+    return;
+  }
+  // Vérifier compte sauvegardé
+  const saved = localStorage.getItem('otm_account');
+  if (saved) {
+    try {
+      const acc = JSON.parse(saved);
+      s.accountId = acc.id;
+      s.myName = acc.name;
+      afterLogin(acc);
+      return;
+    } catch(e) {}
+  }
+  showOverlay('overlayAuth');
+})();
+</script>
+</body>
+</html>
