@@ -570,7 +570,7 @@ class GameEngine:
 app = FastAPI(title="ONE TOUCH MILLION", version="3.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-_static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+_static_dir = os.path.join(os.path.dirname(__file__), "static")
 if os.path.isdir(_static_dir):
     app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
@@ -643,7 +643,7 @@ async def reset_password(body: dict):
 # ─── JEU ENDPOINTS ────────────────────────────────────────────────────────────
 @app.get("/")
 async def root():
-    idx = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static", "index.html")
+    idx = os.path.join(os.path.dirname(__file__), "static", "index.html")
     if os.path.exists(idx):
         return FileResponse(idx)
     return HTMLResponse("<h1>ONE TOUCH MILLION</h1>")
