@@ -33,7 +33,8 @@ NOTCHPAY_PUBLIC_KEY  = os.environ.get("NOTCHPAY_PUBLIC_KEY",  "pk_test.dOlXBVahg
 NOTCHPAY_PRIVATE_KEY = os.environ.get("NOTCHPAY_PRIVATE_KEY", "sk_test.O4NUFAjLnXqtsFjndHXxtcynt2aAqbVZ2RwVa44lRqzqlAcFodoOHR2Py6KtaaZSDgaXDWbFb2B22ToIyu8w0qqBaWjeFjmTaQep7Bh0wUuu23Px8cZ4GiCHmSZiw")
 NOTCHPAY_HASH_KEY    = os.environ.get("NOTCHPAY_HASH_KEY",    "hsk_test.2heaJByGADdVDdH4niK811B6QN8ST9buAWGDe1jIIlZQzK97if3fJFb1WYbWlZCPspHvEUEMnb7FVAwI6R5d2XgOA6SXxWLR3ORHR3sA9BvYmQDtBHCZqMmNg5gdH")
 NOTCHPAY_API         = "https://api.notchpay.co"
-MISE_FCFA            = 500   # Montant pour jouer (XAF)
+MISE_MIN             = 100   # Mise minimum (XAF)
+MISE_MAX             = 1000  # Mise maximum (XAF)
 
 SITE_URL = os.environ.get("SITE_URL", "https://one-touch-million.onrender.com")
 
@@ -131,6 +132,7 @@ class Player:
     group: int
     phone: str = ""
     email: str = ""
+    mise: int = 500
     paid: bool = False
     wallet: int = 0
     joined_at: float = field(default_factory=time.time)
@@ -172,9 +174,9 @@ class NotchPayClient:
             "Content-Type": "application/json",
         }
 
-    async def init_payment(self, player: "Player", reference: str) -> dict:
+    async def init_payment(self, player: "Player", reference: str, amount: int = 500) -> dict:
         payload = {
-            "amount": MISE_FCFA,
+            "amount": amount,
             "currency": "XAF",
             "customer": {
                 "name": player.name,
@@ -349,7 +351,7 @@ class GameEngine:
         return False
 
     # ── REJOINDRE UNE PARTIE ──────────────────────────────────────────────────
-    async def join_game(self, account_id: str) -> tuple[str, int]:
+    async def join_game(self, account_id: str, mise: int = 500) -> tuple[str, int]:
         """Crée une session de jeu à partir d'un compte authentifié"""
         async with self._lock:
             acc = self.accounts_by_id.get(account_id)
@@ -360,7 +362,7 @@ class GameEngine:
 
             pid = str(uuid.uuid4())
             grp = min(self.state.total_players // GROUP_SIZE, 9)
-            player = Player(id=pid, name=acc.name, group=grp, phone=acc.phone, email=acc.email)
+            player = Player(id=pid, name=acc.name, group=grp, phone=acc.phone, email=acc.email, mise=mise)
             self.players[pid] = player
 
             bots_to_add = random.randint(120_000, 180_000)
@@ -386,7 +388,7 @@ class GameEngine:
         self.pending_payments[ref] = player_id
 
         try:
-            data = await notchpay.init_payment(player, ref)
+            data = await notchpay.init_payment(player, ref, player.mise)
             auth_url = data.get("authorization_url") or data.get("transaction", {}).get("authorization_url")
             return {"authorization_url": auth_url, "reference": ref}
         except Exception as e:
@@ -562,7 +564,8 @@ class GameEngine:
             "groups": self.state.groups,
             "winners": self.state.winners,
             "winners_count": len(self.state.winners),
-            "mise": MISE_FCFA,
+            "mise_min": MISE_MIN,
+            "mise_max": MISE_MAX,
         }
 
 
@@ -658,15 +661,19 @@ async def get_state():
 async def join_game(body: dict):
     """Un compte authentifié rejoint une partie"""
     account_id = body.get("account_id")
+    mise = int(body.get("mise") or 500)
+    if mise < MISE_MIN or mise > MISE_MAX:
+        raise HTTPException(400, f"La mise doit être entre {MISE_MIN} et {MISE_MAX} FCFA")
     if not account_id:
         raise HTTPException(400, "account_id manquant")
     try:
-        pid, grp = await engine.join_game(account_id)
+        pid, grp = await engine.join_game(account_id, mise)
         return {
             "player_id": pid,
             "group": grp,
             "group_label": f"G-{grp+1}",
-            "mise": MISE_FCFA,
+            "mise_min": MISE_MIN,
+            "mise_max": MISE_MAX,
             "state": engine.snapshot()
         }
     except ValueError as e:
@@ -725,6 +732,19 @@ async def click(body: dict):
 @app.get("/api/leaderboard")
 async def leaderboard():
     return {"winners": engine.state.winners, "round": engine.state.round}
+
+
+@app.post("/api/demo/click")
+async def demo_click(body: dict):
+    """Clic en mode démo — pas de vrai paiement"""
+    import random, time
+    elapsed = round(random.uniform(0.05, 2.5), 4)
+    rank = random.randint(1, 50)
+    prize_demo = [5000000,2000000,1000000,500000,300000,200000,150000,100000,80000,60000,50000,45000,40000,35000,30000,28000,26000,24000,22000,20000,18000,17000,16000,15000,14000,13000,12000,11000,10000,9500,9000,8500,8000,7500,7000,6500,6000,5500,5000,4500,4000,3500,3000,2500,2000,1500,1200,1000,800,500]
+    won = random.random() > 0.4
+    if won:
+        return {"ok": True, "rank": rank, "prize": prize_demo[rank-1], "time": elapsed, "demo": True}
+    return {"ok": False, "reason": "too_late", "demo": True}
 
 
 @app.get("/health")
