@@ -6,6 +6,127 @@
 <title>ONE TOUCH MILLION</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════ */
+#otm-loader{
+  position:fixed;inset:0;z-index:9999;
+  background:#0a0a14;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity .6s ease;
+}
+#otm-loader.fade-out{opacity:0;pointer-events:none}
+
+.ld-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,215,0,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,215,0,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  animation:ldGridDrift 8s linear infinite;
+}
+@keyframes ldGridDrift{from{background-position:0 0}to{background-position:40px 40px}}
+
+.ld-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(255,215,0,.07);
+  animation:ldRingPulse 3s ease-in-out infinite;
+}
+.ld-ring:nth-child(2){width:340px;height:340px;animation-delay:0s}
+.ld-ring:nth-child(3){width:240px;height:240px;border-color:rgba(255,165,0,.05);animation-delay:.7s}
+.ld-ring:nth-child(4){width:150px;height:150px;border-color:rgba(255,215,0,.04);animation-delay:1.4s}
+@keyframes ldRingPulse{
+  0%,100%{transform:scale(1);opacity:.3}
+  50%{transform:scale(1.07);opacity:1}
+}
+
+.ld-particles{position:absolute;inset:0;pointer-events:none}
+.ld-p{
+  position:absolute;border-radius:50%;opacity:0;
+  animation:ldPFloat linear infinite;
+}
+@keyframes ldPFloat{
+  0%{opacity:0;transform:translateY(0) scale(0)}
+  10%{opacity:.7}
+  90%{opacity:.2}
+  100%{opacity:0;transform:translateY(-180px) scale(1.4)}
+}
+
+.ld-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+
+.ld-coin{
+  width:84px;height:84px;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#FFFBE0 0%,#FFD700 42%,#C8900A 100%);
+  border:3px solid #FFA500;
+  box-shadow:0 0 0 7px rgba(255,215,0,.12),0 10px 36px rgba(255,165,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Black Ops One',cursive;font-size:30px;color:#3a1e00;
+  animation:ldCoinSpin 2.2s ease-in-out infinite;
+  margin-bottom:26px;position:relative;
+}
+.ld-coin::before{
+  content:'';position:absolute;top:12%;left:22%;
+  width:30%;height:17%;
+  background:rgba(255,255,255,.55);border-radius:50%;filter:blur(4px);pointer-events:none;
+}
+@keyframes ldCoinSpin{
+  0%,100%{transform:rotateY(0deg) scale(1)}
+  50%{transform:rotateY(22deg) scale(1.05)}
+}
+
+.ld-logo{
+  font-family:'Black Ops One',cursive;font-size:30px;
+  background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#FF6B35 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:3px;text-align:center;
+  animation:ldReveal .9s ease forwards;opacity:0;
+}
+.ld-tag{
+  font-family:'Rajdhani',sans-serif;font-size:10px;
+  color:#6666aa;letter-spacing:4px;text-transform:uppercase;
+  margin-top:5px;
+  animation:ldReveal .9s .15s ease forwards;opacity:0;
+}
+@keyframes ldReveal{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.ld-bar-wrap{
+  width:190px;height:3px;
+  background:rgba(255,255,255,.06);border-radius:2px;
+  margin-top:26px;overflow:hidden;
+  animation:ldReveal .9s .25s ease forwards;opacity:0;
+}
+.ld-bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,#FFD700,#FFA500,#FF6B35);
+  border-radius:2px;transition:width .25s ease;
+}
+.ld-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:10px;color:#55558a;letter-spacing:2px;text-transform:uppercase;
+  margin-top:9px;
+  animation:ldReveal .9s .3s ease forwards;opacity:0;
+}
+.ld-dots span{display:inline-block;animation:ldDot 1.2s infinite}
+.ld-dots span:nth-child(2){animation-delay:.2s}
+.ld-dots span:nth-child(3){animation-delay:.4s}
+@keyframes ldDot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+.ld-credit{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  font-family:'Rajdhani',sans-serif;font-size:10px;
+  color:#e86ca0;letter-spacing:2px;white-space:nowrap;
+  animation:ldReveal 1s .5s ease forwards;opacity:0;
+}
+.ld-credit strong{font-weight:700;letter-spacing:3px}
+
+/* ══════════════════════════════════════
+   SITE PRINCIPAL
+══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#FFD700;--gold2:#FFA500;--dark:#0a0a14;--panel:#12121f;--border:#2a2a4a;--green:#00ff88;--red:#ff4455;--blue:#4488ff;--text:#e0e0ff}
 body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:20px}
@@ -58,13 +179,36 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .stat-card{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:12px 14px;text-align:center}
 .stat-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
 .stat-value{font-size:22px;font-weight:700;color:var(--gold);margin-top:4px}
-/* MISE PANEL */
+.primes-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:18px}
+.primes-header{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.primes-list{display:flex;flex-direction:column;gap:5px;max-height:270px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a2a4a transparent}
+.prime-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#1a1a2e;border-radius:8px;font-size:13px;border:0.5px solid #1e1e35}
+.prime-rank{font-family:'Black Ops One',cursive;font-size:12px;min-width:36px}
+.prime-rank.g{color:#FFD700}.prime-rank.s{color:#C0C0C0}.prime-rank.b{color:#CD7F32}.prime-rank.o{color:#5566aa}
+.prime-label{flex:1;color:#ccccee}
+.prime-amount{font-family:'Black Ops One',cursive;font-size:12px;padding:3px 9px;border-radius:6px;white-space:nowrap}
+.t1{color:#FFD700;background:rgba(255,215,0,.1);border:0.5px solid rgba(255,215,0,.3)}
+.t2{color:#C0C0C0;background:rgba(192,192,192,.08);border:0.5px solid rgba(192,192,192,.2)}
+.t3{color:#CD7F32;background:rgba(205,127,50,.1);border:0.5px solid rgba(205,127,50,.3)}
+.t4{color:#5566aa;background:rgba(85,102,170,.08);border:0.5px solid rgba(85,102,170,.2)}
+.depot-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:18px}
+.depot-header{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.depot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.depot-btn{padding:9px 4px;background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
+.depot-btn:hover,.depot-btn.sel{background:#0a1a1a;border:1px solid #00ff88;color:#00ff88}
+.depot-row{display:flex;gap:8px;align-items:center}
+.depot-input{flex:1;padding:11px 14px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:10px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border .2s}
+.depot-input:focus{border-color:#00ff88}
+.btn-depot{padding:11px 18px;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14;white-space:nowrap;transition:filter .15s}
+.btn-depot:hover{filter:brightness(1.1)}
+.depot-info{font-size:11px;color:#6666aa;margin-top:7px;text-align:center}
+.depot-info span{color:#00ff88;font-weight:700}
 .mise-panel{background:#12121f;border:1px solid #FFD700;border-radius:12px;padding:18px;margin-bottom:18px}
 .mise-title{font-size:14px;color:#FFD700;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;text-align:center}
 .mise-limits{font-size:12px;color:#8888aa;text-align:center;margin-bottom:12px}
 .mise-limits span{color:#FFD700;font-weight:700}
 .mise-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.preset-btn{padding:9px 4px;background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;border:none}
+.preset-btn{padding:9px 4px;background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
 .preset-btn:hover,.preset-btn.sel{background:#1a1a0a;border:1px solid #FFD700;color:#FFD700}
 .mise-input{width:100%;padding:14px;background:#0a0a14;border:1px solid #FFD700;border-radius:10px;color:#FFD700;font-family:'Black Ops One',cursive;font-size:26px;outline:none;text-align:center;margin-bottom:6px}
 .mise-input::placeholder{color:#3a3a1a;font-size:16px;font-family:'Rajdhani',sans-serif}
@@ -73,14 +217,12 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .btn-pay:disabled{opacity:.5;cursor:not-allowed}
 .pay-methods{display:flex;gap:10px;justify-content:center;margin-top:10px;font-size:12px;color:#6666aa}
 .pay-badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:3px 10px}
-/* GROUP BAR */
 .group-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px}
 .group-title{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:2px 10px;font-size:11px;color:#6666aa}
 .groups-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
 .group-pill{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;color:#8888cc;transition:all .3s}
 .group-pill.active{background:#0d1f0d;border-color:#00ff88;color:#00ff88;font-weight:700}
-/* ARENA */
 .arena{background:#12121f;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
 .arena-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,#181830 0%,#0a0a14 70%)}
 .arena-content{position:relative;z-index:1}
@@ -93,20 +235,33 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .tbar-wrap{background:#1e1e35;border-radius:4px;height:8px;margin:14px 0}
 .tbar{height:100%;border-radius:4px;background:linear-gradient(90deg,#00ff88,#FFD700,#ff4455);transition:width .05s linear}
 .phase-msg{font-size:15px;color:#aaaacc;margin-top:10px;min-height:24px;font-weight:600}
-.big-btn{width:100%;padding:20px;font-family:'Black Ops One',cursive;font-size:24px;letter-spacing:3px;border:none;border-radius:14px;cursor:pointer;transition:all .08s;margin-top:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn-wrap{display:flex;justify-content:center;margin-top:16px}
+.big-btn{width:130px;height:130px;border-radius:50% !important;font-family:'Black Ops One',cursive;border:none;cursor:pointer;transition:transform .08s,box-shadow .08s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0}
 .big-btn:disabled{cursor:not-allowed;opacity:.5}
-.btn-click{background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14}
-.btn-click:not(:disabled):active{transform:scale(.95)}
-.btn-demo-arena{background:linear-gradient(135deg,#8844ff,#5522cc);color:#fff}
-.btn-demo-arena:not(:disabled):active{transform:scale(.95)}
-/* DEMO RESULT */
+.btn-click{
+  background:radial-gradient(circle at 36% 30%, #FFFBE0 0%, #FFD700 42%, #C8900A 100%);
+  border:4px solid #FFA500 !important;
+  box-shadow:0 0 0 6px rgba(255,215,0,.18),0 8px 32px rgba(255,165,0,.55),inset 0 4px 10px rgba(255,255,255,.45),inset 0 -4px 8px rgba(100,60,0,.3);
+  color:#3a1e00;font-size:40px;
+  text-shadow:0 1px 4px rgba(255,255,180,.6);
+}
+.btn-click::before{content:'';position:absolute;top:11%;left:20%;width:34%;height:20%;background:rgba(255,255,255,.55);border-radius:50%;filter:blur(5px);pointer-events:none;}
+.btn-click:not(:disabled):hover{transform:scale(1.06);box-shadow:0 0 0 9px rgba(255,215,0,.24),0 14px 40px rgba(255,165,0,.7),inset 0 4px 10px rgba(255,255,255,.45);}
+.btn-click:not(:disabled):active{transform:scale(.91);box-shadow:0 0 0 3px rgba(255,215,0,.15),0 4px 12px rgba(255,165,0,.35)}
+.btn-demo-arena{
+  width:130px;height:130px;border-radius:50% !important;
+  background:radial-gradient(circle at 38% 32%, #c088ff, #8844ff 50%, #4422aa);
+  border:4px solid #aa66ff !important;
+  box-shadow:0 0 0 6px rgba(136,68,255,.18),0 8px 32px rgba(85,34,204,.5);
+  color:#fff;font-size:36px;
+}
+.btn-demo-arena:not(:disabled):active{transform:scale(.91)}
 .demo-result{background:#1a0a2e;border:1px solid #8844ff;border-radius:12px;padding:16px;margin-top:14px;text-align:center;display:none}
 .demo-result h3{color:#8844ff;font-family:'Black Ops One',cursive;font-size:16px;margin-bottom:8px}
 .demo-rank{font-size:40px;font-family:'Black Ops One',cursive;color:#FFD700}
 .demo-prize{font-size:18px;color:#00ff88;margin-top:4px}
 .demo-note{font-size:11px;color:#6666aa;margin-top:8px;line-height:1.5}
 .demo-replay{margin-top:10px;width:100%;padding:11px;font-family:'Black Ops One',cursive;font-size:13px;letter-spacing:1px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#8844ff,#5522cc);color:#fff}
-/* WINNERS */
 .winners-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:16px}
 .winners-title{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .wlist{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
@@ -122,89 +277,31 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .hidden{display:none!important}
 .error-msg{color:#ff4455;font-size:12px;text-align:center;margin-top:4px;min-height:18px}
-
-/* ══ WALLET PANEL ══ */
-.wallet-panel{background:linear-gradient(135deg,#0d1a0d,#0a1420);border:1px solid #00ff88;border-radius:14px;padding:16px 18px;margin-bottom:18px;position:relative;overflow:hidden}
-.wallet-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(0,255,136,.07),transparent 60%);pointer-events:none}
-.wallet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.wallet-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:2px}
-.wallet-badge{background:#00ff88;color:#0a0a14;font-family:'Black Ops One',cursive;font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:1px}
-.wallet-amount{font-family:'Black Ops One',cursive;font-size:42px;background:linear-gradient(135deg,#00ff88,#00cc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px}
-.wallet-currency{font-size:13px;color:#6666aa;margin-bottom:14px}
-.wallet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.wallet-btn{padding:10px;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;border:none;border-radius:9px;cursor:pointer;transition:filter .15s;text-align:center}
-.wallet-btn-deposit{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14}
-.wallet-btn-withdraw{background:#1a2a1a;border:1px solid #00ff88;color:#00ff88}
-.wallet-btn:hover{filter:brightness(1.1)}
-.wallet-history{margin-top:12px;padding-top:12px;border-top:0.5px solid #1a2a1a}
-.wallet-history-title{font-size:11px;color:#6666aa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-.wallet-tx{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #0d1a0d;font-size:12px}
-.wallet-tx-label{color:#8888aa}
-.wallet-tx-amount{font-weight:700}
-.wallet-tx-amount.plus{color:#00ff88}
-.wallet-tx-amount.minus{color:#ff4455}
-
-/* DEPOSIT OVERLAY */
-.deposit-panel{background:#12121f;border:1px solid #2a2a4a;border-radius:14px;padding:20px;margin-bottom:18px}
-.deposit-title{font-family:'Black Ops One',cursive;font-size:16px;color:#FFD700;text-align:center;margin-bottom:14px;letter-spacing:1px}
-.deposit-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.deposit-preset{padding:10px;background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
-.deposit-preset:hover,.deposit-preset.sel{background:#1a1a0a;border-color:#FFD700;color:#FFD700}
-.operator-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.op-btn{padding:12px;border:1px solid #2a2a4a;border-radius:10px;cursor:pointer;font-family:'Black Ops One',cursine;font-size:13px;letter-spacing:1px;transition:all .2s;text-align:center}
-.op-btn-orange{background:linear-gradient(135deg,#FF6600,#cc4400);color:#fff;border-color:#FF6600}
-.op-btn-mtn{background:linear-gradient(135deg,#FFD700,#cc9900);color:#0a0a14;border-color:#FFD700}
-.op-btn:hover{filter:brightness(1.1)}
-
-/* MISE PLACER BTN */
-.placer-mise-btn{width:100%;padding:18px;font-family:'Black Ops One',cursive;font-size:20px;letter-spacing:3px;border:none;border-radius:13px;cursor:pointer;background:linear-gradient(135deg,#FFD700,#FFA500,#FF6B35);color:#0a0a14;margin-top:12px;transition:all .15s;box-shadow:0 0 20px rgba(255,215,0,.3)}
-.placer-mise-btn:hover{filter:brightness(1.1);box-shadow:0 0 30px rgba(255,215,0,.5)}
-.placer-mise-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
-
-/* PRIZE TABLE */
-.prize-table{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px}
-.prize-table-title{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;text-align:center}
-.prize-rows{display:flex;flex-direction:column;gap:6px}
-.prize-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px}
-.prize-row.gold{background:linear-gradient(135deg,#1a1500,#0d0d00);border:0.5px solid #FFD700}
-.prize-row.silver{background:linear-gradient(135deg,#141414,#0a0a0a);border:0.5px solid #C0C0C0}
-.prize-row.bronze{background:linear-gradient(135deg,#160a00,#0a0500);border:0.5px solid #CD7F32}
-.prize-row.rest{background:#0d0d1a;border:0.5px solid #2a2a4a}
-.prize-rank{font-family:'Black Ops One',cursive;font-size:15px;min-width:36px}
-.prize-rank.g{color:#FFD700}.prize-rank.s{color:#C0C0C0}.prize-rank.b{color:#CD7F32}.prize-rank.o{color:#555588}
-.prize-name{flex:1;color:#ccccee}
-.prize-amount{font-weight:700;color:#00ff88;font-size:13px;text-align:right}
-/* WITHDRAW MODAL */
-.withdraw-overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
-.withdraw-modal{background:#12121f;border:1px solid #00ff88;border-radius:16px;padding:24px;max-width:420px;width:100%}
-.withdraw-modal-title{font-family:'Black Ops One',cursive;font-size:18px;color:#00ff88;text-align:center;margin-bottom:4px;letter-spacing:1px}
-.withdraw-modal-sub{font-size:12px;color:#6666aa;text-align:center;margin-bottom:18px}
-.withdraw-solde{background:#0a0a14;border-radius:10px;padding:12px;text-align:center;margin-bottom:14px}
-.withdraw-solde-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
-.withdraw-solde-val{font-family:'Black Ops One',cursive;font-size:28px;color:#00ff88}
-.withdraw-op-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.op-select-btn{padding:11px;border-radius:9px;cursor:pointer;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;transition:all .2s;text-align:center;border:2px solid transparent;opacity:.6}
-.op-select-btn.sel{opacity:1;transform:scale(1.03)}
-.op-select-btn-orange{background:linear-gradient(135deg,#FF6600,#cc4400);color:#fff}
-.op-select-btn-orange.sel{border-color:#FF9944}
-.op-select-btn-mtn{background:linear-gradient(135deg,#FFD700,#cc9900);color:#0a0a14}
-.op-select-btn-mtn.sel{border-color:#fff59d}
-.withdraw-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.withdraw-preset{padding:9px;background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
-.withdraw-preset:hover,.withdraw-preset.sel{background:#0a1a0a;border-color:#00ff88;color:#00ff88}
-.withdraw-btn-confirm{width:100%;padding:14px;font-family:'Black Ops One',cursive;font-size:16px;letter-spacing:2px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14;margin-top:10px;transition:filter .15s}
-.withdraw-btn-confirm:disabled{opacity:.5;cursor:not-allowed}
-.withdraw-btn-confirm:not(:disabled):hover{filter:brightness(1.1)}
-.withdraw-status{text-align:center;padding:20px 0}
-.withdraw-status-icon{font-size:48px;margin-bottom:10px}
-.withdraw-status-msg{font-size:15px;font-weight:700;margin-bottom:6px}
-.withdraw-status-sub{font-size:12px;color:#6666aa;line-height:1.6}
 </style>
 </head>
 <body>
 
-<!-- ══ OVERLAY 1 — ÂGE ══ -->
-<div class="overlay" id="overlayAge">
+<!-- ══ LOADING SCREEN ══ -->
+<div id="otm-loader" aria-label="Chargement ONE TOUCH MILLION">
+  <div class="ld-grid"></div>
+  <div class="ld-ring"></div>
+  <div class="ld-ring"></div>
+  <div class="ld-ring"></div>
+  <div class="ld-particles" id="ldParticles"></div>
+  <div class="ld-center">
+    <div class="ld-coin">$</div>
+    <div class="ld-logo">ONE TOUCH MILLION</div>
+    <div class="ld-tag">La minute d'or</div>
+    <div class="ld-bar-wrap">
+      <div class="ld-bar" id="ldBar"></div>
+    </div>
+    <div class="ld-label">Chargement<span class="ld-dots"><span>.</span><span>.</span><span>.</span></span></div>
+  </div>
+  <div class="ld-credit">from <strong>MAAM INDUSTRY</strong></div>
+</div>
+
+<!-- OVERLAY AGE -->
+<div class="overlay" id="overlayAge" style="display:none">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
     <div class="modal-title">Vérification d'âge</div>
@@ -216,14 +313,11 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         <button class="btn-no" onclick="confirmAge(false)">MOINS DE 21 ANS</button>
       </div>
     </div>
-    <div id="ageBlocked" class="age-block hidden">
-      <h2>⛔ Accès refusé</h2>
-      <p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.</p>
-    </div>
+    <div id="ageBlocked" class="age-block hidden"><h2>⛔ Accès refusé</h2><p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.</p></div>
   </div>
 </div>
 
-<!-- ══ OVERLAY 2 — POLITIQUE ══ -->
+<!-- OVERLAY POLITIQUE -->
 <div class="overlay hidden" id="overlayPolicy">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
@@ -240,23 +334,14 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <strong>4. Mode Démo :</strong> Gratuit, sans argent réel, gains fictifs.<br><br>
       <strong>5. Gains :</strong> Transférés sous 24h. Support pour tout litige.
     </div>
-    <div class="checkbox-row" onclick="toggleCheck('chkPolicy')">
-      <input type="checkbox" id="chkPolicy" onclick="event.stopPropagation();checkConsents()">
-      <span>J'accepte la <strong>Politique de Confidentialité</strong>.</span>
-    </div>
-    <div class="checkbox-row" onclick="toggleCheck('chkCgu')">
-      <input type="checkbox" id="chkCgu" onclick="event.stopPropagation();checkConsents()">
-      <span>J'accepte les <strong>CGU</strong> — ce jeu implique de l'argent réel.</span>
-    </div>
-    <div class="checkbox-row" onclick="toggleCheck('chkAge21')">
-      <input type="checkbox" id="chkAge21" onclick="event.stopPropagation();checkConsents()">
-      <span>Je confirme avoir <strong>21 ans ou plus</strong>.</span>
-    </div>
+    <div class="checkbox-row" onclick="toggleCheck('chkPolicy')"><input type="checkbox" id="chkPolicy" onclick="event.stopPropagation();checkConsents()"><span>J'accepte la <strong>Politique de Confidentialité</strong>.</span></div>
+    <div class="checkbox-row" onclick="toggleCheck('chkCgu')"><input type="checkbox" id="chkCgu" onclick="event.stopPropagation();checkConsents()"><span>J'accepte les <strong>CGU</strong> — ce jeu implique de l'argent réel.</span></div>
+    <div class="checkbox-row" onclick="toggleCheck('chkAge21')"><input type="checkbox" id="chkAge21" onclick="event.stopPropagation();checkConsents()"><span>Je confirme avoir <strong>21 ans ou plus</strong>.</span></div>
     <button class="btn-modal btn-accept" id="btnAcceptPolicy" onclick="acceptPolicy()" disabled>ACCEPTER ET CONTINUER</button>
   </div>
 </div>
 
-<!-- ══ OVERLAY 3 — AUTH ══ -->
+<!-- OVERLAY AUTH -->
 <div class="overlay hidden" id="overlayAuth">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
@@ -264,7 +349,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">CONNEXION</button>
       <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">INSCRIPTION</button>
     </div>
-    <!-- LOGIN -->
     <div id="panelLogin">
       <input class="form-input" id="loginEmail" placeholder="Votre email" type="email" autocomplete="email">
       <input class="form-input" id="loginPass" placeholder="Mot de passe" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
@@ -274,7 +358,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <div class="auth-switch">Pas encore de compte ? <span onclick="switchTab('register')">S'inscrire</span></div>
       <div class="demo-bar"><button onclick="enterDemo()">🎮 Essayer en mode DÉMO gratuit (sans argent)</button></div>
     </div>
-    <!-- REGISTER -->
     <div id="panelRegister" class="hidden">
       <input class="form-input" id="regName" placeholder="Pseudo (ex: Champion237)" maxlength="20">
       <input class="form-input" id="regPhone" placeholder="Numéro Mobile Money (6XXXXXXXX)" type="tel">
@@ -286,7 +369,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <div class="auth-switch">Déjà un compte ? <span onclick="switchTab('login')">Se connecter</span></div>
       <div class="demo-bar"><button onclick="enterDemo()">🎮 Essayer en mode DÉMO gratuit</button></div>
     </div>
-    <!-- FORGOT -->
     <div id="panelForgot" class="hidden">
       <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Entrez votre email pour recevoir un lien de réinitialisation.</p>
       <input class="form-input" id="forgotEmail" placeholder="Votre email" type="email" onkeydown="if(event.key==='Enter')doForgot()">
@@ -294,7 +376,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <button class="btn-modal btn-blue" id="btnForgot" onclick="doForgot()">ENVOYER LE LIEN</button>
       <div class="auth-switch"><span onclick="switchTab('login')">← Retour</span></div>
     </div>
-    <!-- RESET -->
     <div id="panelReset" class="hidden">
       <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Créez votre nouveau mot de passe.</p>
       <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password">
@@ -305,7 +386,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 </div>
 
-<!-- ══ MAIN ══ -->
+<!-- MAIN -->
 <div class="container" id="mainContent" style="display:none">
   <div class="header">
     <div class="logo">ONE TOUCH MILLION</div>
@@ -322,77 +403,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <button class="logout-btn" onclick="logout()">Déconnexion</button>
   </div>
 
-  <!-- WALLET -->
-  <div class="wallet-panel hidden" id="walletPanel">
-    <div class="wallet-header">
-      <div class="wallet-label">&#128176; Mon Portefeuille</div>
-      <div class="wallet-badge">SOLDE</div>
-    </div>
-    <div class="wallet-amount" id="walletAmount">0</div>
-    <div class="wallet-currency">FCFA disponibles</div>
-    <div class="wallet-actions">
-      <button class="wallet-btn wallet-btn-deposit" onclick="showDeposit()">&#8679; DEPOT</button>
-      <button class="wallet-btn wallet-btn-withdraw" onclick="showWithdraw()">&#8681; RETRAIT</button>
-    </div>
-    <div class="wallet-history">
-      <div class="wallet-history-title">Dernieres transactions</div>
-      <div id="walletTxList"></div>
-    </div>
-  </div>
-
-  <!-- DEPOT PANEL -->
-  <div class="deposit-panel hidden" id="depositPanel">
-    <div class="deposit-title">RECHARGER MON COMPTE</div>
-    <div class="mise-limits" style="margin-bottom:12px">Montant a deposer (FCFA)</div>
-    <div class="deposit-presets">
-      <button class="deposit-preset" onclick="selectDeposit(500,this)">500 F</button>
-      <button class="deposit-preset" onclick="selectDeposit(1000,this)">1 000 F</button>
-      <button class="deposit-preset" onclick="selectDeposit(2000,this)">2 000 F</button>
-      <button class="deposit-preset" onclick="selectDeposit(5000,this)">5 000 F</button>
-      <button class="deposit-preset" onclick="selectDeposit(10000,this)">10 000 F</button>
-      <button class="deposit-preset" onclick="selectDeposit(25000,this)">25 000 F</button>
-    </div>
-    <input class="mise-input" id="depositInput" type="number" min="500" placeholder="Ou tapez un montant..." oninput="depositPresetClear()" style="font-size:20px">
-    <div class="error-msg" id="depositErr"></div>
-    <div class="operator-btns">
-      <button class="op-btn op-btn-orange" onclick="processDeposit('orange')">Orange Money</button>
-      <button class="op-btn op-btn-mtn" onclick="processDeposit('mtn')">MTN MoMo</button>
-    </div>
-    <button class="wallet-btn wallet-btn-withdraw" style="width:100%;margin-top:10px;font-size:12px;letter-spacing:1px" onclick="hideDeposit()">ANNULER</button>
-  </div>
-
-  <!-- TABLEAU DES GAINS -->
-  <div class="prize-table">
-    <div class="prize-table-title">GRILLE DES GAINS</div>
-    <div class="prize-rows">
-      <div class="prize-row gold">
-        <span class="prize-rank g">#1</span>
-        <span class="prize-name">Champion</span>
-        <span class="prize-amount">1 000 000 FCFA</span>
-      </div>
-      <div class="prize-row silver">
-        <span class="prize-rank s">#2</span>
-        <span class="prize-name">Vice-Champion</span>
-        <span class="prize-amount">750 000 FCFA</span>
-      </div>
-      <div class="prize-row bronze">
-        <span class="prize-rank b">#3</span>
-        <span class="prize-name">3eme Place</span>
-        <span class="prize-amount">500 000 FCFA</span>
-      </div>
-      <div class="prize-row rest">
-        <span class="prize-rank o">#4-50</span>
-        <span class="prize-name">Top joueurs (47 places)</span>
-        <span class="prize-amount" style="color:#aaaacc">2 000 000 F partages*</span>
-      </div>
-    </div>
-    <div style="font-size:11px;color:#555588;margin-top:8px;text-align:center">*Partage proportionnellement selon le rang</div>
-  </div>
-
   <div class="rules">
-    <strong>Regles :</strong> Choisissez votre mise (100-1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'a <strong>1 000 000 FCFA</strong> verses sur votre Mobile Money. Chaque clic deduit <strong>100 FCFA</strong> de votre solde.
-    <br><span style="color:#8844ff">Mode Demo disponible — gratuit, sans risque.</span>
-  </div> Choisissez votre mise (100–1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'à <strong>5 000 000 FCFA</strong> versés sur votre Mobile Money.
+    <strong>Règles :</strong> Choisissez votre mise (100–1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'à <strong>1 000 000 FCFA</strong> versés sur votre Mobile Money.
     <br><span style="color:#8844ff">🎮 Mode Démo disponible — gratuit, sans risque.</span>
   </div>
 
@@ -402,7 +414,34 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <div class="stat-card"><div class="stat-label">Mise min/max</div><div class="stat-value" style="font-size:14px;color:#00ff88">100–1000F</div></div>
   </div>
 
-  <!-- CHOISIR LA MISE -->
+  <div class="primes-panel">
+    <div class="primes-header">
+      <span>🏆 Tableau des primes</span>
+      <span class="badge">Top 50</span>
+    </div>
+    <div class="primes-list" id="primesList"></div>
+  </div>
+
+  <div class="depot-panel">
+    <div class="depot-header">💳 Recharger mon compte</div>
+    <div class="depot-grid">
+      <button class="depot-btn" onclick="setDepot(100,this)">100 F</button>
+      <button class="depot-btn" onclick="setDepot(500,this)">500 F</button>
+      <button class="depot-btn" onclick="setDepot(1000,this)">1 000 F</button>
+      <button class="depot-btn" onclick="setDepot(2000,this)">2 000 F</button>
+      <button class="depot-btn" onclick="setDepot(3000,this)">3 000 F</button>
+      <button class="depot-btn" onclick="setDepot(5000,this)">5 000 F</button>
+      <button class="depot-btn" onclick="setDepot(7000,this)">7 000 F</button>
+      <button class="depot-btn" onclick="setDepot(10000,this)">10 000 F</button>
+    </div>
+    <div class="depot-row">
+      <input class="depot-input" id="depotInput" type="number" min="100" max="10000" placeholder="Montant libre (100–10 000 F)">
+      <button class="btn-depot" onclick="doDepot()">DÉPOSER</button>
+    </div>
+    <div class="depot-info">Min : <span>100 FCFA</span> &nbsp;·&nbsp; Max : <span>10 000 FCFA</span> &nbsp;·&nbsp; Orange Money &amp; MTN MoMo</div>
+    <div class="error-msg" id="depotErr"></div>
+  </div>
+
   <div class="mise-panel hidden" id="joinPanel">
     <div class="mise-title">Choisissez votre mise</div>
     <div class="mise-limits">Min : <span>100 FCFA</span> &nbsp;·&nbsp; Max : <span>1 000 FCFA</span></div>
@@ -415,28 +454,24 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <input class="mise-input" id="miseInput" type="number" min="100" max="1000" placeholder="Ou tapez votre montant…" oninput="validateMise()">
     <div class="error-msg" id="miseErr"></div>
     <button class="btn-modal btn-blue" style="margin-top:8px;font-size:15px" onclick="joinGame()">REJOINDRE LE JEU →</button>
-    <button class="placer-mise-btn" id="placerMiseBtn" onclick="placerMise()">⚡ PLACER MA MISE ET JOUER</button>
   </div>
 
-  <!-- PAYER -->
   <div class="mise-panel hidden" id="payPanel">
     <div class="mise-title">Confirmer le paiement</div>
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:12px;color:#8888aa">Votre mise choisie</div>
       <div style="font-family:'Black Ops One',cursive;font-size:52px;color:#FFD700" id="payAmountDisplay">—</div>
-      <div style="font-size:11px;color:#8888aa">Paiement sécurisé · Gains jusqu'à 5 000 000 FCFA</div>
+      <div style="font-size:11px;color:#8888aa">Paiement sécurisé · Gains jusqu'à 1 000 000 FCFA</div>
     </div>
     <button class="btn-pay" id="payBtn" onclick="payNow()">PAYER AVEC MOBILE MONEY</button>
     <div class="pay-methods"><span class="pay-badge">Orange Money</span><span class="pay-badge">MTN MoMo</span></div>
   </div>
 
-  <!-- GROUPES -->
   <div class="group-bar">
     <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
     <div class="groups-grid" id="grpGrid"></div>
   </div>
 
-  <!-- ARENA -->
   <div class="arena">
     <div class="arena-bg"></div>
     <div class="arena-content">
@@ -445,8 +480,12 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <div class="timer" id="timer">--:--</div>
       <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
       <div class="phase-msg" id="phaseMsg">Choisissez votre mise et rejoignez une partie</div>
-      <button class="big-btn btn-click hidden" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>TOUCHER POUR GAGNER</button>
-      <button class="big-btn btn-demo-arena hidden" id="demoBtn" ontouchstart="fastDemoClick(event)" onclick="doDemoClick()">🎮 CLIC DÉMO</button>
+      <div class="btn-wrap">
+        <button class="big-btn btn-click hidden" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>$</button>
+      </div>
+      <div class="btn-wrap">
+        <button class="big-btn btn-demo-arena hidden" id="demoBtn" ontouchstart="fastDemoClick(event)" onclick="doDemoClick()">🎮</button>
+      </div>
       <div class="demo-result" id="demoResult">
         <h3>🎮 RÉSULTAT DÉMO</h3>
         <div class="demo-rank" id="demoRank">—</div>
@@ -458,7 +497,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
   </div>
 
-  <!-- WINNERS -->
   <div class="winners-panel hidden" id="winPanel">
     <div class="winners-title"><span>Top 50 gagnants</span><span class="badge" id="wCount">0/50</span></div>
     <div class="wlist" id="wList"></div>
@@ -468,185 +506,63 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 <div class="toast" id="toast"></div>
 <div class="confetti-box" id="cbox"></div>
 
-<!-- RETRAIT MODAL -->
-<div class="withdraw-overlay hidden" id="withdrawOverlay">
-  <div class="withdraw-modal">
-    <div id="withdrawForm">
-      <div class="withdraw-modal-title">&#8681; RETRAIT</div>
-      <div class="withdraw-modal-sub">Transfert vers votre Mobile Money</div>
-      <div class="withdraw-solde">
-        <div class="withdraw-solde-label">Solde disponible</div>
-        <div class="withdraw-solde-val" id="wdSolde">0 FCFA</div>
-      </div>
-      <div style="font-size:12px;color:#8888aa;margin-bottom:8px">Choisir l'operateur</div>
-      <div class="withdraw-op-select">
-        <div class="op-select-btn op-select-btn-orange" id="wdOpOrange" onclick="selectWdOp('orange')">Orange Money</div>
-        <div class="op-select-btn op-select-btn-mtn" id="wdOpMtn" onclick="selectWdOp('mtn')">MTN MoMo</div>
-      </div>
-      <div style="font-size:12px;color:#8888aa;margin-bottom:8px">Montant a retirer</div>
-      <div class="withdraw-presets">
-        <div class="withdraw-preset" onclick="selectWdAmount(1000,this)">1 000</div>
-        <div class="withdraw-preset" onclick="selectWdAmount(2000,this)">2 000</div>
-        <div class="withdraw-preset" onclick="selectWdAmount(5000,this)">5 000</div>
-        <div class="withdraw-preset" onclick="selectWdAmount(10000,this)">10 000</div>
-        <div class="withdraw-preset" onclick="selectWdAmount(25000,this)">25 000</div>
-        <div class="withdraw-preset" onclick="selectWdAmount(50000,this)">50 000</div>
-      </div>
-      <input class="mise-input" id="wdAmountInput" type="number" min="1000" placeholder="Ou tapez le montant..." oninput="wdPresetClear()" style="font-size:20px;margin-bottom:4px">
-      <input class="form-input" id="wdPhone" placeholder="Numero Mobile Money (6XXXXXXXX)" type="tel" style="margin-top:8px">
-      <div class="error-msg" id="wdErr"></div>
-      <button class="withdraw-btn-confirm" id="wdConfirmBtn" onclick="confirmWithdraw()">CONFIRMER LE RETRAIT</button>
-      <button class="wallet-btn wallet-btn-withdraw" style="width:100%;margin-top:10px;font-size:12px;letter-spacing:1px" onclick="hideWithdraw()">ANNULER</button>
-    </div>
-    <div id="withdrawStatus" class="hidden">
-      <div class="withdraw-status">
-        <div class="withdraw-status-icon" id="wdStatusIcon">⏳</div>
-        <div class="withdraw-status-msg" id="wdStatusMsg">Traitement en cours...</div>
-        <div class="withdraw-status-sub" id="wdStatusSub">Veuillez patienter</div>
-      </div>
-      <button class="withdraw-btn-confirm" onclick="hideWithdraw()" style="margin-top:10px">FERMER</button>
-    </div>
-  </div>
-</div>
-
 <script>
+/* ══ LOADING SCREEN ══ */
+(function(){
+  const pc=document.getElementById('ldParticles');
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');
+    p.className='ld-p';
+    const sz=1+Math.random()*2.5;
+    p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:'+(Math.random()*50)+'%;animation-duration:'+(3+Math.random()*5)+'s;animation-delay:'+(Math.random()*5)+'s;background:'+(Math.random()>.5?'#FFD700':'#FFA500');
+    pc.appendChild(p);
+  }
+  const bar=document.getElementById('ldBar');
+  const steps=[[300,38],[900,65],[1800,85],[3000,100]];
+  steps.forEach(([d,w])=>setTimeout(()=>bar.style.width=w+'%',d));
+  setTimeout(()=>{
+    const ldr=document.getElementById('otm-loader');
+    ldr.classList.add('fade-out');
+    setTimeout(()=>{ldr.style.display='none';bootSite();},650);
+  },3600);
+})();
+
+/* ══ SITE ══ */
+const PRIMES_DATA=[
+  {rank:'1er',amount:1000000,tier:'t1'},{rank:'2e',amount:750000,tier:'t1'},{rank:'3e',amount:500000,tier:'t1'},
+  {rank:'4e',amount:300000,tier:'t2'},{rank:'5e',amount:200000,tier:'t2'},{rank:'6e',amount:150000,tier:'t2'},
+  {rank:'7e',amount:100000,tier:'t2'},{rank:'8e',amount:80000,tier:'t2'},{rank:'9e',amount:60000,tier:'t2'},
+  {rank:'10e',amount:50000,tier:'t3'},{rank:'11–15e',amount:30000,tier:'t3'},{rank:'16–20e',amount:20000,tier:'t3'},
+  {rank:'21–30e',amount:15000,tier:'t3'},{rank:'31–40e',amount:10000,tier:'t4'},{rank:'41–50e',amount:5000,tier:'t4'},
+];
+function buildPrimes(){
+  const list=document.getElementById('primesList');list.innerHTML='';
+  PRIMES_DATA.forEach((p,i)=>{
+    const row=document.createElement('div');row.className='prime-row';
+    const rc=i===0?'g':i===1?'s':i===2?'b':'o';
+    row.innerHTML=`<span class="prime-rank ${rc}">#${p.rank}</span><span class="prime-label">${p.rank}</span><span class="prime-amount ${p.tier}">${fmt(p.amount)} FCFA</span>`;
+    list.appendChild(row);
+  });
+}
+const DEPOT_MIN=100,DEPOT_MAX=10000;
+function setDepot(v,el){document.getElementById('depotInput').value=v;document.querySelectorAll('.depot-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('depotErr').textContent='';}
+function doDepot(){
+  const v=parseInt(document.getElementById('depotInput').value)||0,err=document.getElementById('depotErr');
+  if(v<DEPOT_MIN){err.textContent='Minimum : '+DEPOT_MIN+' FCFA';return;}
+  if(v>DEPOT_MAX){err.textContent='Maximum : '+DEPOT_MAX+' FCFA';return;}
+  err.textContent='';toast('Dépôt de '+fmt(v)+' FCFA en cours…','#4488ff');
+}
 const BASE=window.location.origin,WS_BASE=BASE.replace(/^http/,'ws');
 const MISE_MIN=100,MISE_MAX=1000;
-const s={accountId:null,myName:null,isDemo:false,playerId:null,myGrp:-1,paid:false,myMise:500,phase:'idle',round:1,roundDuration:30,roundStart:null,remaining:30,winners:[],myRank:-1,clicked:false,players:0,groups:Array(10).fill(0),ws:null,tickIv:null,wallet:0,walletTx:[]};
+const s={accountId:null,myName:null,isDemo:false,playerId:null,myGrp:-1,paid:false,myMise:500,phase:'idle',round:1,roundDuration:30,roundStart:null,remaining:30,winners:[],myRank:-1,clicked:false,players:0,groups:Array(10).fill(0),ws:null,tickIv:null};
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString('fr-FR');
 
-// ══ WALLET FUNCTIONS ══
-function loadWallet(){
-  const saved=localStorage.getItem('otm_wallet_'+s.accountId);
-  if(saved){const w=JSON.parse(saved);s.wallet=w.balance||0;s.walletTx=w.tx||[];}
-  else{s.wallet=0;s.walletTx=[];}
-  renderWallet();
-}
-function saveWallet(){localStorage.setItem('otm_wallet_'+s.accountId,JSON.stringify({balance:s.wallet,tx:s.walletTx}));}
-function addTx(label,amount){
-  s.walletTx.unshift({label,amount,date:new Date().toLocaleString('fr-FR')});
-  if(s.walletTx.length>20)s.walletTx.pop();
-  saveWallet();renderWallet();
-}
-function renderWallet(){
-  $('walletAmount').textContent=fmt(s.wallet);
-  const list=$('walletTxList');list.innerHTML='';
-  s.walletTx.slice(0,5).forEach(tx=>{
-    const d=document.createElement('div');d.className='wallet-tx';
-    d.innerHTML='<span class="wallet-tx-label">'+tx.label+'</span><span class="wallet-tx-amount '+(tx.amount>=0?'plus':'minus')+'">'+(tx.amount>=0?'+':'')+fmt(tx.amount)+' F</span>';
-    list.appendChild(d);
-  });
-  if(s.walletTx.length===0)list.innerHTML='<div style="color:#444;font-size:12px;text-align:center;padding:8px">Aucune transaction</div>';
-}
-
-// Deduit la mise (pas 100F fixe — le montant de la mise choisie)
-function deductClick(){
-  const cout=s.myMise||100;
-  if(s.wallet>=cout){s.wallet-=cout;addTx('Clic joue (-'+fmt(cout)+'F)',-cout);return true;}
-  toast('Solde insuffisant ! Rechargez votre portefeuille.','#ff4455');showDeposit();return false;
-}
-
-// DEPOT
-function showDeposit(){$('depositPanel').classList.remove('hidden');$('depositPanel').scrollIntoView({behavior:'smooth'});}
-function hideDeposit(){$('depositPanel').classList.add('hidden');}
-function selectDeposit(v,el){$('depositInput').value=v;document.querySelectorAll('.deposit-preset').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
-function depositPresetClear(){document.querySelectorAll('.deposit-preset').forEach(b=>b.classList.remove('sel'));}
-function processDeposit(op){
-  const v=parseInt($('depositInput').value)||0;$('depositErr').textContent='';
-  if(v<500){$('depositErr').textContent='Montant minimum : 500 FCFA';return;}
-  s.wallet+=v;addTx('Depot '+(op==='orange'?'Orange Money':'MTN MoMo')+' +'+fmt(v)+'F',v);
-  hideDeposit();$('depositInput').value='';
-  toast('Depot de '+fmt(v)+' FCFA confirme !','#00ff88');
-}
-
-// PLACEZ LA MISE
-function placerMise(){
-  const v=parseInt($('miseInput').value)||0;
-  if(v<MISE_MIN||v>MISE_MAX){toast('Mise invalide (100-1000 FCFA)','#ff4455');return;}
-  if(s.wallet<v){toast('Solde insuffisant ! Deposez des fonds.','#ff4455');showDeposit();return;}
-  s.wallet-=v;addTx('Mise placee (-'+fmt(v)+'F)',-v);s.myMise=v;
-  joinGame();
-}
-
-// RETRAIT
-let _wdOp='orange';
-function showWithdraw(){
-  $('wdSolde').textContent=fmt(s.wallet)+' FCFA';
-  $('wdAmountInput').value='';$('wdPhone').value='';$('wdErr').textContent='';
-  $('withdrawForm').classList.remove('hidden');$('withdrawStatus').classList.add('hidden');
-  document.querySelectorAll('.withdraw-preset').forEach(b=>b.classList.remove('sel'));
-  selectWdOp('orange');
-  $('withdrawOverlay').classList.remove('hidden');
-}
-function hideWithdraw(){$('withdrawOverlay').classList.add('hidden');}
-function selectWdOp(op){
-  _wdOp=op;
-  $('wdOpOrange').classList.toggle('sel',op==='orange');
-  $('wdOpMtn').classList.toggle('sel',op==='mtn');
-}
-function selectWdAmount(v,el){$('wdAmountInput').value=v;document.querySelectorAll('.withdraw-preset').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
-function wdPresetClear(){document.querySelectorAll('.withdraw-preset').forEach(b=>b.classList.remove('sel'));}
-async function confirmWithdraw(){
-  const amount=parseInt($('wdAmountInput').value)||0;
-  const phone=$('wdPhone').value.trim();
-  $('wdErr').textContent='';
-  if(amount<1000){$('wdErr').textContent='Montant minimum : 1 000 FCFA';return;}
-  if(amount>s.wallet){$('wdErr').textContent='Solde insuffisant ('+fmt(s.wallet)+' FCFA disponibles)';return;}
-  if(!phone||phone.length<9){$('wdErr').textContent='Numero Mobile Money invalide';return;}
-  $('wdConfirmBtn').disabled=true;
-  $('withdrawForm').classList.add('hidden');$('withdrawStatus').classList.remove('hidden');
-  $('wdStatusIcon').textContent='⏳';$('wdStatusMsg').textContent='Traitement en cours...';$('wdStatusSub').textContent='Connexion a '+(_wdOp==='orange'?'Orange Money':'MTN MoMo')+'...';
-  try{
-    const r=await fetch(BASE+'/api/payment/withdraw',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({account_id:s.accountId,amount,phone,operator:_wdOp})
-    });
-    const d=await r.json();
-    if(!r.ok)throw new Error(d.detail||'Erreur serveur');
-    // Succes : deduire du wallet
-    s.wallet-=amount;addTx('Retrait '+(_wdOp==='orange'?'Orange':'MTN')+' -'+fmt(amount)+'F',-amount);
-    $('wdStatusIcon').textContent='✅';
-    $('wdStatusMsg').textContent='Retrait confirme !';
-    $('wdStatusSub').textContent=fmt(amount)+' FCFA envoyes sur le '+phone+'\nReference : '+(d.reference||d.transaction_id||'OK');
-    toast('Retrait de '+fmt(amount)+' FCFA confirme !','#00ff88');
-  }catch(e){
-    // Si API indisponible, simulation locale avec feedback realiste
-    if(e.message.includes('fetch')||e.message.includes('Failed')||e.message.includes('NetworkError')){
-      s.wallet-=amount;addTx('Retrait '+(_wdOp==='orange'?'Orange':'MTN')+' -'+fmt(amount)+'F',-amount);
-      $('wdStatusIcon').textContent='✅';
-      $('wdStatusMsg').textContent='Retrait en cours de traitement';
-      $('wdStatusSub').textContent=fmt(amount)+' FCFA seront transferes sur le '+phone+' sous quelques minutes.';
-      toast('Retrait de '+fmt(amount)+' FCFA envoye !','#00ff88');
-    }else{
-      $('wdStatusIcon').textContent='❌';
-      $('wdStatusMsg').textContent='Retrait echoue';
-      $('wdStatusSub').textContent=e.message+'\nVeuillez reessayer ou contacter le support.';
-    }
-  }
-  $('wdConfirmBtn').disabled=false;
-}
-
-// Calcul des gains selon le rang
-function calcPrize(rank){
-  if(rank===1)return 1000000;
-  if(rank===2)return 750000;
-  if(rank===3)return 500000;
-  // Rang 4-50 : 2 000 000 partages proportionnellement
-  const pool=2000000;
-  const poids=47-(rank-4);// rang4->47 rang50->1
-  const totalPoids=(47*48)/2;
-  return Math.round((poids/totalPoids)*pool);
-}
-
 function toast(msg,col='#00ff88'){const t=$('toast');t.textContent=msg;t.style.borderColor=col;t.style.color=col;t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>t.style.display='none',3500);}
-function showOverlay(id){document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));$(id)?.classList.remove('hidden');}
-function hideAllOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));$('mainContent').style.display='block';}
+function showOverlay(id){document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display=''});const el=$(id);if(el){el.classList.remove('hidden');el.style.display='flex';}}
+function hideAllOverlays(){document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display='none';});$('mainContent').style.display='block';}
 
-// ÂGE
 function confirmAge(yes){if(!yes){$('ageForms').classList.add('hidden');$('ageBlocked').classList.remove('hidden');return;}localStorage.setItem('otm_age_ok','1');showOverlay('overlayPolicy');}
-
-// POLITIQUE
 function toggleCheck(id){$(id).checked=!$(id).checked;checkConsents();}
 function checkConsents(){$('btnAcceptPolicy').disabled=!($('chkPolicy').checked&&$('chkCgu').checked&&$('chkAge21').checked);}
 function acceptPolicy(){
@@ -657,8 +573,6 @@ function acceptPolicy(){
   if(saved){try{afterLogin(JSON.parse(saved));return;}catch(e){}}
   showOverlay('overlayAuth');
 }
-
-// AUTH
 function switchTab(tab){
   ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p=>$(p)?.classList.add('hidden'));
   ['tabLogin','tabRegister'].forEach(t=>$(t)?.classList.remove('active'));
@@ -667,7 +581,6 @@ function switchTab(tab){
   else if(tab==='forgot')$('panelForgot').classList.remove('hidden');
   else if(tab==='reset')$('panelReset').classList.remove('hidden');
 }
-
 async function doLogin(){
   const email=$('loginEmail').value.trim().toLowerCase(),pass=$('loginPass').value;
   $('loginErr').textContent='';
@@ -677,7 +590,6 @@ async function doLogin(){
   catch(e){$('loginErr').textContent=e.message;}
   $('btnLogin').disabled=false;$('btnLogin').textContent='SE CONNECTER';
 }
-
 async function doRegister(){
   const name=$('regName').value.trim(),phone=$('regPhone').value.trim(),email=$('regEmail').value.trim().toLowerCase(),pass=$('regPass').value,pass2=$('regPass2').value;
   $('regErr').textContent='';
@@ -691,16 +603,14 @@ async function doRegister(){
   catch(e){$('regErr').textContent=e.message;}
   $('btnRegister').disabled=false;$('btnRegister').textContent='CRÉER MON COMPTE';
 }
-
 async function doForgot(){
   const email=$('forgotEmail').value.trim().toLowerCase();$('forgotErr').textContent='';
   if(!email){$('forgotErr').textContent='Email requis';return;}
   $('btnForgot').disabled=true;
-  try{await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});toast('Lien envoyé si l\'email existe','#4488ff');switchTab('login');}
+  try{await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});toast("Lien envoyé si l'email existe",'#4488ff');switchTab('login');}
   catch(e){$('forgotErr').textContent='Erreur réseau';}
   $('btnForgot').disabled=false;
 }
-
 async function doReset(){
   const pass=$('resetPass').value,pass2=$('resetPass2').value;$('resetErr').textContent='';
   if(pass.length<6){$('resetErr').textContent='Trop court (min 6)';return;}
@@ -710,68 +620,50 @@ async function doReset(){
   catch(e){$('resetErr').textContent=e.message;}
   $('btnReset').disabled=false;
 }
-
 function afterLogin(acc){
   s.accountId=acc.id;s.myName=acc.name;s.isDemo=false;
   localStorage.setItem('otm_account',JSON.stringify({id:acc.id,name:acc.name,email:acc.email}));
   hideAllOverlays();
   $('userBar').classList.remove('hidden');$('displayName').textContent=acc.name;
-  $('walletPanel').classList.remove('hidden');
-  loadWallet();
   $('joinPanel').classList.remove('hidden');
   initGame();
 }
 function logout(){localStorage.removeItem('otm_account');localStorage.removeItem('otm_session');if(s.ws)s.ws.close();location.reload();}
-
-// DÉMO
 function enterDemo(){
   s.isDemo=true;s.myName='Visiteur';
   hideAllOverlays();
   $('demoBanner').classList.remove('hidden');
   $('userBar').classList.add('hidden');
-  $('joinPanel').classList.add('hidden');
-  $('payPanel').classList.add('hidden');
-  $('clickBtn').classList.add('hidden');
-  $('demoBtn').classList.remove('hidden');
-  $('winPanel').classList.remove('hidden');
-  $('wList').innerHTML='';$('wCount').textContent='0/50';
+  $('joinPanel').classList.add('hidden');$('payPanel').classList.add('hidden');
+  $('clickBtn').classList.add('hidden');$('demoBtn').classList.remove('hidden');
+  $('winPanel').classList.remove('hidden');$('wList').innerHTML='';$('wCount').textContent='0/50';
   $('phaseMsg').textContent='🎮 Mode Démo — appuyez le bouton pour simuler une partie !';
   $('miseDisplay').textContent='🎮 DÉMO — Aucun argent réel';
   initGame();
 }
 function exitDemo(){s.isDemo=false;$('demoBanner').classList.add('hidden');$('demoBtn').classList.add('hidden');$('demoResult').style.display='none';showOverlay('overlayAuth');switchTab('register');}
-function resetDemo(){$('demoResult').style.display='none';$('demoBtn').disabled=false;$('demoBtn').textContent='🎮 CLIC DÉMO';$('phaseMsg').textContent='🎮 Mode Démo — appuyez pour simuler !';}
-
+function resetDemo(){$('demoResult').style.display='none';$('demoBtn').disabled=false;$('demoBtn').innerHTML='🎮';$('phaseMsg').textContent='🎮 Mode Démo — appuyez pour simuler !';}
 let _demoSent=false;
 function fastDemoClick(e){e.preventDefault();if(_demoSent)return;_demoSent=true;_runDemo();}
 function doDemoClick(){if(_demoSent)return;_demoSent=true;_runDemo();}
 async function _runDemo(){
-  $('demoBtn').disabled=true;$('demoBtn').textContent='⚡';
+  $('demoBtn').disabled=true;$('demoBtn').innerHTML='⚡';
   try{
     const r=await fetch(BASE+'/api/demo/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
     const d=await r.json();
     $('demoResult').style.display='block';
-    if(d.ok){$('demoRank').textContent='#'+d.rank;const dp=calcPrize(d.rank);$('demoPrize').textContent=fmt(dp)+' FCFA (fictif)';$('phaseMsg').textContent='Rang #'+d.rank+' en '+d.time+'s !';confetti();addWinner({rank:d.rank,name:'Vous [DEMO]',time:d.time,prize:dp});}
+    if(d.ok){$('demoRank').textContent='#'+d.rank;$('demoPrize').textContent=fmt(d.prize)+' FCFA (fictif)';$('phaseMsg').textContent='🎮 Rang #'+d.rank+' en '+d.time+'s !';confetti();addWinner({rank:d.rank,name:'Vous [DÉMO] ★',time:d.time,prize:d.prize});}
     else{$('demoRank').textContent='😔 Trop lent';$('demoPrize').textContent='Pas dans le Top 50';$('phaseMsg').textContent='🎮 Démo : pas assez rapide !';}
   }catch(e){$('phaseMsg').textContent='Erreur démo';}
   setTimeout(()=>{_demoSent=false;},1000);
 }
-
-// MISE
-function setMise(v,el){
-  $('miseInput').value=v;
-  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));
-  el.classList.add('sel');
-  validateMise();
-}
+function setMise(v,el){$('miseInput').value=v;document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');validateMise();}
 function validateMise(){
   const v=parseInt($('miseInput').value)||0,err=$('miseErr');
   if(v<MISE_MIN){err.textContent='Mise minimum : '+MISE_MIN+' FCFA';return false;}
   if(v>MISE_MAX){err.textContent='Mise maximum : '+MISE_MAX+' FCFA';return false;}
   err.textContent='';return true;
 }
-
-// REJOINDRE
 async function joinGame(){
   if(!validateMise())return;
   const mise=parseInt($('miseInput').value);s.myMise=mise;
@@ -786,8 +678,6 @@ async function joinGame(){
     toast('Groupe G-'+(d.group+1)+' — payez pour jouer','#4488ff');
   }catch(e){toast(e.message||'Erreur','#ff4455');}
 }
-
-// PAIEMENT
 async function payNow(){
   $('payBtn').disabled=true;$('payBtn').textContent='Chargement...';
   try{
@@ -798,7 +688,6 @@ async function payNow(){
     else throw new Error('URL de paiement non reçue');
   }catch(e){toast(e.message||'Erreur paiement','#ff4455');$('payBtn').disabled=false;$('payBtn').textContent='PAYER AVEC MOBILE MONEY';}
 }
-
 function afterPaid(){
   s.paid=true;$('payPanel').classList.add('hidden');
   $('clickBtn').classList.remove('hidden');$('clickBtn').disabled=false;
@@ -807,8 +696,6 @@ function afterPaid(){
   toast('Vous êtes prêt à jouer !','#00ff88');
   connectWS();
 }
-
-// WEBSOCKET
 function connectWS(){
   if(!s.playerId||s.isDemo)return;
   if(s.ws&&s.ws.readyState<2)return;
@@ -817,18 +704,15 @@ function connectWS(){
   ws.onmessage=e=>handleMsg(JSON.parse(e.data));
   ws.onclose=()=>{$('dot').classList.remove('ok');clearInterval(s._ping);setTimeout(()=>connectWS(),3000);};
 }
-
-// CLIC ULTRA-RAPIDE
 let _clickSent=false;
-function fastClick(e){e.preventDefault();if(s.phase!=='active'||s.clicked||_clickSent)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}if(!deductClick())return;_sendClick();}
-function doClick(){if(_clickSent)return;if(s.phase!=='active'||s.clicked)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}if(!deductClick())return;_sendClick();}
+function fastClick(e){e.preventDefault();if(s.phase!=='active'||s.clicked||_clickSent)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}_sendClick();}
+function doClick(){if(_clickSent)return;if(s.phase!=='active'||s.clicked)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}_sendClick();}
 function _sendClick(){
-  _clickSent=true;s.clicked=true;$('clickBtn').disabled=true;$('clickBtn').textContent='⚡';
+  _clickSent=true;s.clicked=true;$('clickBtn').disabled=true;$('clickBtn').innerHTML='⚡';
   if(s.ws&&s.ws.readyState===1)s.ws.send(JSON.stringify({action:'click'}));
   else fetch(BASE+'/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})}).then(r=>r.json()).then(d=>handleMsg({type:'click_result',...d})).catch(()=>{});
   setTimeout(()=>{_clickSent=false;},500);
 }
-
 function handleMsg(msg){
   switch(msg.type){
     case 'connected':applyState(msg.state);if(msg.paid)afterPaid();break;
@@ -840,14 +724,13 @@ function handleMsg(msg){
       s.phase='countdown';s.round=msg.round;$('roundNum').textContent=msg.round;
       $('timer').textContent='00:0'+msg.seconds;$('timer').className='timer active';
       $('phaseMsg').textContent='Lancement dans '+msg.seconds+'s !';
-      if(!s.isDemo)$('clickBtn').disabled=true;
-      break;
+      if(!s.isDemo)$('clickBtn').disabled=true;break;
     case 'round_start':
       s.phase='active';s.round=msg.round;s.roundDuration=msg.duration;
       s.roundStart=performance.now();s.remaining=msg.duration;
       s.clicked=false;_clickSent=false;s.winners=[];s.myRank=-1;
       $('winPanel').classList.remove('hidden');$('wList').innerHTML='';$('wCount').textContent='0/50';
-      if(!s.isDemo){$('clickBtn').disabled=!s.paid;$('clickBtn').textContent=s.paid?'TOUCHER POUR GAGNER':'PAYEZ POUR JOUER';$('clickBtn').style.background='linear-gradient(135deg,#FFD700,#FFA500)';}
+      if(!s.isDemo){$('clickBtn').disabled=!s.paid;$('clickBtn').innerHTML='$';}
       startLocalTick();break;
     case 'tick':s.remaining=msg.remaining;renderTimer(msg.remaining);$('phaseMsg').textContent=msg.winners_count<50?msg.winners_count+' gagnant'+(msg.winners_count>1?'s':'')+' — soyez rapide !':'50 gagnants confirmés !';break;
     case 'winner_added':addWinner(msg.winner);break;
@@ -856,44 +739,30 @@ function handleMsg(msg){
       $('timer').textContent='00:0';$('timer').className='timer';
       if(!s.isDemo)$('clickBtn').disabled=true;
       $('phaseMsg').textContent=s.myRank>0?'Félicitations ! Rang #'+s.myRank+' !':'Round '+msg.round+' terminé — '+msg.total_winners+' gagnants.';
-      if(s.paid&&!s.isDemo){setTimeout(()=>{s.paid=false;_clickSent=false;$('clickBtn').classList.add('hidden');$('joinPanel').classList.remove('hidden');},8000);}
-      break;
+      if(s.paid&&!s.isDemo){setTimeout(()=>{s.paid=false;_clickSent=false;$('clickBtn').classList.add('hidden');$('joinPanel').classList.remove('hidden');},8000);}break;
     case 'click_result':
-      if(msg.ok){
-        s.myRank=msg.rank;
-        const prize=calcPrize(msg.rank);
-        s.wallet+=prize;addTx('GAIN Rang #'+msg.rank+' +'+fmt(prize)+'F',prize);
-        toast('GAGNE ! Rang #'+msg.rank+' — '+fmt(prize)+' FCFA !','#FFD700');confetti();
-        $('clickBtn').textContent='#'+msg.rank;$('clickBtn').style.background='linear-gradient(135deg,#00ff88,#00aa55)';$('clickBtn').disabled=true;
-      }
-      else if(msg.reason==='not_paid'){s.clicked=false;_clickSent=false;toast('Payez la mise !','#ff4455');$('payPanel').classList.remove('hidden');$('clickBtn').disabled=false;$('clickBtn').textContent='TOUCHER POUR GAGNER';}
-      else if(msg.reason==='too_late')toast('Trop tard ! 50 gagnants trouves.','#ff4455');
-      else if(msg.reason==='round_not_active'){s.clicked=false;_clickSent=false;$('clickBtn').disabled=false;$('clickBtn').textContent='TOUCHER POUR GAGNER';}
-      break;
+      if(msg.ok){s.myRank=msg.rank;toast('GAGNÉ ! Rang #'+msg.rank+' — '+fmt(msg.prize)+' FCFA !','#FFD700');confetti();$('clickBtn').innerHTML='✓';$('clickBtn').style.background='radial-gradient(circle, #00ff88, #007733)';$('clickBtn').disabled=true;}
+      else if(msg.reason==='not_paid'){s.clicked=false;_clickSent=false;toast('Payez la mise !','#ff4455');$('payPanel').classList.remove('hidden');$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}
+      else if(msg.reason==='too_late')toast('Trop tard ! 50 gagnants trouvés.','#ff4455');
+      else if(msg.reason==='round_not_active'){s.clicked=false;_clickSent=false;$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}break;
   }
 }
-
 function startLocalTick(){clearInterval(s.tickIv);s.tickIv=setInterval(()=>{if(s.phase!=='active')return;const rem=Math.max(0,s.roundDuration-(performance.now()-s.roundStart)/1000);renderTimer(rem);if(rem<=0)clearInterval(s.tickIv);},16);}
 function renderTimer(rem){const ss=Math.floor(rem),ds=Math.floor((rem-ss)*10);$('timer').textContent=(ss<10?'0':'')+ss+':'+ds;$('tbar').style.width=((rem/(s.roundDuration||30))*100)+'%';$('timer').className='timer'+(rem<=10?' danger':' active');}
-
 function addWinner(w){
   s.winners.push(w);
   const li=document.createElement('div');li.className='witem';
   if(s.myName&&w.name.startsWith(s.myName)){li.style.background='#0d1f0d';li.style.border='0.5px solid #00ff88';}
   const rc=w.rank===1?'g':w.rank===2?'s':w.rank===3?'b':'o';
-  const prize=w.prize||calcPrize(w.rank);
-  li.innerHTML='<span class="wrank '+rc+'">#'+w.rank+'</span><span class="wname">'+w.name+'</span><span class="wtime">+'+parseFloat(w.time).toFixed(3)+'s</span><span class="wprize">'+fmt(prize)+' F</span>';
+  li.innerHTML='<span class="wrank '+rc+'">#'+w.rank+'</span><span class="wname">'+w.name+'</span><span class="wtime">+'+parseFloat(w.time).toFixed(3)+'s</span><span class="wprize">'+fmt(w.prize)+' F</span>';
   $('wList').appendChild(li);$('wList').scrollTop=9999;$('wCount').textContent=s.winners.length+'/50';
 }
-
 function buildGrid(){const g=$('grpGrid');g.innerHTML='';for(let i=0;i<10;i++){const d=document.createElement('div');d.id='gp'+i;d.className='group-pill'+(i===s.myGrp?' active':'');d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':'#444')+'">'+fmt(s.groups[i])+'</span>';g.appendChild(d);}}
 function refreshStats(){$('totalPlayers').textContent=fmt(s.players);const ag=Math.max(1,Math.ceil(s.players/100000));$('totalGroups').textContent=ag;$('grpBadge').textContent=ag+' groupe'+(ag>1?'s':'');for(let i=0;i<10;i++){const d=$('gp'+i);if(!d)continue;d.className='group-pill'+(i===s.myGrp?' active':s.groups[i]>=100000?' full':'');d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':s.groups[i]>=100000?'#333':'#444')+'">'+fmt(s.groups[i])+'</span>';}}
 function applyState(st){s.players=st.total_players;s.groups=st.groups;s.round=st.round;$('roundNum').textContent=st.round;refreshStats();}
-
 function confetti(){const box=$('cbox'),cols=['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];for(let i=0;i<80;i++){const p=document.createElement('div'),sz=Math.random()*9+4;p.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';box.appendChild(p);setTimeout(()=>p.remove(),4500);}}
-
 async function initGame(){
-  buildGrid();
+  buildGrid();buildPrimes();
   try{const r=await fetch(BASE+'/api/state');applyState(await r.json());}catch(e){}
   if(!s.isDemo){
     const sess=localStorage.getItem('otm_session');
@@ -904,7 +773,8 @@ async function initGame(){
   }
 }
 
-(function boot(){
+/* Appelé après la fin du loading screen */
+function bootSite(){
   const rt=new URLSearchParams(window.location.search).get('reset_token');
   if(rt){window._resetToken=rt;history.replaceState({},'','/');showOverlay('overlayAuth');switchTab('reset');return;}
   if(!localStorage.getItem('otm_age_ok')){showOverlay('overlayAge');return;}
@@ -912,7 +782,7 @@ async function initGame(){
   const saved=localStorage.getItem('otm_account');
   if(saved){try{afterLogin(JSON.parse(saved));return;}catch(e){}}
   showOverlay('overlayAuth');
-})();
+}
 </script>
 </body>
 </html>
