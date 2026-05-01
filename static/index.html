@@ -191,6 +191,117 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .t2{color:#C0C0C0;background:rgba(192,192,192,.08);border:0.5px solid rgba(192,192,192,.2)}
 .t3{color:#CD7F32;background:rgba(205,127,50,.1);border:0.5px solid rgba(205,127,50,.3)}
 .t4{color:#5566aa;background:rgba(85,102,170,.08);border:0.5px solid rgba(85,102,170,.2)}
+/* ══ BALANCE CARD ══ */
+.balance-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#12121f 0%,#1a1a2e 40%,#0f0f1c 100%);
+  border:1px solid rgba(255,215,0,.25);
+  border-radius:18px;padding:0;margin-bottom:20px;
+  box-shadow:0 4px 32px rgba(255,165,0,.08),0 1px 0 rgba(255,215,0,.12) inset;
+}
+.bc-shimmer{
+  position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,215,0,.04),transparent);
+  animation:bcShimmer 4s ease-in-out infinite;pointer-events:none;
+}
+@keyframes bcShimmer{0%{left:-60%}100%{left:160%}}
+.bc-glow{
+  position:absolute;top:-60px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.bc-glow2{
+  position:absolute;bottom:-80px;left:-30px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,165,0,.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+.bc-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 20px 10px;
+}
+.bc-label{
+  font-size:11px;color:#8888aa;text-transform:uppercase;
+  letter-spacing:2px;font-family:'Rajdhani',sans-serif;
+  display:flex;align-items:center;gap:7px;
+}
+.bc-label-dot{
+  width:7px;height:7px;border-radius:50%;background:#00ff88;
+  box-shadow:0 0 6px #00ff88;
+  animation:bcDotPulse 2s ease-in-out infinite;
+}
+@keyframes bcDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.bc-eye{
+  background:none;border:none;cursor:pointer;padding:6px;
+  color:#5555aa;transition:color .2s;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.bc-eye:hover{color:#FFD700}
+.bc-main{padding:0 20px 16px;display:flex;align-items:flex-end;gap:10px}
+.bc-amount-wrap{flex:1}
+.bc-currency{
+  font-family:'Rajdhani',sans-serif;font-size:13px;
+  color:#aaaacc;letter-spacing:1px;margin-bottom:2px;
+}
+.bc-amount{
+  font-family:'Black Ops One',cursive;
+  font-size:46px;line-height:1;
+  background:linear-gradient(135deg,#FFD700 0%,#FFF0A0 50%,#FFA500 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  transition:filter .15s;
+  letter-spacing:1px;
+}
+.bc-amount.updating{filter:brightness(1.4)}
+.bc-amount.up{animation:bcUp .5s ease}
+.bc-amount.down{animation:bcDown .5s ease}
+@keyframes bcUp{
+  0%{transform:translateY(4px);opacity:.6}
+  50%{transform:translateY(-3px)}
+  100%{transform:translateY(0);opacity:1}
+}
+@keyframes bcDown{
+  0%{transform:translateY(-4px);opacity:.6}
+  50%{transform:translateY(3px)}
+  100%{transform:translateY(0);opacity:1}
+}
+.bc-fcfa{font-family:'Rajdhani',sans-serif;font-size:14px;color:#6666aa;margin-bottom:8px;margin-left:2px}
+.bc-delta{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+  opacity:0;transition:opacity .3s;
+  white-space:nowrap;margin-bottom:8px;
+}
+.bc-delta.show{opacity:1;animation:bcDeltaFade 2.5s ease forwards}
+@keyframes bcDeltaFade{0%{opacity:1;transform:translateY(0)}70%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+.bc-delta.plus{background:rgba(0,255,136,.12);color:#00ff88;border:0.5px solid rgba(0,255,136,.3)}
+.bc-delta.minus{background:rgba(255,68,85,.1);color:#ff4455;border:0.5px solid rgba(255,68,85,.25)}
+.bc-footer{
+  border-top:0.5px solid rgba(255,215,0,.08);
+  padding:10px 20px;
+  display:flex;gap:0;
+}
+.bc-stat{flex:1;text-align:center;padding:0 8px}
+.bc-stat:not(:last-child){border-right:0.5px solid rgba(255,255,255,.06)}
+.bc-stat-label{font-size:10px;color:#555577;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.bc-stat-val{font-family:'Black Ops One',cursive;font-size:13px;color:#aaaacc}
+.bc-stat-val.green{color:#00ff88}
+.bc-stat-val.gold{color:#FFD700}
+.bc-actions{display:flex;gap:8px;padding:0 20px 16px}
+.bc-btn{
+  flex:1;padding:10px 8px;border:none;border-radius:10px;
+  font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;
+  cursor:pointer;transition:filter .15s,transform .1s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.bc-btn:active{transform:scale(.97)}
+.bc-btn-deposit{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14}
+.bc-btn-deposit:hover{filter:brightness(1.1)}
+.bc-btn-history{background:#1a1a2e;border:0.5px solid #2a2a4a;color:#8888cc}
+.bc-btn-history:hover{border-color:#FFD700;color:#FFD700}
+.bc-hidden-blur{filter:blur(8px);user-select:none;pointer-events:none}
+
 .depot-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:18px}
 .depot-header{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
 .depot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
@@ -403,6 +514,55 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <button class="logout-btn" onclick="logout()">Déconnexion</button>
   </div>
 
+  <!-- ══ BALANCE CARD ══ -->
+  <div class="balance-card hidden" id="balanceCard">
+    <div class="bc-shimmer"></div>
+    <div class="bc-glow"></div>
+    <div class="bc-glow2"></div>
+    <div class="bc-top">
+      <div class="bc-label">
+        <div class="bc-label-dot"></div>
+        Mon solde disponible
+      </div>
+      <button class="bc-eye" id="bcEyeBtn" onclick="toggleBalanceVisibility()" title="Afficher/masquer">
+        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="bc-main">
+      <div class="bc-amount-wrap">
+        <div class="bc-currency">XAF · FCFA</div>
+        <div class="bc-amount" id="bcAmount">0</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-bottom:8px">
+        <div class="bc-delta" id="bcDelta">+0</div>
+      </div>
+    </div>
+    <div class="bc-actions">
+      <button class="bc-btn bc-btn-deposit" onclick="scrollToDepot()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        DÉPOSER
+      </button>
+      <button class="bc-btn bc-btn-history" onclick="toast('Historique bientôt disponible','#4488ff')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        HISTORIQUE
+      </button>
+    </div>
+    <div class="bc-footer">
+      <div class="bc-stat">
+        <div class="bc-stat-label">Mise en cours</div>
+        <div class="bc-stat-val gold" id="bcMiseStat">—</div>
+      </div>
+      <div class="bc-stat">
+        <div class="bc-stat-label">Statut</div>
+        <div class="bc-stat-val green" id="bcStatusStat">Actif</div>
+      </div>
+      <div class="bc-stat">
+        <div class="bc-stat-label">Gains reçus</div>
+        <div class="bc-stat-val gold" id="bcGainsStat">0 F</div>
+      </div>
+    </div>
+  </div>
+
   <div class="rules">
     <strong>Règles :</strong> Choisissez votre mise (100–1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'à <strong>1 000 000 FCFA</strong> versés sur votre Mobile Money.
     <br><span style="color:#8844ff">🎮 Mode Démo disponible — gratuit, sans risque.</span>
@@ -544,13 +704,80 @@ function buildPrimes(){
     list.appendChild(row);
   });
 }
+/* ══ BALANCE SYSTEM ══ */
+const bal={amount:0,visible:true,totalGains:0};
+
+function animateBalance(from,to){
+  const el=$('bcAmount');
+  const dir=to>from?'up':'down';
+  const duration=700,steps=40;
+  const step=(to-from)/steps;
+  let cur=from,count=0;
+  el.classList.remove('up','down','updating');
+  void el.offsetWidth;
+  el.classList.add(dir,'updating');
+  const iv=setInterval(()=>{
+    cur+=step;count++;
+    el.textContent=Math.round(cur).toLocaleString('fr-FR');
+    if(count>=steps){clearInterval(iv);el.textContent=Math.round(to).toLocaleString('fr-FR');el.classList.remove('updating');}
+  },duration/steps);
+}
+
+function updateBalance(newAmount,silent=false){
+  const old=bal.amount;
+  bal.amount=newAmount;
+  if(bal.visible){
+    animateBalance(old,newAmount);
+  }
+  if(!silent&&old!==newAmount){
+    const diff=newAmount-old;
+    const d=$('bcDelta');
+    d.className='bc-delta '+(diff>0?'plus':'minus');
+    d.textContent=(diff>0?'+':'')+Math.round(diff).toLocaleString('fr-FR')+' F';
+    void d.offsetWidth;
+    d.classList.add('show');
+    setTimeout(()=>d.classList.remove('show'),2600);
+  }
+  $('bcMiseStat').textContent=s.myMise&&s.paid?fmt(s.myMise)+' F':'—';
+}
+
+function toggleBalanceVisibility(){
+  bal.visible=!bal.visible;
+  const el=$('bcAmount');
+  if(bal.visible){
+    el.classList.remove('bc-hidden-blur');
+    el.textContent=Math.round(bal.amount).toLocaleString('fr-FR');
+    $('eyeIcon').innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  } else {
+    el.classList.add('bc-hidden-blur');
+    el.textContent='••••••';
+    $('eyeIcon').innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  }
+}
+
+function scrollToDepot(){
+  document.querySelector('.depot-panel')?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function showBalanceCard(name){
+  $('balanceCard').classList.remove('hidden');
+  $('bcAmount').textContent='0';
+  $('bcStatusStat').textContent='Actif';
+  updateBalance(bal.amount,true);
+}
+
 const DEPOT_MIN=100,DEPOT_MAX=10000;
 function setDepot(v,el){document.getElementById('depotInput').value=v;document.querySelectorAll('.depot-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('depotErr').textContent='';}
 function doDepot(){
   const v=parseInt(document.getElementById('depotInput').value)||0,err=document.getElementById('depotErr');
   if(v<DEPOT_MIN){err.textContent='Minimum : '+DEPOT_MIN+' FCFA';return;}
   if(v>DEPOT_MAX){err.textContent='Maximum : '+DEPOT_MAX+' FCFA';return;}
-  err.textContent='';toast('Dépôt de '+fmt(v)+' FCFA en cours…','#4488ff');
+  err.textContent='';
+  // Simulation dépôt : animation solde
+  const newBal=bal.amount+v;
+  toast('Dépôt de '+fmt(v)+' FCFA en cours…','#4488ff');
+  setTimeout(()=>{updateBalance(newBal);toast('✓ Solde rechargé : +'+fmt(v)+' FCFA','#00ff88');},1200);
+  // TODO: appel API dépôt réel → updateBalance(response.new_balance)
 }
 const BASE=window.location.origin,WS_BASE=BASE.replace(/^http/,'ws');
 const MISE_MIN=100,MISE_MAX=1000;
@@ -626,6 +853,7 @@ function afterLogin(acc){
   hideAllOverlays();
   $('userBar').classList.remove('hidden');$('displayName').textContent=acc.name;
   $('joinPanel').classList.remove('hidden');
+  showBalanceCard(acc.name);
   initGame();
 }
 function logout(){localStorage.removeItem('otm_account');localStorage.removeItem('otm_session');if(s.ws)s.ws.close();location.reload();}
@@ -694,6 +922,10 @@ function afterPaid(){
   $('phaseMsg').textContent='Paiement confirmé — attendez le signal !';
   $('miseDisplay').textContent='Votre mise : '+fmt(s.myMise)+' FCFA';
   toast('Vous êtes prêt à jouer !','#00ff88');
+  // Déduire la mise du solde
+  updateBalance(Math.max(0,bal.amount-s.myMise));
+  $('bcMiseStat').textContent=fmt(s.myMise)+' F';
+  $('bcStatusStat').textContent='En jeu';
   connectWS();
 }
 function connectWS(){
@@ -739,11 +971,22 @@ function handleMsg(msg){
       $('timer').textContent='00:0';$('timer').className='timer';
       if(!s.isDemo)$('clickBtn').disabled=true;
       $('phaseMsg').textContent=s.myRank>0?'Félicitations ! Rang #'+s.myRank+' !':'Round '+msg.round+' terminé — '+msg.total_winners+' gagnants.';
+      $('bcMiseStat').textContent='—';$('bcStatusStat').textContent='Actif';
       if(s.paid&&!s.isDemo){setTimeout(()=>{s.paid=false;_clickSent=false;$('clickBtn').classList.add('hidden');$('joinPanel').classList.remove('hidden');},8000);}break;
     case 'click_result':
-      if(msg.ok){s.myRank=msg.rank;toast('GAGNÉ ! Rang #'+msg.rank+' — '+fmt(msg.prize)+' FCFA !','#FFD700');confetti();$('clickBtn').innerHTML='✓';$('clickBtn').style.background='radial-gradient(circle, #00ff88, #007733)';$('clickBtn').disabled=true;}
+      if(msg.ok){
+        s.myRank=msg.rank;
+        toast('GAGNÉ ! Rang #'+msg.rank+' — '+fmt(msg.prize)+' FCFA !','#FFD700');
+        confetti();
+        $('clickBtn').innerHTML='✓';$('clickBtn').style.background='radial-gradient(circle, #00ff88, #007733)';$('clickBtn').disabled=true;
+        // Créditer le gain sur le solde
+        bal.totalGains+=msg.prize;
+        updateBalance(bal.amount+msg.prize);
+        $('bcGainsStat').textContent=fmt(bal.totalGains)+' F';
+        $('bcStatusStat').textContent='Gagnant !';
+      }
       else if(msg.reason==='not_paid'){s.clicked=false;_clickSent=false;toast('Payez la mise !','#ff4455');$('payPanel').classList.remove('hidden');$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}
-      else if(msg.reason==='too_late')toast('Trop tard ! 50 gagnants trouvés.','#ff4455');
+      else if(msg.reason==='too_late'){toast('Trop tard ! 50 gagnants trouvés.','#ff4455');$('bcStatusStat').textContent='Actif';}
       else if(msg.reason==='round_not_active'){s.clicked=false;_clickSent=false;$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}break;
   }
 }
