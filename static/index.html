@@ -266,7 +266,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   50%{transform:translateY(3px)}
   100%{transform:translateY(0);opacity:1}
 }
-.bc-fcfa{font-family:'Rajdhani',sans-serif;font-size:14px;color:#6666aa;margin-bottom:8px;margin-left:2px}
 .bc-delta{
   font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
   padding:3px 10px;border-radius:20px;
@@ -312,8 +311,21 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .depot-input:focus{border-color:#00ff88}
 .btn-depot{padding:11px 18px;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14;white-space:nowrap;transition:filter .15s}
 .btn-depot:hover{filter:brightness(1.1)}
+.btn-depot:disabled{opacity:.5;cursor:not-allowed}
 .depot-info{font-size:11px;color:#6666aa;margin-top:7px;text-align:center}
 .depot-info span{color:#00ff88;font-weight:700}
+
+/* Panneau paiement en attente */
+.pending-pay-panel{
+  background:#0d1a2e;border:1px solid #4488ff;
+  border-radius:12px;padding:16px;margin-bottom:18px;
+  text-align:center;display:none;
+}
+.pending-pay-panel h4{color:#4488ff;font-family:'Black Ops One',cursive;font-size:14px;margin-bottom:8px}
+.pending-pay-panel p{font-size:13px;color:#8888aa;margin-bottom:12px}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid rgba(68,136,255,.3);border-top-color:#4488ff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 .mise-panel{background:#12121f;border:1px solid #FFD700;border-radius:12px;padding:18px;margin-bottom:18px}
 .mise-title{font-size:14px;color:#FFD700;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;text-align:center}
 .mise-limits{font-size:12px;color:#8888aa;text-align:center;margin-bottom:12px}
@@ -564,7 +576,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 
   <div class="rules">
-    <strong>Règles :</strong> Choisissez votre mise (100–1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'à <strong>1 000 000 FCFA</strong> versés sur votre Mobile Money.
+    <strong>Règles :</strong> Choisissez votre mise (100–1000 FCFA) → payez via Mobile Money → au signal, cliquez avant les autres. Les <strong>50 premiers</strong> gagnent jusqu'à <strong>5 000 000 FCFA</strong> versés sur votre Mobile Money.
     <br><span style="color:#8844ff">🎮 Mode Démo disponible — gratuit, sans risque.</span>
   </div>
 
@@ -582,8 +594,9 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <div class="primes-list" id="primesList"></div>
   </div>
 
-  <div class="depot-panel">
-    <div class="depot-header">💳 Recharger mon compte</div>
+  <!-- ══ DÉPÔT RÉEL VIA NOTCHPAY ══ -->
+  <div class="depot-panel" id="depotPanel">
+    <div class="depot-header">💳 Recharger mon compte <span style="color:#00ff88;font-size:11px">· Orange Money &amp; MTN MoMo</span></div>
     <div class="depot-grid">
       <button class="depot-btn" onclick="setDepot(100,this)">100 F</button>
       <button class="depot-btn" onclick="setDepot(500,this)">500 F</button>
@@ -596,10 +609,19 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
     <div class="depot-row">
       <input class="depot-input" id="depotInput" type="number" min="100" max="10000" placeholder="Montant libre (100–10 000 F)">
-      <button class="btn-depot" onclick="doDepot()">DÉPOSER</button>
+      <button class="btn-depot" id="btnDepot" onclick="doDepot()">DÉPOSER</button>
     </div>
     <div class="depot-info">Min : <span>100 FCFA</span> &nbsp;·&nbsp; Max : <span>10 000 FCFA</span> &nbsp;·&nbsp; Orange Money &amp; MTN MoMo</div>
     <div class="error-msg" id="depotErr"></div>
+  </div>
+
+  <!-- Panneau attente paiement dépôt -->
+  <div class="pending-pay-panel" id="pendingDepotPanel">
+    <h4>⏳ Paiement en cours…</h4>
+    <p>Validez le paiement sur votre téléphone (Orange Money / MTN MoMo)<br>puis revenez ici — votre solde sera mis à jour automatiquement.</p>
+    <div class="spinner"></div>
+    <button class="btn-modal btn-blue" style="margin-top:14px" onclick="verifyDepot()">J'AI PAYÉ → VÉRIFIER</button>
+    <button class="btn-modal" style="margin-top:6px;background:#1a1a2e;color:#6666aa;border:0.5px solid #2a2a4a" onclick="cancelDepot()">Annuler</button>
   </div>
 
   <div class="mise-panel hidden" id="joinPanel">
@@ -621,10 +643,23 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:12px;color:#8888aa">Votre mise choisie</div>
       <div style="font-family:'Black Ops One',cursive;font-size:52px;color:#FFD700" id="payAmountDisplay">—</div>
-      <div style="font-size:11px;color:#8888aa">Paiement sécurisé · Gains jusqu'à 1 000 000 FCFA</div>
+      <div style="font-size:11px;color:#8888aa">Paiement sécurisé · Gains jusqu'à 5 000 000 FCFA</div>
     </div>
     <button class="btn-pay" id="payBtn" onclick="payNow()">PAYER AVEC MOBILE MONEY</button>
     <div class="pay-methods"><span class="pay-badge">Orange Money</span><span class="pay-badge">MTN MoMo</span></div>
+    <!-- Bouton vérification après retour depuis NotchPay -->
+    <div style="margin-top:14px;text-align:center;display:none" id="verifyMiseWrap">
+      <button class="btn-modal btn-blue" onclick="verifyMise()">J'AI PAYÉ → VÉRIFIER MON STATUT</button>
+    </div>
+  </div>
+
+  <!-- Attente paiement mise -->
+  <div class="pending-pay-panel" id="pendingMisePanel">
+    <h4>⏳ Validation mise en cours…</h4>
+    <p>Validez sur votre téléphone puis revenez ici.</p>
+    <div class="spinner"></div>
+    <button class="btn-modal btn-blue" style="margin-top:14px" onclick="verifyMise()">J'AI PAYÉ → VÉRIFIER</button>
+    <button class="btn-modal" style="margin-top:6px;background:#1a1a2e;color:#6666aa;border:0.5px solid #2a2a4a" onclick="cancelMise()">Annuler</button>
   </div>
 
   <div class="group-bar">
@@ -687,29 +722,35 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   },3600);
 })();
 
-/* ══ SITE ══ */
-const PRIMES_DATA=[
-  {rank:'1er',amount:1000000,tier:'t1'},{rank:'2e',amount:750000,tier:'t1'},{rank:'3e',amount:500000,tier:'t1'},
-  {rank:'4e',amount:300000,tier:'t2'},{rank:'5e',amount:200000,tier:'t2'},{rank:'6e',amount:150000,tier:'t2'},
-  {rank:'7e',amount:100000,tier:'t2'},{rank:'8e',amount:80000,tier:'t2'},{rank:'9e',amount:60000,tier:'t2'},
-  {rank:'10e',amount:50000,tier:'t3'},{rank:'11–15e',amount:30000,tier:'t3'},{rank:'16–20e',amount:20000,tier:'t3'},
-  {rank:'21–30e',amount:15000,tier:'t3'},{rank:'31–40e',amount:10000,tier:'t4'},{rank:'41–50e',amount:5000,tier:'t4'},
-];
-function buildPrimes(){
-  const list=document.getElementById('primesList');list.innerHTML='';
-  PRIMES_DATA.forEach((p,i)=>{
-    const row=document.createElement('div');row.className='prime-row';
-    const rc=i===0?'g':i===1?'s':i===2?'b':'o';
-    row.innerHTML=`<span class="prime-rank ${rc}">#${p.rank}</span><span class="prime-label">${p.rank}</span><span class="prime-amount ${p.tier}">${fmt(p.amount)} FCFA</span>`;
-    list.appendChild(row);
-  });
-}
-/* ══ BALANCE SYSTEM ══ */
+/* ══ CONFIG ══ */
+const BASE=window.location.origin;
+const WS_BASE=BASE.replace(/^http/,'ws');
+const MISE_MIN=100,MISE_MAX=1000,DEPOT_MIN=100,DEPOT_MAX=10000;
+
+/* ══ ÉTAT APP ══ */
+const s={
+  accountId:null, myName:null, isDemo:false,
+  playerId:null, myGrp:-1, paid:false, myMise:500,
+  phase:'idle', round:1, roundDuration:30, roundStart:null, remaining:30,
+  winners:[], myRank:-1, clicked:false,
+  players:0, groups:Array(10).fill(0),
+  ws:null, tickIv:null,
+  // Paiements en cours
+  currentDepotRef:null,
+  currentMiseRef:null,
+  depotPollIv:null,
+  misePollIv:null,
+};
+
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('fr-FR');
+
+/* ══ BALANCE ══ */
 const bal={amount:0,visible:true,totalGains:0};
 
 function animateBalance(from,to){
   const el=$('bcAmount');
-  const dir=to>from?'up':'down';
+  const dir=to>=from?'up':'down';
   const duration=700,steps=40;
   const step=(to-from)/steps;
   let cur=from,count=0;
@@ -726,9 +767,7 @@ function animateBalance(from,to){
 function updateBalance(newAmount,silent=false){
   const old=bal.amount;
   bal.amount=newAmount;
-  if(bal.visible){
-    animateBalance(old,newAmount);
-  }
+  if(bal.visible) animateBalance(old,newAmount);
   if(!silent&&old!==newAmount){
     const diff=newAmount-old;
     const d=$('bcDelta');
@@ -756,40 +795,56 @@ function toggleBalanceVisibility(){
 }
 
 function scrollToDepot(){
-  document.querySelector('.depot-panel')?.scrollIntoView({behavior:'smooth',block:'center'});
+  $('depotPanel')?.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-function showBalanceCard(name){
+function showBalanceCard(){
   $('balanceCard').classList.remove('hidden');
-  $('bcAmount').textContent='0';
-  $('bcStatusStat').textContent='Actif';
   updateBalance(bal.amount,true);
 }
 
-const DEPOT_MIN=100,DEPOT_MAX=10000;
-function setDepot(v,el){document.getElementById('depotInput').value=v;document.querySelectorAll('.depot-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('depotErr').textContent='';}
-function doDepot(){
-  const v=parseInt(document.getElementById('depotInput').value)||0,err=document.getElementById('depotErr');
-  if(v<DEPOT_MIN){err.textContent='Minimum : '+DEPOT_MIN+' FCFA';return;}
-  if(v>DEPOT_MAX){err.textContent='Maximum : '+DEPOT_MAX+' FCFA';return;}
-  err.textContent='';
-  // Simulation dépôt : animation solde
-  const newBal=bal.amount+v;
-  toast('Dépôt de '+fmt(v)+' FCFA en cours…','#4488ff');
-  setTimeout(()=>{updateBalance(newBal);toast('✓ Solde rechargé : +'+fmt(v)+' FCFA','#00ff88');},1200);
-  // TODO: appel API dépôt réel → updateBalance(response.new_balance)
+/* ══ TOASTS ══ */
+function toast(msg,col='#00ff88'){
+  const t=$('toast');
+  t.textContent=msg;t.style.borderColor=col;t.style.color=col;t.style.display='block';
+  clearTimeout(t._to);t._to=setTimeout(()=>t.style.display='none',3500);
 }
-const BASE=window.location.origin,WS_BASE=BASE.replace(/^http/,'ws');
-const MISE_MIN=100,MISE_MAX=1000;
-const s={accountId:null,myName:null,isDemo:false,playerId:null,myGrp:-1,paid:false,myMise:500,phase:'idle',round:1,roundDuration:30,roundStart:null,remaining:30,winners:[],myRank:-1,clicked:false,players:0,groups:Array(10).fill(0),ws:null,tickIv:null};
-const $=id=>document.getElementById(id);
-const fmt=n=>Math.round(n).toLocaleString('fr-FR');
 
-function toast(msg,col='#00ff88'){const t=$('toast');t.textContent=msg;t.style.borderColor=col;t.style.color=col;t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>t.style.display='none',3500);}
-function showOverlay(id){document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display=''});const el=$(id);if(el){el.classList.remove('hidden');el.style.display='flex';}}
-function hideAllOverlays(){document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display='none';});$('mainContent').style.display='block';}
+/* ══ OVERLAYS ══ */
+function showOverlay(id){
+  document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display='';});
+  const el=$(id);
+  if(el){el.classList.remove('hidden');el.style.display='flex';}
+}
+function hideAllOverlays(){
+  document.querySelectorAll('.overlay').forEach(o=>{o.classList.add('hidden');o.style.display='none';});
+  $('mainContent').style.display='block';
+}
 
-function confirmAge(yes){if(!yes){$('ageForms').classList.add('hidden');$('ageBlocked').classList.remove('hidden');return;}localStorage.setItem('otm_age_ok','1');showOverlay('overlayPolicy');}
+/* ══ PRIMES ══ */
+const PRIMES_DATA=[
+  {rank:'1er',amount:5000000,tier:'t1'},{rank:'2e',amount:2000000,tier:'t1'},{rank:'3e',amount:1000000,tier:'t1'},
+  {rank:'4e',amount:500000,tier:'t2'},{rank:'5e',amount:300000,tier:'t2'},{rank:'6e',amount:200000,tier:'t2'},
+  {rank:'7e',amount:150000,tier:'t2'},{rank:'8e',amount:100000,tier:'t2'},{rank:'9e',amount:80000,tier:'t2'},
+  {rank:'10e',amount:60000,tier:'t3'},{rank:'11–15e',amount:30000,tier:'t3'},{rank:'16–20e',amount:20000,tier:'t3'},
+  {rank:'21–30e',amount:15000,tier:'t3'},{rank:'31–40e',amount:10000,tier:'t4'},{rank:'41–50e',amount:5000,tier:'t4'},
+];
+function buildPrimes(){
+  const list=$('primesList');list.innerHTML='';
+  PRIMES_DATA.forEach((p,i)=>{
+    const row=document.createElement('div');row.className='prime-row';
+    const rc=i===0?'g':i===1?'s':i===2?'b':'o';
+    row.innerHTML=`<span class="prime-rank ${rc}">#${p.rank}</span><span class="prime-label">${p.rank}</span><span class="prime-amount ${p.tier}">${fmt(p.amount)} FCFA</span>`;
+    list.appendChild(row);
+  });
+}
+
+/* ══ AGE & POLITIQUE ══ */
+function confirmAge(yes){
+  if(!yes){$('ageForms').classList.add('hidden');$('ageBlocked').classList.remove('hidden');return;}
+  localStorage.setItem('otm_age_ok','1');
+  showOverlay('overlayPolicy');
+}
 function toggleCheck(id){$(id).checked=!$(id).checked;checkConsents();}
 function checkConsents(){$('btnAcceptPolicy').disabled=!($('chkPolicy').checked&&$('chkCgu').checked&&$('chkAge21').checked);}
 function acceptPolicy(){
@@ -800,6 +855,8 @@ function acceptPolicy(){
   if(saved){try{afterLogin(JSON.parse(saved));return;}catch(e){}}
   showOverlay('overlayAuth');
 }
+
+/* ══ AUTH ══ */
 function switchTab(tab){
   ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p=>$(p)?.classList.add('hidden'));
   ['tabLogin','tabRegister'].forEach(t=>$(t)?.classList.remove('active'));
@@ -808,15 +865,21 @@ function switchTab(tab){
   else if(tab==='forgot')$('panelForgot').classList.remove('hidden');
   else if(tab==='reset')$('panelReset').classList.remove('hidden');
 }
+
 async function doLogin(){
   const email=$('loginEmail').value.trim().toLowerCase(),pass=$('loginPass').value;
   $('loginErr').textContent='';
   if(!email||!pass){$('loginErr').textContent='Email et mot de passe requis';return;}
   $('btnLogin').disabled=true;$('btnLogin').textContent='...';
-  try{const r=await fetch(BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Erreur');afterLogin({id:d.account_id,name:d.name,email:d.email});}
-  catch(e){$('loginErr').textContent=e.message;}
+  try{
+    const r=await fetch(BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Erreur');
+    afterLogin({id:d.account_id,name:d.name,email:d.email,balance:d.balance||0,totalGains:d.total_gains||0});
+  }catch(e){$('loginErr').textContent=e.message;}
   $('btnLogin').disabled=false;$('btnLogin').textContent='SE CONNECTER';
 }
+
 async function doRegister(){
   const name=$('regName').value.trim(),phone=$('regPhone').value.trim(),email=$('regEmail').value.trim().toLowerCase(),pass=$('regPass').value,pass2=$('regPass2').value;
   $('regErr').textContent='';
@@ -826,42 +889,69 @@ async function doRegister(){
   if(pass.length<6){$('regErr').textContent='Mot de passe trop court (min 6)';return;}
   if(pass!==pass2){$('regErr').textContent='Mots de passe différents';return;}
   $('btnRegister').disabled=true;$('btnRegister').textContent='...';
-  try{const r=await fetch(BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,password:pass})});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Erreur');afterLogin({id:d.account_id,name:d.name,email:d.email});toast('Bienvenue '+d.name+' !','#00ff88');}
-  catch(e){$('regErr').textContent=e.message;}
+  try{
+    const r=await fetch(BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,password:pass})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Erreur');
+    afterLogin({id:d.account_id,name:d.name,email:d.email,balance:0,totalGains:0});
+    toast('Bienvenue '+d.name+' !','#00ff88');
+  }catch(e){$('regErr').textContent=e.message;}
   $('btnRegister').disabled=false;$('btnRegister').textContent='CRÉER MON COMPTE';
 }
+
 async function doForgot(){
   const email=$('forgotEmail').value.trim().toLowerCase();$('forgotErr').textContent='';
   if(!email){$('forgotErr').textContent='Email requis';return;}
   $('btnForgot').disabled=true;
-  try{await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});toast("Lien envoyé si l'email existe",'#4488ff');switchTab('login');}
-  catch(e){$('forgotErr').textContent='Erreur réseau';}
+  try{
+    await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    toast("Lien envoyé si l'email existe",'#4488ff');switchTab('login');
+  }catch(e){$('forgotErr').textContent='Erreur réseau';}
   $('btnForgot').disabled=false;
 }
+
 async function doReset(){
   const pass=$('resetPass').value,pass2=$('resetPass2').value;$('resetErr').textContent='';
   if(pass.length<6){$('resetErr').textContent='Trop court (min 6)';return;}
   if(pass!==pass2){$('resetErr').textContent='Mots de passe différents';return;}
   $('btnReset').disabled=true;
-  try{const r=await fetch(BASE+'/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:window._resetToken,password:pass})});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Lien invalide');toast('Mot de passe modifié !','#00ff88');switchTab('login');}
-  catch(e){$('resetErr').textContent=e.message;}
+  try{
+    const r=await fetch(BASE+'/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:window._resetToken,password:pass})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Lien invalide');
+    toast('Mot de passe modifié !','#00ff88');switchTab('login');
+  }catch(e){$('resetErr').textContent=e.message;}
   $('btnReset').disabled=false;
 }
+
 function afterLogin(acc){
   s.accountId=acc.id;s.myName=acc.name;s.isDemo=false;
+  bal.amount=acc.balance||0;
+  bal.totalGains=acc.totalGains||0;
   localStorage.setItem('otm_account',JSON.stringify({id:acc.id,name:acc.name,email:acc.email}));
   hideAllOverlays();
   $('userBar').classList.remove('hidden');$('displayName').textContent=acc.name;
   $('joinPanel').classList.remove('hidden');
-  showBalanceCard(acc.name);
+  showBalanceCard();
+  $('bcGainsStat').textContent=fmt(bal.totalGains)+' F';
   initGame();
 }
-function logout(){localStorage.removeItem('otm_account');localStorage.removeItem('otm_session');if(s.ws)s.ws.close();location.reload();}
+
+function logout(){
+  localStorage.removeItem('otm_account');
+  localStorage.removeItem('otm_session');
+  if(s.ws)s.ws.close();
+  location.reload();
+}
+
+/* ══ DÉMO ══ */
 function enterDemo(){
   s.isDemo=true;s.myName='Visiteur';
   hideAllOverlays();
   $('demoBanner').classList.remove('hidden');
   $('userBar').classList.add('hidden');
+  $('balanceCard').classList.add('hidden');
+  $('depotPanel').classList.add('hidden');
   $('joinPanel').classList.add('hidden');$('payPanel').classList.add('hidden');
   $('clickBtn').classList.add('hidden');$('demoBtn').classList.remove('hidden');
   $('winPanel').classList.remove('hidden');$('wList').innerHTML='';$('wCount').textContent='0/50';
@@ -869,8 +959,21 @@ function enterDemo(){
   $('miseDisplay').textContent='🎮 DÉMO — Aucun argent réel';
   initGame();
 }
-function exitDemo(){s.isDemo=false;$('demoBanner').classList.add('hidden');$('demoBtn').classList.add('hidden');$('demoResult').style.display='none';showOverlay('overlayAuth');switchTab('register');}
-function resetDemo(){$('demoResult').style.display='none';$('demoBtn').disabled=false;$('demoBtn').innerHTML='🎮';$('phaseMsg').textContent='🎮 Mode Démo — appuyez pour simuler !';}
+
+function exitDemo(){
+  s.isDemo=false;
+  $('demoBanner').classList.add('hidden');$('demoBtn').classList.add('hidden');
+  $('demoResult').style.display='none';
+  $('depotPanel').classList.remove('hidden');
+  showOverlay('overlayAuth');switchTab('register');
+}
+
+function resetDemo(){
+  $('demoResult').style.display='none';
+  $('demoBtn').disabled=false;$('demoBtn').innerHTML='🎮';
+  $('phaseMsg').textContent='🎮 Mode Démo — appuyez pour simuler !';
+}
+
 let _demoSent=false;
 function fastDemoClick(e){e.preventDefault();if(_demoSent)return;_demoSent=true;_runDemo();}
 function doDemoClick(){if(_demoSent)return;_demoSent=true;_runDemo();}
@@ -880,118 +983,404 @@ async function _runDemo(){
     const r=await fetch(BASE+'/api/demo/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
     const d=await r.json();
     $('demoResult').style.display='block';
-    if(d.ok){$('demoRank').textContent='#'+d.rank;$('demoPrize').textContent=fmt(d.prize)+' FCFA (fictif)';$('phaseMsg').textContent='🎮 Rang #'+d.rank+' en '+d.time+'s !';confetti();addWinner({rank:d.rank,name:'Vous [DÉMO] ★',time:d.time,prize:d.prize});}
-    else{$('demoRank').textContent='😔 Trop lent';$('demoPrize').textContent='Pas dans le Top 50';$('phaseMsg').textContent='🎮 Démo : pas assez rapide !';}
+    if(d.ok){
+      $('demoRank').textContent='#'+d.rank;
+      $('demoPrize').textContent=fmt(d.prize)+' FCFA (fictif)';
+      $('phaseMsg').textContent='🎮 Rang #'+d.rank+' en '+d.time+'s !';
+      confetti();
+      addWinner({rank:d.rank,name:'Vous [DÉMO] ★',time:d.time,prize:d.prize});
+    } else {
+      $('demoRank').textContent='😔 Trop lent';
+      $('demoPrize').textContent='Pas dans le Top 50';
+      $('phaseMsg').textContent='🎮 Démo : pas assez rapide !';
+    }
   }catch(e){$('phaseMsg').textContent='Erreur démo';}
   setTimeout(()=>{_demoSent=false;},1000);
 }
-function setMise(v,el){$('miseInput').value=v;document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');validateMise();}
+
+/* ══════════════════════════════════════════════════════════════
+   DÉPÔT RÉEL — NOTCHPAY
+══════════════════════════════════════════════════════════════ */
+function setDepot(v,el){
+  $('depotInput').value=v;
+  document.querySelectorAll('.depot-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  $('depotErr').textContent='';
+}
+
+async function doDepot(){
+  if(!s.accountId){toast('Connectez-vous d\'abord','#ff4455');return;}
+  const v=parseInt($('depotInput').value)||0;
+  const err=$('depotErr');
+  if(v<DEPOT_MIN){err.textContent='Minimum : '+DEPOT_MIN+' FCFA';return;}
+  if(v>DEPOT_MAX){err.textContent='Maximum : '+DEPOT_MAX+' FCFA';return;}
+  err.textContent='';
+
+  const btn=$('btnDepot');
+  btn.disabled=true;btn.textContent='Chargement...';
+
+  try{
+    const r=await fetch(BASE+'/api/depot/init',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({account_id:s.accountId,amount:v})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||d.message||'Erreur');
+
+    if(d.authorization_url){
+      // Sauvegarder la référence pour le polling
+      s.currentDepotRef=d.reference;
+      localStorage.setItem('otm_depot_ref',d.reference);
+
+      // Afficher le panneau d'attente
+      $('depotPanel').style.display='none';
+      $('pendingDepotPanel').style.display='block';
+      $('pendingDepotPanel').scrollIntoView({behavior:'smooth',block:'center'});
+
+      // Ouvrir la page de paiement NotchPay
+      window.open(d.authorization_url,'_blank');
+
+      // Polling automatique toutes les 5s
+      s.depotPollIv=setInterval(async()=>{
+        const ok=await verifyDepotSilent();
+        if(ok)clearInterval(s.depotPollIv);
+      },5000);
+    } else {
+      throw new Error('URL de paiement non reçue');
+    }
+  }catch(e){
+    err.textContent=e.message;
+    toast(e.message,'#ff4455');
+  }
+  btn.disabled=false;btn.textContent='DÉPOSER';
+}
+
+async function verifyDepotSilent(){
+  const ref=s.currentDepotRef||localStorage.getItem('otm_depot_ref');
+  if(!ref)return false;
+  try{
+    const r=await fetch(BASE+'/api/depot/verify',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({reference:ref})
+    });
+    const d=await r.json();
+    if(d.confirmed){
+      clearInterval(s.depotPollIv);
+      s.currentDepotRef=null;
+      localStorage.removeItem('otm_depot_ref');
+      // Mettre à jour le solde
+      updateBalance(d.balance);
+      $('pendingDepotPanel').style.display='none';
+      $('depotPanel').style.display='block';
+      toast('✓ Dépôt confirmé ! Solde rechargé.','#00ff88');
+      confetti();
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+async function verifyDepot(){
+  toast('Vérification en cours…','#4488ff');
+  const ok=await verifyDepotSilent();
+  if(!ok)toast('Paiement pas encore confirmé. Réessayez dans quelques secondes.','#FFA500');
+}
+
+function cancelDepot(){
+  clearInterval(s.depotPollIv);
+  s.currentDepotRef=null;
+  localStorage.removeItem('otm_depot_ref');
+  $('pendingDepotPanel').style.display='none';
+  $('depotPanel').style.display='block';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAIEMENT MISE — NOTCHPAY
+══════════════════════════════════════════════════════════════ */
+function setMise(v,el){
+  $('miseInput').value=v;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');validateMise();
+}
+
 function validateMise(){
   const v=parseInt($('miseInput').value)||0,err=$('miseErr');
   if(v<MISE_MIN){err.textContent='Mise minimum : '+MISE_MIN+' FCFA';return false;}
   if(v>MISE_MAX){err.textContent='Mise maximum : '+MISE_MAX+' FCFA';return false;}
   err.textContent='';return true;
 }
+
 async function joinGame(){
   if(!validateMise())return;
   const mise=parseInt($('miseInput').value);s.myMise=mise;
   try{
-    const r=await fetch(BASE+'/api/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account_id:s.accountId,mise})});
-    const d=await r.json();if(!r.ok)throw new Error(d.detail);
-    s.playerId=d.player_id;s.myGrp=d.group;applyState(d.state);
-    localStorage.setItem('otm_session',JSON.stringify({playerId:d.player_id,accountId:s.accountId,name:s.myName,group:d.group,mise}));
-    $('joinPanel').classList.add('hidden');$('payPanel').classList.remove('hidden');
+    const r=await fetch(BASE+'/api/join',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({account_id:s.accountId,mise})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail);
+    s.playerId=d.player_id;s.myGrp=d.group;
+    applyState(d.state);
+    localStorage.setItem('otm_session',JSON.stringify({
+      playerId:d.player_id,accountId:s.accountId,
+      name:s.myName,group:d.group,mise
+    }));
+    $('joinPanel').classList.add('hidden');
+    $('payPanel').classList.remove('hidden');
     $('payAmountDisplay').textContent=fmt(mise)+' FCFA';
     $('miseDisplay').textContent='Votre mise : '+fmt(mise)+' FCFA';
     toast('Groupe G-'+(d.group+1)+' — payez pour jouer','#4488ff');
   }catch(e){toast(e.message||'Erreur','#ff4455');}
 }
+
 async function payNow(){
   $('payBtn').disabled=true;$('payBtn').textContent='Chargement...';
   try{
-    const r=await fetch(BASE+'/api/payment/init',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})});
+    const r=await fetch(BASE+'/api/payment/init',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({player_id:s.playerId})
+    });
     const d=await r.json();
+
     if(d.already_paid){afterPaid();return;}
-    if(d.authorization_url)window.location.href=d.authorization_url;
-    else throw new Error('URL de paiement non reçue');
-  }catch(e){toast(e.message||'Erreur paiement','#ff4455');$('payBtn').disabled=false;$('payBtn').textContent='PAYER AVEC MOBILE MONEY';}
+
+    if(d.authorization_url){
+      s.currentMiseRef=d.reference;
+      localStorage.setItem('otm_mise_ref',d.reference);
+
+      // Masquer le panneau de paiement, afficher attente
+      $('payPanel').classList.add('hidden');
+      $('pendingMisePanel').style.display='block';
+      $('pendingMisePanel').scrollIntoView({behavior:'smooth',block:'center'});
+
+      // Ouvrir la page NotchPay
+      window.open(d.authorization_url,'_blank');
+
+      // Polling automatique
+      s.misePollIv=setInterval(async()=>{
+        const ok=await verifyMiseSilent();
+        if(ok)clearInterval(s.misePollIv);
+      },5000);
+    } else {
+      throw new Error('URL de paiement non reçue');
+    }
+  }catch(e){
+    toast(e.message||'Erreur paiement','#ff4455');
+    $('payPanel').classList.remove('hidden');
+  }
+  $('payBtn').disabled=false;$('payBtn').textContent='PAYER AVEC MOBILE MONEY';
 }
+
+async function verifyMiseSilent(){
+  const ref=s.currentMiseRef||localStorage.getItem('otm_mise_ref');
+  if(!ref)return false;
+  try{
+    const r=await fetch(BASE+'/api/payment/verify',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({reference:ref})
+    });
+    const d=await r.json();
+    if(d.confirmed){
+      clearInterval(s.misePollIv);
+      s.currentMiseRef=null;
+      localStorage.removeItem('otm_mise_ref');
+      $('pendingMisePanel').style.display='none';
+      afterPaid();
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+async function verifyMise(){
+  toast('Vérification en cours…','#4488ff');
+  const ok=await verifyMiseSilent();
+  if(!ok)toast('Paiement pas encore confirmé. Attendez quelques secondes.','#FFA500');
+}
+
+function cancelMise(){
+  clearInterval(s.misePollIv);
+  s.currentMiseRef=null;
+  localStorage.removeItem('otm_mise_ref');
+  $('pendingMisePanel').style.display='none';
+  $('payPanel').classList.remove('hidden');
+}
+
 function afterPaid(){
-  s.paid=true;$('payPanel').classList.add('hidden');
+  s.paid=true;
+  $('payPanel').classList.add('hidden');
+  $('pendingMisePanel').style.display='none';
   $('clickBtn').classList.remove('hidden');$('clickBtn').disabled=false;
   $('phaseMsg').textContent='Paiement confirmé — attendez le signal !';
   $('miseDisplay').textContent='Votre mise : '+fmt(s.myMise)+' FCFA';
-  toast('Vous êtes prêt à jouer !','#00ff88');
-  // Déduire la mise du solde
-  updateBalance(Math.max(0,bal.amount-s.myMise));
+  toast('✅ Vous êtes prêt à jouer !','#00ff88');
   $('bcMiseStat').textContent=fmt(s.myMise)+' F';
   $('bcStatusStat').textContent='En jeu';
   connectWS();
 }
+
+/* ══ WEBSOCKET ══ */
 function connectWS(){
   if(!s.playerId||s.isDemo)return;
   if(s.ws&&s.ws.readyState<2)return;
   const ws=new WebSocket(WS_BASE+'/ws/'+s.playerId);s.ws=ws;
-  ws.onopen=()=>{$('dot').classList.add('ok');s._ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({action:'ping'})),20000);};
+  ws.onopen=()=>{
+    $('dot').classList.add('ok');
+    s._ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({action:'ping'})),20000);
+  };
   ws.onmessage=e=>handleMsg(JSON.parse(e.data));
-  ws.onclose=()=>{$('dot').classList.remove('ok');clearInterval(s._ping);setTimeout(()=>connectWS(),3000);};
+  ws.onclose=()=>{
+    $('dot').classList.remove('ok');
+    clearInterval(s._ping);
+    setTimeout(()=>connectWS(),3000);
+  };
 }
+
+/* ══ CLIC ══ */
 let _clickSent=false;
 function fastClick(e){e.preventDefault();if(s.phase!=='active'||s.clicked||_clickSent)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}_sendClick();}
 function doClick(){if(_clickSent)return;if(s.phase!=='active'||s.clicked)return;if(!s.paid){toast('Payez la mise !','#ff4455');return;}_sendClick();}
 function _sendClick(){
   _clickSent=true;s.clicked=true;$('clickBtn').disabled=true;$('clickBtn').innerHTML='⚡';
-  if(s.ws&&s.ws.readyState===1)s.ws.send(JSON.stringify({action:'click'}));
-  else fetch(BASE+'/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})}).then(r=>r.json()).then(d=>handleMsg({type:'click_result',...d})).catch(()=>{});
+  if(s.ws&&s.ws.readyState===1){
+    s.ws.send(JSON.stringify({action:'click'}));
+  } else {
+    fetch(BASE+'/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})})
+      .then(r=>r.json())
+      .then(d=>handleMsg({type:'click_result',...d}))
+      .catch(()=>{});
+  }
   setTimeout(()=>{_clickSent=false;},500);
 }
+
+/* ══ MESSAGES WS ══ */
 function handleMsg(msg){
   switch(msg.type){
-    case 'connected':applyState(msg.state);if(msg.paid)afterPaid();break;
+    case 'connected':
+      applyState(msg.state);
+      if(msg.paid)afterPaid();
+      if(msg.balance!==undefined) updateBalance(msg.balance,true);
+      break;
     case 'pong':break;
-    case 'payment_confirmed':afterPaid();break;
-    case 'prize_sent':toast(msg.message,'#00ff88');break;
-    case 'prize_error':toast(msg.message,'#ff4455');break;
+    case 'payment_confirmed':
+      afterPaid();
+      break;
+    case 'payment_failed':
+      toast(msg.message,'#ff4455');
+      $('pendingMisePanel').style.display='none';
+      $('payPanel').classList.remove('hidden');
+      break;
+    case 'depot_confirmed':
+      updateBalance(msg.new_balance);
+      toast('✓ Dépôt de '+fmt(msg.amount)+' FCFA confirmé !','#00ff88');
+      $('pendingDepotPanel').style.display='none';
+      $('depotPanel').style.display='block';
+      confetti();
+      break;
+    case 'prize_sent':
+      toast(msg.message,'#FFD700');
+      break;
+    case 'prize_error':
+      toast(msg.message,'#ff4455');
+      break;
+    case 'balance':
+      updateBalance(msg.balance,true);
+      bal.totalGains=msg.total_gains||bal.totalGains;
+      $('bcGainsStat').textContent=fmt(bal.totalGains)+' F';
+      break;
     case 'countdown':
       s.phase='countdown';s.round=msg.round;$('roundNum').textContent=msg.round;
       $('timer').textContent='00:0'+msg.seconds;$('timer').className='timer active';
       $('phaseMsg').textContent='Lancement dans '+msg.seconds+'s !';
-      if(!s.isDemo)$('clickBtn').disabled=true;break;
+      if(!s.isDemo)$('clickBtn').disabled=true;
+      break;
     case 'round_start':
       s.phase='active';s.round=msg.round;s.roundDuration=msg.duration;
       s.roundStart=performance.now();s.remaining=msg.duration;
       s.clicked=false;_clickSent=false;s.winners=[];s.myRank=-1;
       $('winPanel').classList.remove('hidden');$('wList').innerHTML='';$('wCount').textContent='0/50';
       if(!s.isDemo){$('clickBtn').disabled=!s.paid;$('clickBtn').innerHTML='$';}
-      startLocalTick();break;
-    case 'tick':s.remaining=msg.remaining;renderTimer(msg.remaining);$('phaseMsg').textContent=msg.winners_count<50?msg.winners_count+' gagnant'+(msg.winners_count>1?'s':'')+' — soyez rapide !':'50 gagnants confirmés !';break;
-    case 'winner_added':addWinner(msg.winner);break;
+      startLocalTick();
+      break;
+    case 'tick':
+      s.remaining=msg.remaining;
+      renderTimer(msg.remaining);
+      $('phaseMsg').textContent=msg.winners_count<50?msg.winners_count+' gagnant'+(msg.winners_count>1?'s':'')+' — soyez rapide !':'50 gagnants confirmés !';
+      break;
+    case 'winner_added':
+      addWinner(msg.winner);
+      break;
     case 'round_end':
       s.phase='ended';clearInterval(s.tickIv);
       $('timer').textContent='00:0';$('timer').className='timer';
       if(!s.isDemo)$('clickBtn').disabled=true;
       $('phaseMsg').textContent=s.myRank>0?'Félicitations ! Rang #'+s.myRank+' !':'Round '+msg.round+' terminé — '+msg.total_winners+' gagnants.';
       $('bcMiseStat').textContent='—';$('bcStatusStat').textContent='Actif';
-      if(s.paid&&!s.isDemo){setTimeout(()=>{s.paid=false;_clickSent=false;$('clickBtn').classList.add('hidden');$('joinPanel').classList.remove('hidden');},8000);}break;
+      if(s.paid&&!s.isDemo){
+        setTimeout(()=>{
+          s.paid=false;_clickSent=false;
+          $('clickBtn').classList.add('hidden');
+          $('joinPanel').classList.remove('hidden');
+        },8000);
+      }
+      break;
     case 'click_result':
       if(msg.ok){
         s.myRank=msg.rank;
         toast('GAGNÉ ! Rang #'+msg.rank+' — '+fmt(msg.prize)+' FCFA !','#FFD700');
         confetti();
-        $('clickBtn').innerHTML='✓';$('clickBtn').style.background='radial-gradient(circle, #00ff88, #007733)';$('clickBtn').disabled=true;
-        // Créditer le gain sur le solde
+        $('clickBtn').innerHTML='✓';
+        $('clickBtn').style.background='radial-gradient(circle, #00ff88, #007733)';
+        $('clickBtn').disabled=true;
+        // Le gain est crédité côté serveur — rafraîchir le solde
         bal.totalGains+=msg.prize;
         updateBalance(bal.amount+msg.prize);
         $('bcGainsStat').textContent=fmt(bal.totalGains)+' F';
         $('bcStatusStat').textContent='Gagnant !';
       }
-      else if(msg.reason==='not_paid'){s.clicked=false;_clickSent=false;toast('Payez la mise !','#ff4455');$('payPanel').classList.remove('hidden');$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}
-      else if(msg.reason==='too_late'){toast('Trop tard ! 50 gagnants trouvés.','#ff4455');$('bcStatusStat').textContent='Actif';}
-      else if(msg.reason==='round_not_active'){s.clicked=false;_clickSent=false;$('clickBtn').disabled=false;$('clickBtn').innerHTML='$';}break;
+      else if(msg.reason==='not_paid'){
+        s.clicked=false;_clickSent=false;
+        toast('Payez la mise !','#ff4455');
+        $('payPanel').classList.remove('hidden');
+        $('clickBtn').disabled=false;$('clickBtn').innerHTML='$';
+      }
+      else if(msg.reason==='too_late'){
+        toast('Trop tard ! 50 gagnants trouvés.','#ff4455');
+        $('bcStatusStat').textContent='Actif';
+      }
+      else if(msg.reason==='round_not_active'){
+        s.clicked=false;_clickSent=false;
+        $('clickBtn').disabled=false;$('clickBtn').innerHTML='$';
+      }
+      break;
   }
 }
-function startLocalTick(){clearInterval(s.tickIv);s.tickIv=setInterval(()=>{if(s.phase!=='active')return;const rem=Math.max(0,s.roundDuration-(performance.now()-s.roundStart)/1000);renderTimer(rem);if(rem<=0)clearInterval(s.tickIv);},16);}
-function renderTimer(rem){const ss=Math.floor(rem),ds=Math.floor((rem-ss)*10);$('timer').textContent=(ss<10?'0':'')+ss+':'+ds;$('tbar').style.width=((rem/(s.roundDuration||30))*100)+'%';$('timer').className='timer'+(rem<=10?' danger':' active');}
+
+/* ══ TIMER ══ */
+function startLocalTick(){
+  clearInterval(s.tickIv);
+  s.tickIv=setInterval(()=>{
+    if(s.phase!=='active')return;
+    const rem=Math.max(0,s.roundDuration-(performance.now()-s.roundStart)/1000);
+    renderTimer(rem);
+    if(rem<=0)clearInterval(s.tickIv);
+  },16);
+}
+
+function renderTimer(rem){
+  const ss=Math.floor(rem),ds=Math.floor((rem-ss)*10);
+  $('timer').textContent=(ss<10?'0':'')+ss+':'+ds;
+  $('tbar').style.width=((rem/(s.roundDuration||30))*100)+'%';
+  $('timer').className='timer'+(rem<=10?' danger':' active');
+}
+
+/* ══ WINNERS ══ */
 function addWinner(w){
   s.winners.push(w);
   const li=document.createElement('div');li.className='witem';
@@ -1000,23 +1389,118 @@ function addWinner(w){
   li.innerHTML='<span class="wrank '+rc+'">#'+w.rank+'</span><span class="wname">'+w.name+'</span><span class="wtime">+'+parseFloat(w.time).toFixed(3)+'s</span><span class="wprize">'+fmt(w.prize)+' F</span>';
   $('wList').appendChild(li);$('wList').scrollTop=9999;$('wCount').textContent=s.winners.length+'/50';
 }
-function buildGrid(){const g=$('grpGrid');g.innerHTML='';for(let i=0;i<10;i++){const d=document.createElement('div');d.id='gp'+i;d.className='group-pill'+(i===s.myGrp?' active':'');d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':'#444')+'">'+fmt(s.groups[i])+'</span>';g.appendChild(d);}}
-function refreshStats(){$('totalPlayers').textContent=fmt(s.players);const ag=Math.max(1,Math.ceil(s.players/100000));$('totalGroups').textContent=ag;$('grpBadge').textContent=ag+' groupe'+(ag>1?'s':'');for(let i=0;i<10;i++){const d=$('gp'+i);if(!d)continue;d.className='group-pill'+(i===s.myGrp?' active':s.groups[i]>=100000?' full':'');d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':s.groups[i]>=100000?'#333':'#444')+'">'+fmt(s.groups[i])+'</span>';}}
-function applyState(st){s.players=st.total_players;s.groups=st.groups;s.round=st.round;$('roundNum').textContent=st.round;refreshStats();}
-function confetti(){const box=$('cbox'),cols=['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];for(let i=0;i<80;i++){const p=document.createElement('div'),sz=Math.random()*9+4;p.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';box.appendChild(p);setTimeout(()=>p.remove(),4500);}}
-async function initGame(){
-  buildGrid();buildPrimes();
-  try{const r=await fetch(BASE+'/api/state');applyState(await r.json());}catch(e){}
-  if(!s.isDemo){
-    const sess=localStorage.getItem('otm_session');
-    if(sess){try{const sd=JSON.parse(sess);if(sd.accountId===s.accountId&&sd.playerId){s.playerId=sd.playerId;s.myGrp=sd.group;s.myMise=sd.mise||500;$('joinPanel').classList.add('hidden');$('payPanel').classList.remove('hidden');$('payAmountDisplay').textContent=fmt(s.myMise)+' FCFA';$('miseDisplay').textContent='Votre mise : '+fmt(s.myMise)+' FCFA';}}catch(e){}}
-    const p=new URLSearchParams(window.location.search);
-    if(p.get('payment')==='success'){history.replaceState({},'','/');const ss=localStorage.getItem('otm_session');if(ss){try{const sd=JSON.parse(ss);s.playerId=sd.playerId;s.myGrp=sd.group;s.myMise=sd.mise||500;s.paid=true;afterPaid();}catch(e){}}toast('Paiement confirmé !','#00ff88');}
-    else if(p.get('payment')==='failed'){history.replaceState({},'','/');toast('Paiement échoué. Réessayez.','#ff4455');}
+
+/* ══ GRILLE GROUPES ══ */
+function buildGrid(){
+  const g=$('grpGrid');g.innerHTML='';
+  for(let i=0;i<10;i++){
+    const d=document.createElement('div');
+    d.id='gp'+i;d.className='group-pill'+(i===s.myGrp?' active':'');
+    d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':'#444')+'">'+fmt(s.groups[i])+'</span>';
+    g.appendChild(d);
   }
 }
 
-/* Appelé après la fin du loading screen */
+function refreshStats(){
+  $('totalPlayers').textContent=fmt(s.players);
+  const ag=Math.max(1,Math.ceil(s.players/100000));
+  $('totalGroups').textContent=ag;
+  $('grpBadge').textContent=ag+' groupe'+(ag>1?'s':'');
+  for(let i=0;i<10;i++){
+    const d=$('gp'+i);if(!d)continue;
+    d.className='group-pill'+(i===s.myGrp?' active':s.groups[i]>=100000?' full':'');
+    d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':s.groups[i]>=100000?'#333':'#444')+'">'+fmt(s.groups[i])+'</span>';
+  }
+}
+
+function applyState(st){
+  s.players=st.total_players;s.groups=st.groups;s.round=st.round;
+  $('roundNum').textContent=st.round;refreshStats();
+}
+
+/* ══ CONFETTI ══ */
+function confetti(){
+  const box=$('cbox'),cols=['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div'),sz=Math.random()*9+4;
+    p.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';
+    box.appendChild(p);setTimeout(()=>p.remove(),4500);
+  }
+}
+
+/* ══ INIT JEU ══ */
+async function initGame(){
+  buildGrid();buildPrimes();
+  try{const r=await fetch(BASE+'/api/state');applyState(await r.json());}catch(e){}
+
+  // Vérifier si dépôt en attente
+  const pendingDepotRef=localStorage.getItem('otm_depot_ref');
+  if(pendingDepotRef&&s.accountId){
+    s.currentDepotRef=pendingDepotRef;
+    const ok=await verifyDepotSilent();
+    if(!ok){
+      $('depotPanel').style.display='none';
+      $('pendingDepotPanel').style.display='block';
+      s.depotPollIv=setInterval(async()=>{const ok2=await verifyDepotSilent();if(ok2)clearInterval(s.depotPollIv);},5000);
+    }
+  }
+
+  if(!s.isDemo){
+    // Restaurer session jeu
+    const sess=localStorage.getItem('otm_session');
+    if(sess){
+      try{
+        const sd=JSON.parse(sess);
+        if(sd.accountId===s.accountId&&sd.playerId){
+          s.playerId=sd.playerId;s.myGrp=sd.group;s.myMise=sd.mise||500;
+          $('joinPanel').classList.add('hidden');
+          $('payPanel').classList.remove('hidden');
+          $('payAmountDisplay').textContent=fmt(s.myMise)+' FCFA';
+          $('miseDisplay').textContent='Votre mise : '+fmt(s.myMise)+' FCFA';
+        }
+      }catch(e){}
+    }
+
+    // Vérifier si mise en attente de confirmation
+    const pendingMiseRef=localStorage.getItem('otm_mise_ref');
+    if(pendingMiseRef&&s.playerId){
+      s.currentMiseRef=pendingMiseRef;
+      const ok=await verifyMiseSilent();
+      if(!ok){
+        $('payPanel').classList.add('hidden');
+        $('pendingMisePanel').style.display='block';
+        s.misePollIv=setInterval(async()=>{const ok2=await verifyMiseSilent();if(ok2)clearInterval(s.misePollIv);},5000);
+      }
+    }
+
+    // Retour depuis NotchPay
+    const p=new URLSearchParams(window.location.search);
+    if(p.get('payment')==='success'){
+      history.replaceState({},'','/');
+      const ok=await verifyMiseSilent();
+      if(!ok){
+        // Dernier recours : considérer comme payé si callback reçu
+        const ss=localStorage.getItem('otm_session');
+        if(ss){try{const sd=JSON.parse(ss);s.playerId=sd.playerId;s.myGrp=sd.group;s.myMise=sd.mise||500;}catch(e){}}
+        toast('Paiement confirmé !','#00ff88');
+        afterPaid();
+      }
+    } else if(p.get('payment')==='failed'){
+      history.replaceState({},'','/');
+      toast('Paiement échoué. Réessayez.','#ff4455');
+    }
+
+    if(p.get('depot')==='success'){
+      history.replaceState({},'','/');
+      await verifyDepotSilent();
+    } else if(p.get('depot')==='failed'){
+      history.replaceState({},'','/');
+      toast('Dépôt échoué. Réessayez.','#ff4455');
+    }
+  }
+}
+
+/* ══ BOOT ══ */
 function bootSite(){
   const rt=new URLSearchParams(window.location.search).get('reset_token');
   if(rt){window._resetToken=rt;history.replaceState({},'','/');showOverlay('overlayAuth');switchTab('reset');return;}
