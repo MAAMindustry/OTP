@@ -1,6 +1,6 @@
 """
 ONE TOUCH MILLION — Backend FastAPI + NotchPay
-Déployable sur Render — Version corrigée avec persistance JSON
+Version complète avec paiement connecté (phone + operator + verify endpoint)
 """
 
 import asyncio
@@ -36,19 +36,16 @@ NOTCHPAY_API         = "https://api.notchpay.co"
 MISE_MIN             = 100
 MISE_MAX             = 1000
 
-SITE_URL = os.environ.get("SITE_URL", "https://one-touch-million.onrender.com")
-
+SITE_URL  = os.environ.get("SITE_URL",  "https://one-touch-million.onrender.com")
 SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASS = os.environ.get("SMTP_PASS", "")
 
 # ─── PERSISTANCE JSON ─────────────────────────────────────────────────────────
-# FIX CRITIQUE : Render efface la RAM au redémarrage → on sauvegarde sur disque
 DATA_FILE = os.environ.get("DATA_FILE", "/tmp/otm_accounts.json")
 
 def load_accounts_from_disk() -> dict:
-    """Charge les comptes depuis le fichier JSON au démarrage"""
     if not os.path.exists(DATA_FILE):
         return {}
     try:
@@ -65,7 +62,6 @@ def load_accounts_from_disk() -> dict:
         return {}
 
 def save_accounts_to_disk(accounts: dict):
-    """Sauvegarde les comptes sur disque après chaque inscription/modification"""
     try:
         raw = {email: asdict(acc) for email, acc in accounts.items()}
         with open(DATA_FILE, "w", encoding="utf-8") as f:
@@ -136,7 +132,6 @@ class Account:
     created_at: float = field(default_factory=time.time)
     reset_token: str = ""
     reset_expires: float = 0.0
-    # FIX : Solde persistant sur le compte
     wallet: int = 0
     total_gains: int = 0
     total_deposits: int = 0
@@ -187,28 +182,47 @@ class NotchPayClient:
             "Content-Type": "application/json",
         }
 
-    async def init_payment(self, player: "Player", reference: str, amount: int, callback_url: str) -> dict:
-        """
-        FIX: callback_url est maintenant dynamique (mise vs dépôt)
-        FIX: 'phone' doit inclure l'indicatif pays pour NotchPay Cameroun
-        """
-        phone = player.phone or ""
-        # NotchPay attend le format international : +237XXXXXXXXX
-        if phone and not phone.startswith("+"):
-            phone = "+237" + phone.lstrip("0")
+    def _normalize_phone(self, phone: str) -> str:
+        """Normalise le numéro au format international +237XXXXXXXXX"""
+        phone = phone.strip()
+        if not phone:
+            return phone
+        # Supprimer le + si déjà présent pour retravailler
+        if phone.startswith("+"):
+            return phone
+        # Si commence par 237 (indicatif sans +)
+        if phone.startswith("237"):
+            return "+" + phone
+        # Si commence par 0 (format local)
+        if phone.startswith("0"):
+            return "+237" + phone[1:]
+        # Sinon considérer comme numéro local camerounais
+        return "+237" + phone
+
+    async def init_payment(self, player: "Player", reference: str, amount: int,
+                           callback_url: str, operator: str = "") -> dict:
+        phone = self._normalize_phone(player.phone or "")
 
         payload = {
             "amount": amount,
             "currency": "XAF",
             "customer": {
                 "name": player.name,
-                "email": player.email if player.email and "@" in player.email else f"user_{player.id[:8]}@otm.game",
+                "email": player.email if player.email and "@" in player.email
+                         else f"user_{player.id[:8]}@otm.game",
                 "phone": phone,
             },
-            "description": "ONE TOUCH MILLION",
+            "description": "ONE TOUCH MILLION — Mise de jeu",
             "reference": reference,
             "callback": callback_url,
         }
+
+        # Si l'opérateur est précisé, le passer à NotchPay
+        if operator == "orange":
+            payload["channel"] = "cm.orange"
+        elif operator == "mtn":
+            payload["channel"] = "cm.mtn"
+
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 f"{NOTCHPAY_API}/payments",
@@ -218,7 +232,6 @@ class NotchPayClient:
             data = r.json()
             log.info(f"NotchPay init_payment [{r.status_code}]: {data}")
             if r.status_code not in (200, 201):
-                # FIX : Message d'erreur plus précis pour le débogage
                 msg = data.get("message") or data.get("error") or str(data)
                 raise ValueError(f"NotchPay [{r.status_code}]: {msg}")
             return data
@@ -232,12 +245,10 @@ class NotchPayClient:
             return r.json()
 
     async def send_transfer(self, account: "Account", amount: int, reference: str) -> dict:
-        phone = account.phone or ""
-        if phone and not phone.startswith("+"):
-            phone = "+237" + phone.lstrip("0")
+        phone = self._normalize_phone(account.phone or "")
 
-        # FIX : Détection canal MTN/Orange améliorée
-        local = account.phone.lstrip("+237").lstrip("0") if account.phone else ""
+        # Détection canal MTN/Orange par préfixe
+        local = (account.phone or "").lstrip("+").lstrip("237").lstrip("0")
         if local.startswith(("65", "66", "69")):
             channel = "cm.orange"
         else:
@@ -251,7 +262,7 @@ class NotchPayClient:
                 "phone": phone,
                 "email": account.email,
             },
-            "description": f"Gain ONE TOUCH MILLION",
+            "description": "Gain ONE TOUCH MILLION",
             "reference": reference,
             "channel": channel,
         }
@@ -266,7 +277,6 @@ class NotchPayClient:
             return data
 
     def verify_webhook(self, payload: bytes, signature: str) -> bool:
-        """FIX : Utilisation correcte de hmac.new"""
         expected = hmac.new(
             NOTCHPAY_HASH_KEY.encode(),
             payload,
@@ -331,12 +341,11 @@ class GameEngine:
         self.mgr = manager
         self.state = GameState()
         self.players: dict[str, Player] = {}
-        # FIX CRITIQUE : Charger les comptes depuis le disque au démarrage
         self.accounts: dict[str, Account] = load_accounts_from_disk()
         self.accounts_by_id: dict[str, Account] = {
             acc.id: acc for acc in self.accounts.values()
         }
-        self.pending_payments: dict[str, dict] = {}  # ref -> {player_id, account_id, type, amount}
+        self.pending_payments: dict[str, dict] = {}
         self.bot_clicks: list[float] = []
         self.task: Optional[asyncio.Task] = None
         self._lock = asyncio.Lock()
@@ -355,7 +364,6 @@ class GameEngine:
         )
         self.accounts[email] = acc
         self.accounts_by_id[acc.id] = acc
-        # FIX : Sauvegarder immédiatement sur disque
         save_accounts_to_disk(self.accounts)
         log.info(f"Nouveau compte créé: {name} ({email})")
         return acc
@@ -391,9 +399,8 @@ class GameEngine:
                 return True
         return False
 
-    # ── DÉPÔT (recharge de portefeuille) ─────────────────────────────────────
-    async def initiate_deposit(self, account_id: str, amount: int) -> dict:
-        """FIX : Nouvel endpoint dépôt — séparé du paiement de mise"""
+    # ── DÉPÔT PORTEFEUILLE ────────────────────────────────────────────────────
+    async def initiate_deposit(self, account_id: str, amount: int, operator: str = "") -> dict:
         acc = self.accounts_by_id.get(account_id)
         if not acc:
             raise ValueError("Compte introuvable — veuillez vous reconnecter")
@@ -403,18 +410,15 @@ class GameEngine:
             "type": "deposit",
             "account_id": account_id,
             "amount": amount,
+            "operator": operator,
         }
 
-        # Créer un pseudo-player pour l'API NotchPay
         fake_player = Player(
-            id=acc.id,
-            name=acc.name,
-            group=0,
-            phone=acc.phone,
-            email=acc.email,
+            id=acc.id, name=acc.name, group=0,
+            phone=acc.phone, email=acc.email,
         )
         callback = f"{SITE_URL}/api/deposit/callback"
-        data = await notchpay.init_payment(fake_player, ref, amount, callback)
+        data = await notchpay.init_payment(fake_player, ref, amount, callback, operator=operator)
         auth_url = (
             data.get("authorization_url")
             or (data.get("transaction") or {}).get("authorization_url")
@@ -423,7 +427,6 @@ class GameEngine:
         return {"authorization_url": auth_url, "reference": ref}
 
     async def confirm_deposit(self, reference: str) -> bool:
-        """FIX : Vérifier et créditer le dépôt sur le compte"""
         info = self.pending_payments.get(reference)
         if not info or info.get("type") != "deposit":
             return False
@@ -435,7 +438,7 @@ class GameEngine:
 
         try:
             data = await notchpay.verify_payment(reference)
-            tx = data.get("transaction") or data.get("payment") or {}
+            tx     = data.get("transaction") or data.get("payment") or {}
             status = tx.get("status", "")
             amount = int(tx.get("amount") or info.get("amount", 0))
             log.info(f"Vérif dépôt {reference}: status={status}, amount={amount}")
@@ -445,35 +448,33 @@ class GameEngine:
                 acc.total_deposits += amount
                 del self.pending_payments[reference]
                 save_accounts_to_disk(self.accounts)
-                # Notifier le joueur en temps réel si connecté
                 player_id = self._find_player_by_account(account_id)
                 if player_id:
                     await self.mgr.send(player_id, {
                         "type": "deposit_confirmed",
                         "amount": amount,
                         "new_balance": acc.wallet,
-                        "message": f"Depot de {amount:,} FCFA confirme !",
+                        "message": f"Dépôt de {amount:,} FCFA confirmé !",
                     })
-                log.info(f"Depot confirme: {acc.name} +{amount} FCFA → solde={acc.wallet}")
+                log.info(f"Dépôt confirmé: {acc.name} +{amount} FCFA → solde={acc.wallet}")
                 return True
         except Exception as e:
-            log.error(f"Erreur confirmation depot: {e}")
+            log.error(f"Erreur confirmation dépôt: {e}")
         return False
 
     def _find_player_by_account(self, account_id: str) -> Optional[str]:
         for pid, p in self.players.items():
-            if p.id == account_id or (hasattr(p, 'account_id') and p.account_id == account_id):
+            if p.id == account_id:
                 return pid
         return None
 
     # ── REJOINDRE UNE PARTIE ──────────────────────────────────────────────────
     async def join_game(self, account_id: str, mise: int = 500) -> tuple[str, int]:
         async with self._lock:
-            # FIX : Message d'erreur plus explicite
             acc = self.accounts_by_id.get(account_id)
             if not acc:
                 raise ValueError(
-                    "Compte introuvable. Le serveur a peut-etre redémarré — "
+                    "Compte introuvable. Le serveur a peut-être redémarré — "
                     "veuillez vous déconnecter et vous reconnecter."
                 )
             if self.state.total_players >= MAX_PLAYERS:
@@ -499,22 +500,32 @@ class GameEngine:
             return pid, grp
 
     # ── INITIER PAIEMENT MISE ─────────────────────────────────────────────────
-    async def initiate_payment(self, player_id: str) -> dict:
+    async def initiate_payment(self, player_id: str, phone: str = "", operator: str = "") -> dict:
         player = self.players.get(player_id)
         if not player:
             raise ValueError("Session de jeu introuvable — veuillez rejoindre la partie")
         if player.paid:
             return {"already_paid": True}
 
+        # Mettre à jour le numéro de téléphone si fourni par l'UI
+        if phone:
+            player.phone = notchpay._normalize_phone(phone)
+            # Mettre à jour aussi le compte permanent
+            acc = self.accounts.get(player.email)
+            if acc:
+                acc.phone = player.phone
+                save_accounts_to_disk(self.accounts)
+
         ref = f"otm_{player_id[:8]}_{int(time.time())}"
         self.pending_payments[ref] = {
             "type": "mise",
             "player_id": player_id,
             "amount": player.mise,
+            "operator": operator,
         }
 
         callback = f"{SITE_URL}/api/payment/callback"
-        data = await notchpay.init_payment(player, ref, player.mise, callback)
+        data = await notchpay.init_payment(player, ref, player.mise, callback, operator=operator)
         auth_url = (
             data.get("authorization_url")
             or (data.get("transaction") or {}).get("authorization_url")
@@ -522,13 +533,52 @@ class GameEngine:
         )
         return {"authorization_url": auth_url, "reference": ref}
 
+    # ── VÉRIFIER PAIEMENT MISE (polling) ─────────────────────────────────────
+    async def verify_payment_status(self, reference: str, player_id: str) -> dict:
+        """
+        Appelé par le frontend toutes les 5s pour vérifier si le paiement
+        a été confirmé par NotchPay. Retourne confirmed=True dès que c'est bon.
+        """
+        # 1. Vérifier si le joueur est déjà marqué payé
+        player = self.players.get(player_id)
+        if player and player.paid:
+            return {"confirmed": True, "paid": True, "status": "complete"}
+
+        # 2. Vérifier si la référence est encore en attente
+        info = self.pending_payments.get(reference)
+        if not info:
+            # Référence inconnue ou déjà traitée
+            if player and player.paid:
+                return {"confirmed": True, "paid": True, "status": "complete"}
+            return {"confirmed": False, "paid": False, "status": "unknown"}
+
+        # 3. Interroger NotchPay
+        try:
+            data   = await notchpay.verify_payment(reference)
+            tx     = data.get("transaction") or data.get("payment") or {}
+            status = tx.get("status", "")
+            log.info(f"[VERIFY] ref={reference} player={player_id} status={status}")
+
+            if status == "complete":
+                confirmed = await self.confirm_payment(reference)
+                return {"confirmed": confirmed, "paid": confirmed, "status": status}
+            elif status in ("failed", "cancelled", "expired"):
+                # Nettoyer la référence en échec
+                self.pending_payments.pop(reference, None)
+                return {"confirmed": False, "paid": False, "status": status, "failed": True}
+            else:
+                # pending / processing — continuer à attendre
+                return {"confirmed": False, "paid": False, "status": status or "pending"}
+        except Exception as e:
+            log.error(f"[VERIFY] Erreur: {e}")
+            return {"confirmed": False, "paid": False, "error": str(e)}
+
     # ── CONFIRMER PAIEMENT MISE ───────────────────────────────────────────────
     async def confirm_payment(self, reference: str) -> bool:
         info = self.pending_payments.get(reference)
         if not info:
             return False
 
-        # Rediriger si c'est un dépôt
         if info.get("type") == "deposit":
             return await self.confirm_deposit(reference)
 
@@ -540,8 +590,8 @@ class GameEngine:
             return False
 
         try:
-            data = await notchpay.verify_payment(reference)
-            tx = data.get("transaction") or data.get("payment") or {}
+            data   = await notchpay.verify_payment(reference)
+            tx     = data.get("transaction") or data.get("payment") or {}
             status = tx.get("status", "")
             log.info(f"Vérif paiement mise {reference}: {status}")
             if status == "complete":
@@ -549,7 +599,7 @@ class GameEngine:
                 del self.pending_payments[reference]
                 await self.mgr.send(player_id, {
                     "type": "payment_confirmed",
-                    "message": "Paiement confirme ! Vous pouvez jouer.",
+                    "message": "Paiement confirmé ! Vous pouvez jouer.",
                 })
                 if self.task is None or self.task.done():
                     self.task = asyncio.create_task(self._game_loop())
@@ -575,9 +625,9 @@ class GameEngine:
         player.click_time = elapsed
 
         if len(self.state.winners) < WINNERS_COUNT:
-            rank = len(self.state.winners) + 1
+            rank  = len(self.state.winners) + 1
             prize = PRIZES[rank - 1]
-            player.rank = rank
+            player.rank  = rank
             player.prize = prize
             player.wallet += prize
             winner = Winner(rank=rank, name=player.name + " ", time=elapsed, prize=prize)
@@ -589,7 +639,6 @@ class GameEngine:
                 "total": len(self.state.winners)
             })
 
-            # Créditer le gain sur le compte permanent
             acc = self.accounts.get(player.email)
             if acc:
                 acc.wallet += prize
@@ -653,26 +702,26 @@ class GameEngine:
         self.state.round_start = time.time()
         self.state.winners = []
         for p in self.players.values():
-            p.clicked = False
+            p.clicked    = False
             p.click_time = None
-            p.rank = None
-            p.prize = None
+            p.rank       = None
+            p.prize      = None
 
         await self.mgr.broadcast_all({"type": "round_start", "round": self.state.round, "duration": ROUND_DURATION})
 
         end_time = self.state.round_start + ROUND_DURATION
-        bot_idx = 0
+        bot_idx  = 0
 
         while time.time() < end_time and self.state.phase == "active":
-            elapsed = time.time() - self.state.round_start
+            elapsed   = time.time() - self.state.round_start
             remaining = max(0, ROUND_DURATION - elapsed)
 
             while bot_idx < len(self.bot_clicks) and self.bot_clicks[bot_idx] <= elapsed:
                 if len(self.state.winners) < WINNERS_COUNT:
-                    rank = len(self.state.winners) + 1
-                    prize = PRIZES[rank - 1]
+                    rank     = len(self.state.winners) + 1
+                    prize    = PRIZES[rank - 1]
                     bot_name = f"Joueur{random.randint(10000, 99999)}"
-                    winner = Winner(rank=rank, name=bot_name, time=self.bot_clicks[bot_idx], prize=prize, is_bot=True)
+                    winner   = Winner(rank=rank, name=bot_name, time=self.bot_clicks[bot_idx], prize=prize, is_bot=True)
                     self.state.winners.append(asdict(winner))
                     await self.mgr.broadcast_all({
                         "type": "winner_added",
@@ -700,7 +749,7 @@ class GameEngine:
             "total_winners": len(self.state.winners)
         })
         self.state.round += 1
-        log.info(f"Round {self.state.round - 1} termine. {len(self.state.winners)} gagnants.")
+        log.info(f"Round {self.state.round - 1} terminé. {len(self.state.winners)} gagnants.")
 
     def snapshot(self) -> dict:
         return {
@@ -715,7 +764,7 @@ class GameEngine:
         }
 
 # ─── APP ──────────────────────────────────────────────────────────────────────
-app = FastAPI(title="ONE TOUCH MILLION", version="4.0.0")
+app = FastAPI(title="ONE TOUCH MILLION", version="5.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -728,9 +777,9 @@ if os.path.isdir(_static_dir):
     app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
 manager = ConnectionManager()
-engine = GameEngine(manager)
+engine  = GameEngine(manager)
 
-# ─── AUTH ENDPOINTS ───────────────────────────────────────────────────────────
+# ─── AUTH ─────────────────────────────────────────────────────────────────────
 @app.post("/api/auth/register")
 async def auth_register(body: dict):
     name     = (body.get("name") or "").strip()
@@ -739,9 +788,9 @@ async def auth_register(body: dict):
     password = (body.get("password") or "").strip()
 
     if not name or len(name) > 20:
-        raise HTTPException(400, "Pseudo invalide (1-20 caracteres)")
+        raise HTTPException(400, "Pseudo invalide (1-20 caractères)")
     if not phone:
-        raise HTTPException(400, "Numero de telephone requis")
+        raise HTTPException(400, "Numéro de téléphone requis")
     if not email or "@" not in email:
         raise HTTPException(400, "Email invalide")
     if len(password) < 6:
@@ -753,6 +802,7 @@ async def auth_register(body: dict):
             "account_id": acc.id,
             "name": acc.name,
             "email": acc.email,
+            "phone": acc.phone,
             "wallet": acc.wallet,
         }
     except ValueError as e:
@@ -771,7 +821,8 @@ async def auth_login(body: dict):
             "account_id": acc.id,
             "name": acc.name,
             "email": acc.email,
-            "wallet": acc.wallet,          # FIX : Retourner le solde réel
+            "phone": acc.phone,
+            "wallet": acc.wallet,
             "total_gains": acc.total_gains,
         }
     except ValueError as e:
@@ -795,14 +846,13 @@ async def reset_password(body: dict):
         raise HTTPException(400, "Token ou mot de passe invalide")
     ok = await engine.reset_password(token, password)
     if not ok:
-        raise HTTPException(400, "Lien expire ou invalide")
-    return {"message": "Mot de passe modifie avec succes"}
+        raise HTTPException(400, "Lien expiré ou invalide")
+    return {"message": "Mot de passe modifié avec succès"}
 
 
-# ─── WALLET ENDPOINT ──────────────────────────────────────────────────────────
+# ─── WALLET ───────────────────────────────────────────────────────────────────
 @app.get("/api/wallet/{account_id}")
 async def get_wallet(account_id: str):
-    """FIX NOUVEAU : Obtenir le solde réel du compte"""
     acc = engine.accounts_by_id.get(account_id)
     if not acc:
         raise HTTPException(404, "Compte introuvable")
@@ -813,18 +863,18 @@ async def get_wallet(account_id: str):
     }
 
 
-# ─── DÉPÔT ENDPOINTS ──────────────────────────────────────────────────────────
+# ─── DÉPÔT ────────────────────────────────────────────────────────────────────
 @app.post("/api/deposit/init")
 async def deposit_init(body: dict):
-    """FIX NOUVEAU : Initier un dépôt de portefeuille"""
     account_id = body.get("account_id")
-    amount = int(body.get("amount") or 0)
+    amount     = int(body.get("amount") or 0)
+    operator   = (body.get("operator") or "").strip()
     if not account_id:
         raise HTTPException(400, "account_id manquant")
     if amount < 100 or amount > 10000:
-        raise HTTPException(400, "Montant invalide (100-10000 FCFA)")
+        raise HTTPException(400, "Montant invalide (100–10 000 FCFA)")
     try:
-        result = await engine.initiate_deposit(account_id, amount)
+        result = await engine.initiate_deposit(account_id, amount, operator=operator)
         return result
     except ValueError as e:
         raise HTTPException(400, str(e))
@@ -832,7 +882,6 @@ async def deposit_init(body: dict):
 
 @app.get("/api/deposit/callback")
 async def deposit_callback(reference: str = None, trxref: str = None):
-    """FIX NOUVEAU : Callback après dépôt réussi"""
     ref = reference or trxref
     if ref:
         confirmed = await engine.confirm_deposit(ref)
@@ -841,7 +890,7 @@ async def deposit_callback(reference: str = None, trxref: str = None):
     return RedirectResponse(url="/?deposit=failed")
 
 
-# ─── JEU ENDPOINTS ────────────────────────────────────────────────────────────
+# ─── JEU ──────────────────────────────────────────────────────────────────────
 @app.get("/")
 async def root():
     idx = os.path.join(os.path.dirname(__file__), "static", "index.html")
@@ -879,14 +928,29 @@ async def join_game(body: dict):
 
 @app.post("/api/payment/init")
 async def payment_init(body: dict):
-    pid = body.get("player_id")
+    pid      = body.get("player_id")
+    phone    = (body.get("phone") or "").strip()
+    operator = (body.get("operator") or "").strip()
     if not pid:
         raise HTTPException(400, "player_id manquant")
     try:
-        result = await engine.initiate_payment(pid)
+        result = await engine.initiate_payment(pid, phone=phone, operator=operator)
         return result
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
+@app.post("/api/payment/verify")
+async def payment_verify(body: dict):
+    """
+    Polling côté frontend — appelé toutes les 5s après initiation du paiement.
+    Retourne confirmed=True dès que NotchPay confirme le paiement.
+    """
+    ref       = (body.get("reference") or "").strip()
+    player_id = (body.get("player_id") or "").strip()
+    if not ref:
+        raise HTTPException(400, "reference manquante")
+    return await engine.verify_payment_status(ref, player_id)
 
 
 @app.get("/api/payment/callback")
@@ -904,7 +968,6 @@ async def payment_webhook(request: Request):
     body = await request.body()
     sig  = request.headers.get("x-notch-signature", "")
 
-    # FIX : Vérification de signature avec le résultat utilisé
     if sig and not notchpay.verify_webhook(body, sig):
         log.warning("Webhook signature invalide — ignoré")
         return {"received": False}
@@ -942,21 +1005,6 @@ async def leaderboard():
     return {"winners": engine.state.winners, "round": engine.state.round}
 
 
-@app.post("/api/demo/click")
-async def demo_click(body: dict):
-    elapsed = round(random.uniform(0.05, 2.5), 4)
-    rank    = random.randint(1, 50)
-    prizes  = [5000000,2000000,1000000,500000,300000,200000,150000,100000,
-               80000,60000,50000,45000,40000,35000,30000,28000,26000,24000,
-               22000,20000,18000,17000,16000,15000,14000,13000,12000,11000,
-               10000,9500,9000,8500,8000,7500,7000,6500,6000,5500,5000,4500,
-               4000,3500,3000,2500,2000,1500,1200,1000,800,500]
-    won = random.random() > 0.4
-    if won:
-        return {"ok": True, "rank": rank, "prize": prizes[rank-1], "time": elapsed, "demo": True}
-    return {"ok": False, "reason": "too_late", "demo": True}
-
-
 @app.get("/health")
 async def health():
     return {
@@ -964,6 +1012,7 @@ async def health():
         "players": engine.state.total_players,
         "phase": engine.state.phase,
         "accounts": len(engine.accounts),
+        "version": "5.0.0",
     }
 
 
