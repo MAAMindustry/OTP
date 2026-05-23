@@ -27,6 +27,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .btn-accept:not(:disabled):hover{filter:brightness(1.1)}
 .btn-blue{background:linear-gradient(135deg,#4488ff,#2255cc);color:#fff}
 .btn-blue:not(:disabled):hover{filter:brightness(1.15)}
+.btn-green{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14}
+.btn-green:not(:disabled):hover{filter:brightness(1.1)}
 .age-big{font-family:'Black Ops One',cursive;font-size:64px;text-align:center;color:#FFD700;margin:14px 0}
 .age-sub{text-align:center;font-size:14px;color:#8888aa;margin-bottom:20px}
 .age-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
@@ -53,10 +55,20 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .subtitle{font-size:13px;color:#8888aa;margin-top:6px;letter-spacing:3px;text-transform:uppercase}
 .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff4455;margin-right:6px;transition:background .3s}
 .conn-dot.ok{background:#00ff88}
-.user-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+
+/* ── USER BAR ── */
+.user-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:10px;flex-wrap:wrap}
 .user-name{color:#FFD700;font-weight:700;font-size:14px}
+.wallet-display{display:flex;align-items:center;gap:6px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:8px;padding:5px 10px;cursor:pointer;transition:border-color .2s}
+.wallet-display:hover{border-color:#FFD700}
+.wallet-amount{color:#00ff88;font-weight:700;font-size:13px}
+.wallet-label{color:#6666aa;font-size:11px}
+.wallet-icon{font-size:14px}
+.user-actions{display:flex;gap:8px;align-items:center}
 .logout-btn{color:#6666aa;cursor:pointer;font-size:12px;background:none;border:none;font-family:'Rajdhani',sans-serif}
 .logout-btn:hover{color:#ff4455}
+.deposit-mini-btn{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14;border:none;border-radius:6px;padding:5px 10px;font-family:'Black Ops One',cursive;font-size:10px;cursor:pointer;letter-spacing:1px}
+.deposit-mini-btn:hover{filter:brightness(1.1)}
 
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
@@ -72,16 +84,46 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .group-pill.full{background:#111;border-color:#333;color:#333}
 .progress-note{font-size:12px;color:#6666aa;text-align:center;margin-top:10px}
 
-/* ── PAIEMENT ── */
+/* ── PAIEMENT MISE ── */
 .pay-panel{background:#12121f;border:0.5px solid #FFD700;border-radius:12px;padding:18px;margin-bottom:18px;text-align:center}
 .pay-title{font-size:14px;color:#FFD700;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
 .pay-amount{font-family:'Black Ops One',cursive;font-size:40px;color:#FFD700;margin:8px 0}
 .pay-sub{font-size:13px;color:#8888aa;margin-bottom:16px}
+.pay-methods-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.pay-method-btn{flex:1;max-width:160px;padding:11px 8px;border:1px solid #2a2a4a;border-radius:10px;background:#0a0a14;cursor:pointer;transition:all .2s;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#aaaacc;display:flex;align-items:center;justify-content:center;gap:6px}
+.pay-method-btn:hover{border-color:#FFD700;color:#FFD700}
+.pay-method-btn.selected{border-color:#FFD700;background:#1a1500;color:#FFD700}
+.pay-method-btn .op-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.op-orange{background:#FF6600}
+.op-mtn{background:#FFCC00}
+.phone-input-row{display:flex;gap:8px;margin-bottom:10px}
+.phone-prefix{background:#1e1e35;border:0.5px solid #2a2a4a;border-radius:10px;padding:11px 12px;color:#aaaacc;font-size:14px;font-weight:700;white-space:nowrap;display:flex;align-items:center}
 .btn-pay{width:100%;padding:16px;font-family:'Black Ops One',cursive;font-size:18px;letter-spacing:2px;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14;transition:filter .15s}
 .btn-pay:not(:disabled):hover{filter:brightness(1.1)}
 .btn-pay:disabled{opacity:.5;cursor:not-allowed}
-.pay-methods{display:flex;gap:10px;justify-content:center;margin-top:12px;font-size:12px;color:#6666aa}
-.pay-badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:3px 10px}
+.pay-status{font-size:13px;margin-top:10px;min-height:20px}
+.pay-status.pending{color:#FFD700}
+.pay-status.ok{color:#00ff88}
+.pay-status.err{color:#ff4455}
+
+/* ── WALLET / DÉPÔT ── */
+.wallet-panel{background:#12121f;border:0.5px solid #00ff88;border-radius:12px;padding:18px;margin-bottom:18px}
+.wallet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.wallet-title{font-size:14px;color:#00ff88;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.wallet-balance-big{font-family:'Black Ops One',cursive;font-size:32px;color:#00ff88;margin:6px 0}
+.wallet-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.wallet-stat{background:#0a0a14;border-radius:8px;padding:10px 12px;text-align:center}
+.wallet-stat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
+.wallet-stat-val{font-size:16px;font-weight:700;color:#aaaacc;margin-top:2px}
+.deposit-amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.dep-amount-btn{padding:9px 4px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
+.dep-amount-btn:hover,.dep-amount-btn.selected{border-color:#00ff88;background:#0d1f0d;color:#00ff88}
+.custom-amount-row{display:flex;gap:8px;margin-bottom:10px}
+.custom-amount-row .form-input{margin-bottom:0;flex:1}
+
+/* ── REJOINDRE ── */
+.join-panel{background:#12121f;border:0.5px solid #4488ff;border-radius:12px;padding:18px;margin-bottom:18px;text-align:center}
+.join-title{font-size:14px;color:#4488ff;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
 
 /* ── ARENA ── */
 .arena{background:#12121f;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
@@ -113,24 +155,42 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .wprize{color:#FFD700;font-weight:700;font-size:12px;min-width:100px;text-align:right}
 .rules{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#8888aa;line-height:1.8}
 .rules strong{color:#aaaacc}
+
+/* ── TOAST ── */
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:14px 24px;color:#00ff88;font-size:15px;font-weight:700;z-index:999;display:none;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;white-space:normal;text-align:center}
 .confetti-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998;overflow:hidden}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .hidden{display:none!important}
 .error-msg{color:#ff4455;font-size:12px;text-align:center;margin-top:6px;min-height:18px}
+
+/* ── MODAL DÉPÔT (overlay interne) ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,5,15,.95);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#6666aa;font-size:20px;cursor:pointer;line-height:1}
+.modal-close:hover{color:#ff4455}
+.modal-inner{position:relative}
+
+/* ── SPINNER ── */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── VÉRIFICATION PAIEMENT ── */
+.verify-panel{background:#12121f;border:0.5px solid #FFD700;border-radius:12px;padding:16px;margin-bottom:18px;text-align:center}
+.verify-steps{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.verify-step{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#0a0a14;border-radius:8px;font-size:13px;color:#8888aa}
+.verify-step.done{color:#00ff88;border:0.5px solid #00ff8833}
+.verify-step.active{color:#FFD700;border:0.5px solid #FFD70033}
+.step-icon{font-size:16px;min-width:20px}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     OVERLAY 1 — VÉRIFICATION D'ÂGE
-══════════════════════════════════════════════════════ -->
+<!-- ══════ OVERLAY 1 — ÂGE ══════ -->
 <div class="overlay" id="overlayAge">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
     <div class="modal-title">Vérification d'âge requise</div>
     <div class="age-big">21+</div>
-    <div class="age-sub">Ce jeu est réservé aux personnes majeures de <strong>21 ans et plus</strong>.<br>Confirmez votre âge pour continuer.</div>
+    <div class="age-sub">Ce jeu est réservé aux personnes de <strong>21 ans et plus</strong>.<br>Confirmez votre âge pour continuer.</div>
     <div id="ageForms">
       <div class="age-btns">
         <button class="btn-modal btn-accept" onclick="confirmAge(true)">J'AI 21 ANS OU PLUS</button>
@@ -139,84 +199,62 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
     <div id="ageBlocked" class="age-block hidden">
       <h2>⛔ Accès refusé</h2>
-      <p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.<br>Vous devez quitter cette page.</p>
+      <p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     OVERLAY 2 — POLITIQUE DE CONFIDENTIALITÉ + CGU
-══════════════════════════════════════════════════════ -->
+<!-- ══════ OVERLAY 2 — CGU ══════ -->
 <div class="overlay hidden" id="overlayPolicy">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
     <div class="modal-title">Conditions d'utilisation</div>
-
     <div class="modal-section">
       <h4>🔒 Politique de Confidentialité</h4>
-      <p>ONE TOUCH MILLION collecte votre nom, numéro de téléphone, email et données de paiement uniquement pour le bon fonctionnement du jeu et le versement de vos gains.</p>
-      <br>
-      <p>Vos données ne sont <strong>jamais vendues</strong> à des tiers. Les informations de paiement sont traitées exclusivement par <strong>NotchPay</strong>, un prestataire de paiement certifié. Nous conservons vos données 12 mois après votre dernière session.</p>
-      <br>
-      <p>Vous pouvez demander la suppression de votre compte à tout moment en contactant : <strong>support@onetouchmillion.cm</strong></p>
+      <p>ONE TOUCH MILLION collecte votre nom, numéro de téléphone, email et données de paiement uniquement pour le bon fonctionnement du jeu et le versement de vos gains. Vos données ne sont <strong>jamais vendues</strong> à des tiers. Les paiements sont traités par <strong>NotchPay</strong>.</p>
     </div>
-
     <div class="modal-section">
-      <h4>📜 Conditions Générales d'Utilisation</h4>
-      <p><strong>1. Jeu d'argent réel :</strong> La mise d'entrée de 500 FCFA est débitée de votre Mobile Money. Les gains sont versés directement sur votre numéro enregistré.</p>
-      <br>
-      <p><strong>2. Âge minimum :</strong> Vous confirmez avoir 21 ans ou plus. Toute fraude entraîne l'annulation des gains et la suppression du compte.</p>
-      <br>
-      <p><strong>3. Jeu responsable :</strong> Ce jeu implique des risques financiers. Ne jouez que les sommes que vous pouvez vous permettre de perdre. En cas de dépendance au jeu, contactez un professionnel de santé.</p>
-      <br>
-      <p><strong>4. Résultats :</strong> Le classement est déterminé par la vitesse de réaction. ONE TOUCH MILLION n'est pas responsable des aléas de connexion Internet.</p>
-      <br>
-      <p><strong>5. Gains :</strong> Les gains sont transférés sous 24h ouvrées. En cas d'erreur technique, le support traite les réclamations sous 48h.</p>
-      <br>
-      <p><strong>6. Juridiction :</strong> Ce service est soumis au droit camerounais. Tout litige sera traité devant les juridictions compétentes de Yaoundé, Cameroun.</p>
+      <h4>📜 Conditions Générales</h4>
+      <p><strong>1. Jeu d'argent réel :</strong> La mise de 500 FCFA est débitée de votre Mobile Money. Les gains sont versés sur votre numéro enregistré.</p><br>
+      <p><strong>2. Âge minimum :</strong> 21 ans. Toute fraude entraîne l'annulation des gains.</p><br>
+      <p><strong>3. Jeu responsable :</strong> Ne jouez que les sommes que vous pouvez perdre.</p><br>
+      <p><strong>4. Gains :</strong> Versés sous 24h ouvrées. Réclamations traitées sous 48h.</p><br>
+      <p><strong>5. Juridiction :</strong> Droit camerounais — Yaoundé.</p>
     </div>
-
     <div class="checkbox-row" onclick="toggleCheck('chkPolicy')">
       <input type="checkbox" id="chkPolicy" onclick="event.stopPropagation();checkConsents()">
-      <span>J'ai lu et j'accepte la <strong>Politique de Confidentialité</strong> et le traitement de mes données personnelles.</span>
+      <span>J'accepte la <strong>Politique de Confidentialité</strong> et le traitement de mes données.</span>
     </div>
     <div class="checkbox-row" onclick="toggleCheck('chkCgu')">
       <input type="checkbox" id="chkCgu" onclick="event.stopPropagation();checkConsents()">
-      <span>J'ai lu et j'accepte les <strong>Conditions Générales d'Utilisation</strong> et je comprends que ce jeu implique de l'argent réel.</span>
+      <span>J'accepte les <strong>CGU</strong> et je comprends que ce jeu implique de l'argent réel.</span>
     </div>
     <div class="checkbox-row" onclick="toggleCheck('chkAge21')">
       <input type="checkbox" id="chkAge21" onclick="event.stopPropagation();checkConsents()">
-      <span>Je confirme avoir <strong>21 ans ou plus</strong> et être en droit de participer à ce jeu dans mon pays de résidence.</span>
+      <span>Je confirme avoir <strong>21 ans ou plus</strong>.</span>
     </div>
-
     <button class="btn-modal btn-accept" id="btnAcceptPolicy" onclick="acceptPolicy()" disabled>ACCEPTER ET CONTINUER</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     OVERLAY 3 — CONNEXION / INSCRIPTION / MOT DE PASSE
-══════════════════════════════════════════════════════ -->
+<!-- ══════ OVERLAY 3 — AUTH ══════ -->
 <div class="overlay hidden" id="overlayAuth">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
-
-    <!-- TABS -->
     <div class="auth-tabs" id="authTabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">CONNEXION</button>
       <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">INSCRIPTION</button>
     </div>
-
-    <!-- PANEL LOGIN -->
+    <!-- LOGIN -->
     <div id="panelLogin">
       <input class="form-input" id="loginEmail" placeholder="Votre email" type="email" autocomplete="email">
       <input class="form-input" id="loginPass" placeholder="Mot de passe" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="forgot-link" onclick="switchTab('forgot')">Mot de passe oublié ?</div>
       <div class="error-msg" id="loginErr"></div>
       <button class="btn-modal btn-blue" id="btnLogin" onclick="doLogin()">SE CONNECTER</button>
-      <div class="auth-switch">Pas encore de compte ? <span onclick="switchTab('register')">S'inscrire</span></div>
+      <div class="auth-switch">Pas de compte ? <span onclick="switchTab('register')">S'inscrire</span></div>
     </div>
-
-    <!-- PANEL REGISTER -->
+    <!-- REGISTER -->
     <div id="panelRegister" class="hidden">
       <input class="form-input" id="regName" placeholder="Pseudo (ex: Champion237)" maxlength="20" autocomplete="nickname">
       <input class="form-input" id="regPhone" placeholder="Numéro Mobile Money (6XXXXXXXX)" type="tel" autocomplete="tel">
@@ -227,47 +265,98 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
       <button class="btn-modal btn-accept" id="btnRegister" onclick="doRegister()">CRÉER MON COMPTE</button>
       <div class="auth-switch">Déjà un compte ? <span onclick="switchTab('login')">Se connecter</span></div>
     </div>
-
-    <!-- PANEL MOT DE PASSE OUBLIÉ -->
+    <!-- FORGOT -->
     <div id="panelForgot" class="hidden">
-      <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Entrez votre email. Vous recevrez un lien pour réinitialiser votre mot de passe.</p>
+      <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Entrez votre email pour recevoir un lien de réinitialisation.</p>
       <input class="form-input" id="forgotEmail" placeholder="Votre email" type="email" autocomplete="email" onkeydown="if(event.key==='Enter')doForgot()">
       <div class="error-msg" id="forgotErr"></div>
       <button class="btn-modal btn-blue" id="btnForgot" onclick="doForgot()">ENVOYER LE LIEN</button>
-      <div class="auth-switch"><span onclick="switchTab('login')">← Retour à la connexion</span></div>
+      <div class="auth-switch"><span onclick="switchTab('login')">← Retour</span></div>
     </div>
-
-    <!-- PANEL RESET PASSWORD (via token URL) -->
+    <!-- RESET -->
     <div id="panelReset" class="hidden">
       <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Créez votre nouveau mot de passe.</p>
-      <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 caractères)" type="password" autocomplete="new-password">
-      <input class="form-input" id="resetPass2" placeholder="Confirmer le nouveau mot de passe" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
+      <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password" autocomplete="new-password">
+      <input class="form-input" id="resetPass2" placeholder="Confirmer" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
       <div class="error-msg" id="resetErr"></div>
       <button class="btn-modal btn-accept" id="btnReset" onclick="doReset()">CHANGER LE MOT DE PASSE</button>
     </div>
-
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     CONTENU PRINCIPAL
-══════════════════════════════════════════════════════ -->
+<!-- ══════ MODAL DÉPÔT (popup interne) ══════ -->
+<div class="modal-overlay hidden" id="overlayDeposit">
+  <div class="modal modal-inner" style="max-width:420px">
+    <button class="modal-close" onclick="closeDeposit()">✕</button>
+    <div class="modal-logo" style="font-size:18px">RECHARGER MON COMPTE</div>
+    <div class="modal-title" style="margin-bottom:16px">Dépôt Mobile Money</div>
+
+    <!-- Solde actuel -->
+    <div style="background:#0a0a14;border-radius:10px;padding:12px;margin-bottom:14px;text-align:center">
+      <div style="font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px">Solde actuel</div>
+      <div style="font-family:'Black Ops One',cursive;font-size:28px;color:#00ff88;margin-top:4px" id="depositCurrentBalance">0 FCFA</div>
+    </div>
+
+    <!-- Montants rapides -->
+    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Montant à recharger</div>
+    <div class="deposit-amounts" id="depositAmountBtns">
+      <div class="dep-amount-btn" onclick="selectDepositAmount(500)">500 F</div>
+      <div class="dep-amount-btn" onclick="selectDepositAmount(1000)">1 000 F</div>
+      <div class="dep-amount-btn" onclick="selectDepositAmount(2000)">2 000 F</div>
+      <div class="dep-amount-btn" onclick="selectDepositAmount(5000)">5 000 F</div>
+    </div>
+    <div class="custom-amount-row">
+      <input class="form-input" id="depositCustomAmount" type="number" placeholder="Montant personnalisé (100 - 10 000)" min="100" max="10000" oninput="onCustomAmountInput()">
+    </div>
+
+    <!-- Opérateur -->
+    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Opérateur</div>
+    <div class="pay-methods-row" style="margin-bottom:14px">
+      <button class="pay-method-btn" id="depBtnOrange" onclick="selectDepositOp('orange')">
+        <span class="op-dot op-orange"></span> Orange Money
+      </button>
+      <button class="pay-method-btn" id="depBtnMtn" onclick="selectDepositOp('mtn')">
+        <span class="op-dot op-mtn"></span> MTN MoMo
+      </button>
+    </div>
+
+    <div class="error-msg" id="depositErr"></div>
+    <button class="btn-modal btn-green" id="btnDeposit" onclick="doDeposit()" disabled>RECHARGER MON COMPTE</button>
+    <div class="pay-status" id="depositStatus"></div>
+  </div>
+</div>
+
+<!-- ══════ CONTENU PRINCIPAL ══════ -->
 <div class="container" id="mainContent" style="display:none">
   <div class="header">
     <div class="logo">ONE TOUCH MILLION</div>
     <div class="subtitle"><span class="conn-dot" id="dot"></span>La minute d'or</div>
   </div>
 
-  <!-- Barre utilisateur connecté -->
+  <!-- Barre utilisateur -->
   <div class="user-bar" id="userBar">
-    <div><span style="color:#6666aa;font-size:12px">Connecté : </span><span class="user-name" id="displayName">—</span></div>
-    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    <div>
+      <div style="font-size:11px;color:#6666aa">Connecté</div>
+      <div class="user-name" id="displayName">—</div>
+    </div>
+    <!-- Wallet avec bouton dépôt -->
+    <div class="wallet-display" onclick="openDeposit()" title="Recharger mon compte">
+      <span class="wallet-icon">💰</span>
+      <div>
+        <div class="wallet-label">Mon solde</div>
+        <div class="wallet-amount" id="walletAmount">0 FCFA</div>
+      </div>
+      <span style="color:#6666aa;font-size:11px;margin-left:4px">+</span>
+    </div>
+    <div class="user-actions">
+      <button class="deposit-mini-btn" onclick="openDeposit()">RECHARGER</button>
+      <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
   </div>
 
   <div class="rules">
-    <strong>Règles :</strong> Connectez-vous → payez la mise de <strong>500 FCFA</strong> via Orange Money ou MTN MoMo →
-    au signal, cliquez le bouton avant les autres.
-    Les <strong>50 premiers</strong> remportent jusqu'à <strong>5 000 000 FCFA</strong> versés directement sur votre Mobile Money.
+    <strong>Règles :</strong> Payez la mise de <strong>500 FCFA</strong> via Orange Money ou MTN MoMo →
+    au signal, cliquez avant les autres. Les <strong>50 premiers</strong> remportent jusqu'à <strong>5 000 000 FCFA</strong> versés sur votre Mobile Money.
   </div>
 
   <div class="stats-row">
@@ -276,23 +365,58 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     <div class="stat-card"><div class="stat-label">Mise d'entrée</div><div class="stat-value" style="color:#00ff88">500F</div></div>
   </div>
 
-  <!-- PAIEMENT -->
+  <!-- ── ÉTAPE 1 : REJOINDRE ── -->
+  <div class="join-panel hidden" id="joinPanel">
+    <div class="join-title">🎮 Rejoindre une partie</div>
+    <div style="font-size:13px;color:#8888aa;margin-bottom:14px">Rejoignez la file d'attente pour participer au prochain round.</div>
+    <button class="btn-modal btn-blue" style="width:100%;padding:14px;font-size:16px" onclick="joinGame()">REJOINDRE LE JEU</button>
+  </div>
+
+  <!-- ── ÉTAPE 2 : PAYER LA MISE ── -->
   <div class="pay-panel hidden" id="payPanel">
-    <div class="pay-title">Payer la mise pour jouer</div>
+    <div class="pay-title">💳 Payer la mise pour jouer</div>
     <div class="pay-amount">500 FCFA</div>
     <div class="pay-sub">Paiement sécurisé via NotchPay · Gagner jusqu'à 5 000 000 FCFA</div>
-    <button class="btn-pay" id="payBtn" onclick="payNow()">PAYER AVEC MOBILE MONEY</button>
-    <div class="pay-methods">
-      <span class="pay-badge">Orange Money</span>
-      <span class="pay-badge">MTN MoMo</span>
+
+    <!-- Choix opérateur -->
+    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Choisir votre opérateur</div>
+    <div class="pay-methods-row">
+      <button class="pay-method-btn" id="payBtnOrange" onclick="selectPayOp('orange')">
+        <span class="op-dot op-orange"></span> Orange Money
+      </button>
+      <button class="pay-method-btn" id="payBtnMtn" onclick="selectPayOp('mtn')">
+        <span class="op-dot op-mtn"></span> MTN MoMo
+      </button>
+    </div>
+
+    <!-- Numéro de paiement -->
+    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Numéro Mobile Money</div>
+    <div class="phone-input-row">
+      <div class="phone-prefix">+237</div>
+      <input class="form-input" id="payPhone" placeholder="6XXXXXXXX" type="tel" style="margin-bottom:0;flex:1" maxlength="9">
+    </div>
+    <div style="font-size:12px;color:#6666aa;margin-bottom:14px;text-align:left">Le débit sera effectué sur ce numéro.</div>
+
+    <div class="error-msg" id="payErr"></div>
+    <button class="btn-pay" id="payBtn" onclick="payNow()" disabled>PAYER AVEC MOBILE MONEY</button>
+    <div class="pay-status" id="payStatus"></div>
+
+    <!-- Vérification manuelle -->
+    <div style="margin-top:12px;font-size:12px;color:#555577">
+      Paiement en attente ? <span style="color:#4488ff;cursor:pointer" onclick="verifyPaymentManual()">Vérifier manuellement</span>
     </div>
   </div>
 
-  <!-- Bouton rejoindre partie -->
-  <div id="joinPanel" class="pay-panel hidden" style="border-color:#4488ff">
-    <div class="pay-title" style="color:#4488ff">Rejoindre une partie</div>
-    <div style="font-size:13px;color:#8888aa;margin-bottom:14px">Rejoignez la file d'attente et payez pour jouer</div>
-    <button class="btn-modal btn-blue" style="width:100%;padding:14px;font-size:16px" onclick="joinGame()">REJOINDRE LE JEU</button>
+  <!-- ── ÉTAPE 2b : VÉRIFICATION EN COURS ── -->
+  <div class="verify-panel hidden" id="verifyPanel">
+    <div style="font-size:14px;color:#FFD700;font-weight:700;margin-bottom:8px">⏳ Vérification du paiement</div>
+    <div class="verify-steps" id="verifySteps">
+      <div class="verify-step active" id="vstep1"><span class="step-icon">📱</span> Paiement initié sur votre téléphone</div>
+      <div class="verify-step" id="vstep2"><span class="step-icon">🔄</span> En attente de confirmation NotchPay</div>
+      <div class="verify-step" id="vstep3"><span class="step-icon">✅</span> Paiement confirmé</div>
+    </div>
+    <div style="font-size:12px;color:#8888aa;margin-top:8px">Confirmez le paiement sur votre téléphone puis patientez.</div>
+    <button class="btn-modal btn-blue" style="margin-top:12px;font-size:12px;padding:10px" onclick="cancelPaymentVerif()">Annuler</button>
   </div>
 
   <!-- GROUPES -->
@@ -328,21 +452,27 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 const BASE    = window.location.origin;
 const WS_BASE = BASE.replace(/^http/, 'ws');
 
-// ─── ÉTAT ──────────────────────────────────────────────────────────────────
+// ─── ÉTAT ─────────────────────────────────────────────────────────────────────
 const s = {
-  accountId: null, myName: null,
+  accountId: null, myName: null, myEmail: null, myPhone: null,
+  wallet: 0, totalGains: 0, totalDeposits: 0,
   playerId: null, myGrp: -1, paid: false,
   phase: 'idle', round: 1, roundDuration: 30,
   roundStart: null, remaining: 30,
   winners: [], myRank: -1, clicked: false,
   players: 0, groups: Array(10).fill(0),
-  ws: null, tickIv: null
+  ws: null, tickIv: null,
+  // Paiement
+  selectedPayOp: null, pendingPayRef: null,
+  payVerifyIv: null, payVerifyCount: 0,
+  // Dépôt
+  depositAmount: 0, selectedDepositOp: null, depositRef: null
 };
 
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(n).toLocaleString('fr-FR');
 
-// ─── UTILITAIRES ──────────────────────────────────────────────────────────
+// ─── UTILITAIRES ──────────────────────────────────────────────────────────────
 function toast(msg, col = '#00ff88') {
   const t = $('toast');
   t.textContent = msg;
@@ -357,7 +487,7 @@ function setLoading(btnId, loading, label) {
   const b = $(btnId);
   if (!b) return;
   b.disabled = loading;
-  if (label) b.textContent = loading ? '...' : label;
+  b.innerHTML = loading ? '<span class="spinner"></span>' + (label||'') : (label||'');
 }
 
 function showOverlay(id) {
@@ -370,7 +500,12 @@ function hideAllOverlays() {
   $('mainContent').style.display = 'block';
 }
 
-// ─── ÉTAPE 1 : VÉRIFICATION D'ÂGE ────────────────────────────────────────
+function updateWalletUI() {
+  $('walletAmount').textContent = fmt(s.wallet) + ' FCFA';
+  $('depositCurrentBalance').textContent = fmt(s.wallet) + ' FCFA';
+}
+
+// ─── ÉTAPE 1 : ÂGE ────────────────────────────────────────────────────────────
 function confirmAge(yes) {
   if (!yes) {
     $('ageForms').classList.add('hidden');
@@ -381,19 +516,15 @@ function confirmAge(yes) {
   showOverlay('overlayPolicy');
 }
 
-// ─── ÉTAPE 2 : POLITIQUE DE CONFIDENTIALITÉ ───────────────────────────────
+// ─── ÉTAPE 2 : CGU ─────────────────────────────────────────────────────────────
 function toggleCheck(id) {
-  const cb = $(id);
-  cb.checked = !cb.checked;
-  checkConsents();
+  const cb = $(id); cb.checked = !cb.checked; checkConsents();
 }
 function checkConsents() {
-  const ok = $('chkPolicy').checked && $('chkCgu').checked && $('chkAge21').checked;
-  $('btnAcceptPolicy').disabled = !ok;
+  $('btnAcceptPolicy').disabled = !($('chkPolicy').checked && $('chkCgu').checked && $('chkAge21').checked);
 }
 function acceptPolicy() {
   localStorage.setItem('otm_policy_ok', '1');
-  // Vérifier token de reset dans l'URL
   const p = new URLSearchParams(window.location.search);
   const resetToken = p.get('reset_token');
   if (resetToken) {
@@ -403,36 +534,21 @@ function acceptPolicy() {
     history.replaceState({}, '', '/');
     return;
   }
-  // Vérifier session sauvegardée
   const saved = localStorage.getItem('otm_account');
   if (saved) {
-    try {
-      const acc = JSON.parse(saved);
-      s.accountId = acc.id;
-      s.myName = acc.name;
-      afterLogin(acc);
-      return;
-    } catch(e) {}
+    try { const acc = JSON.parse(saved); afterLogin(acc); return; } catch(e) {}
   }
   showOverlay('overlayAuth');
 }
 
-// ─── ÉTAPE 3 : AUTH ───────────────────────────────────────────────────────
+// ─── ÉTAPE 3 : AUTH ─────────────────────────────────────────────────────────────
 function switchTab(tab) {
   ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p => $(p).classList.add('hidden'));
   ['tabLogin','tabRegister'].forEach(t => $(t)?.classList.remove('active'));
-
-  if (tab === 'login') {
-    $('panelLogin').classList.remove('hidden');
-    $('tabLogin').classList.add('active');
-  } else if (tab === 'register') {
-    $('panelRegister').classList.remove('hidden');
-    $('tabRegister').classList.add('active');
-  } else if (tab === 'forgot') {
-    $('panelForgot').classList.remove('hidden');
-  } else if (tab === 'reset') {
-    $('panelReset').classList.remove('hidden');
-  }
+  if (tab === 'login')    { $('panelLogin').classList.remove('hidden');    $('tabLogin').classList.add('active'); }
+  else if (tab === 'register') { $('panelRegister').classList.remove('hidden'); $('tabRegister').classList.add('active'); }
+  else if (tab === 'forgot')   { $('panelForgot').classList.remove('hidden'); }
+  else if (tab === 'reset')    { $('panelReset').classList.remove('hidden'); }
 }
 
 async function doLogin() {
@@ -440,20 +556,17 @@ async function doLogin() {
   const pass  = $('loginPass').value;
   $('loginErr').textContent = '';
   if (!email || !pass) { $('loginErr').textContent = 'Email et mot de passe requis'; return; }
-
   setLoading('btnLogin', true, 'SE CONNECTER');
   try {
     const r = await fetch(BASE + '/api/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({email, password: pass})
     });
     const d = await r.json();
     if (!r.ok) throw new Error(d.detail || 'Erreur');
-    afterLogin({id: d.account_id, name: d.name, email: d.email});
-  } catch(e) {
-    $('loginErr').textContent = e.message;
-  }
+    afterLogin({id: d.account_id, name: d.name, email: d.email, phone: d.phone||'',
+                wallet: d.wallet||0, total_gains: d.total_gains||0});
+  } catch(e) { $('loginErr').textContent = e.message; }
   setLoading('btnLogin', false, 'SE CONNECTER');
 }
 
@@ -464,27 +577,22 @@ async function doRegister() {
   const pass  = $('regPass').value;
   const pass2 = $('regPass2').value;
   $('regErr').textContent = '';
-
   if (!name) { $('regErr').textContent = 'Pseudo requis'; return; }
   if (!phone) { $('regErr').textContent = 'Numéro Mobile Money requis'; return; }
   if (!email || !email.includes('@')) { $('regErr').textContent = 'Email invalide'; return; }
   if (pass.length < 6) { $('regErr').textContent = 'Mot de passe trop court (min 6 car.)'; return; }
-  if (pass !== pass2) { $('regErr').textContent = 'Les mots de passe ne correspondent pas'; return; }
-
+  if (pass !== pass2) { $('regErr').textContent = 'Mots de passe différents'; return; }
   setLoading('btnRegister', true, 'CRÉER MON COMPTE');
   try {
     const r = await fetch(BASE + '/api/auth/register', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({name, phone, email, password: pass})
     });
     const d = await r.json();
     if (!r.ok) throw new Error(d.detail || 'Erreur');
-    afterLogin({id: d.account_id, name: d.name, email: d.email});
-    toast('Compte créé ! Bienvenue ' + d.name, '#00ff88');
-  } catch(e) {
-    $('regErr').textContent = e.message;
-  }
+    afterLogin({id: d.account_id, name: d.name, email: d.email, phone, wallet: 0, total_gains: 0});
+    toast('Bienvenue ' + d.name + ' !', '#00ff88');
+  } catch(e) { $('regErr').textContent = e.message; }
   setLoading('btnRegister', false, 'CRÉER MON COMPTE');
 }
 
@@ -492,19 +600,15 @@ async function doForgot() {
   const email = $('forgotEmail').value.trim().toLowerCase();
   $('forgotErr').textContent = '';
   if (!email) { $('forgotErr').textContent = 'Email requis'; return; }
-
   setLoading('btnForgot', true, 'ENVOYER LE LIEN');
   try {
     await fetch(BASE + '/api/auth/forgot-password', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({email})
     });
-    toast('Si cet email existe, un lien de réinitialisation a été envoyé.', '#4488ff');
+    toast('Lien envoyé si cet email existe.', '#4488ff');
     switchTab('login');
-  } catch(e) {
-    $('forgotErr').textContent = 'Erreur réseau. Réessayez.';
-  }
+  } catch(e) { $('forgotErr').textContent = 'Erreur réseau. Réessayez.'; }
   setLoading('btnForgot', false, 'ENVOYER LE LIEN');
 }
 
@@ -512,33 +616,43 @@ async function doReset() {
   const pass  = $('resetPass').value;
   const pass2 = $('resetPass2').value;
   $('resetErr').textContent = '';
-  if (pass.length < 6) { $('resetErr').textContent = 'Mot de passe trop court (min 6 car.)'; return; }
-  if (pass !== pass2) { $('resetErr').textContent = 'Les mots de passe ne correspondent pas'; return; }
-
+  if (pass.length < 6) { $('resetErr').textContent = 'Mot de passe trop court'; return; }
+  if (pass !== pass2)  { $('resetErr').textContent = 'Mots de passe différents'; return; }
   setLoading('btnReset', true, 'CHANGER LE MOT DE PASSE');
   try {
     const r = await fetch(BASE + '/api/auth/reset-password', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({token: window._resetToken, password: pass})
     });
     const d = await r.json();
     if (!r.ok) throw new Error(d.detail || 'Lien invalide ou expiré');
-    toast('Mot de passe modifié avec succès !', '#00ff88');
+    toast('Mot de passe modifié !', '#00ff88');
     switchTab('login');
-  } catch(e) {
-    $('resetErr').textContent = e.message;
-  }
+  } catch(e) { $('resetErr').textContent = e.message; }
   setLoading('btnReset', false, 'CHANGER LE MOT DE PASSE');
 }
 
 function afterLogin(acc) {
-  s.accountId = acc.id;
-  s.myName = acc.name;
-  localStorage.setItem('otm_account', JSON.stringify({id: acc.id, name: acc.name, email: acc.email}));
+  s.accountId   = acc.id;
+  s.myName      = acc.name;
+  s.myEmail     = acc.email;
+  s.myPhone     = acc.phone || '';
+  s.wallet      = acc.wallet || 0;
+  s.totalGains  = acc.total_gains || 0;
+  localStorage.setItem('otm_account', JSON.stringify({
+    id: acc.id, name: acc.name, email: acc.email,
+    phone: acc.phone||'', wallet: acc.wallet||0, total_gains: acc.total_gains||0
+  }));
   hideAllOverlays();
   $('displayName').textContent = acc.name;
+  updateWalletUI();
+  // Pré-remplir le numéro de téléphone dans le formulaire de paiement
+  if (acc.phone) {
+    const local = (acc.phone||'').replace(/^\+237/, '').replace(/^0/, '');
+    $('payPhone').value = local;
+  }
   $('joinPanel').classList.remove('hidden');
+  loadWallet(); // Rafraîchir le solde depuis le serveur
   initGame();
 }
 
@@ -549,12 +663,287 @@ function logout() {
   location.reload();
 }
 
-// ─── REJOINDRE UNE PARTIE ────────────────────────────────────────────────
+// ─── WALLET — CHARGEMENT SOLDE ────────────────────────────────────────────────
+async function loadWallet() {
+  if (!s.accountId) return;
+  try {
+    const r = await fetch(BASE + '/api/wallet/' + s.accountId);
+    if (r.ok) {
+      const d = await r.json();
+      s.wallet      = d.wallet || 0;
+      s.totalGains  = d.total_gains || 0;
+      s.totalDeposits = d.total_deposits || 0;
+      updateWalletUI();
+      // Mettre à jour le localStorage
+      const saved = localStorage.getItem('otm_account');
+      if (saved) {
+        const acc = JSON.parse(saved);
+        acc.wallet = s.wallet;
+        acc.total_gains = s.totalGains;
+        localStorage.setItem('otm_account', JSON.stringify(acc));
+      }
+    }
+  } catch(e) { /* silencieux */ }
+}
+
+// ─── DÉPÔT — MODAL ────────────────────────────────────────────────────────────
+function openDeposit() {
+  $('depositErr').textContent = '';
+  $('depositStatus').textContent = '';
+  $('depositStatus').className = 'pay-status';
+  $('depositCustomAmount').value = '';
+  // Réinitialiser les boutons de montant
+  document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
+  // Réinitialiser opérateur
+  $('depBtnOrange').classList.remove('selected');
+  $('depBtnMtn').classList.remove('selected');
+  s.depositAmount = 0; s.selectedDepositOp = null;
+  $('btnDeposit').disabled = true;
+  $('depositCurrentBalance').textContent = fmt(s.wallet) + ' FCFA';
+  $('overlayDeposit').classList.remove('hidden');
+}
+
+function closeDeposit() {
+  $('overlayDeposit').classList.add('hidden');
+  s.depositAmount = 0; s.selectedDepositOp = null;
+}
+
+function selectDepositAmount(amount) {
+  s.depositAmount = amount;
+  $('depositCustomAmount').value = '';
+  document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
+  // Trouver et sélectionner le bon bouton
+  document.querySelectorAll('.dep-amount-btn').forEach(b => {
+    if (b.textContent.replace(/\s/g,'').includes(amount.toString())) b.classList.add('selected');
+  });
+  checkDepositReady();
+}
+
+function onCustomAmountInput() {
+  const v = parseInt($('depositCustomAmount').value);
+  if (!isNaN(v) && v >= 100 && v <= 10000) {
+    s.depositAmount = v;
+    document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
+  } else {
+    s.depositAmount = 0;
+  }
+  checkDepositReady();
+}
+
+function selectDepositOp(op) {
+  s.selectedDepositOp = op;
+  $('depBtnOrange').classList.toggle('selected', op === 'orange');
+  $('depBtnMtn').classList.toggle('selected', op === 'mtn');
+  checkDepositReady();
+}
+
+function checkDepositReady() {
+  $('btnDeposit').disabled = !(s.depositAmount >= 100 && s.selectedDepositOp);
+}
+
+async function doDeposit() {
+  $('depositErr').textContent = '';
+  if (!s.depositAmount || s.depositAmount < 100) { $('depositErr').textContent = 'Montant invalide'; return; }
+  if (!s.selectedDepositOp) { $('depositErr').textContent = 'Choisissez votre opérateur'; return; }
+
+  setLoading('btnDeposit', true, 'RECHARGER MON COMPTE');
+  $('depositStatus').className = 'pay-status pending';
+  $('depositStatus').textContent = 'Initialisation du paiement...';
+
+  try {
+    const r = await fetch(BASE + '/api/deposit/init', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        account_id: s.accountId,
+        amount: s.depositAmount,
+        operator: s.selectedDepositOp   // Info pour le backend / NotchPay
+      })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Erreur initialisation');
+
+    s.depositRef = d.reference;
+
+    if (d.authorization_url) {
+      $('depositStatus').textContent = 'Redirection vers NotchPay...';
+      // Sauvegarder le contexte avant redirection
+      localStorage.setItem('otm_deposit_pending', JSON.stringify({
+        ref: d.reference,
+        amount: s.depositAmount,
+        accountId: s.accountId
+      }));
+      setTimeout(() => { window.location.href = d.authorization_url; }, 800);
+    } else {
+      throw new Error('URL de paiement non reçue');
+    }
+  } catch(e) {
+    $('depositErr').textContent = e.message;
+    $('depositStatus').textContent = '';
+    $('depositStatus').className = 'pay-status';
+  }
+  setLoading('btnDeposit', false, 'RECHARGER MON COMPTE');
+}
+
+// ─── PAIEMENT MISE ─────────────────────────────────────────────────────────────
+function selectPayOp(op) {
+  s.selectedPayOp = op;
+  $('payBtnOrange').classList.toggle('selected', op === 'orange');
+  $('payBtnMtn').classList.toggle('selected', op === 'mtn');
+  checkPayReady();
+}
+
+function checkPayReady() {
+  const phone = $('payPhone').value.trim();
+  $('payBtn').disabled = !(s.selectedPayOp && phone.length >= 9);
+  $('payErr').textContent = '';
+}
+
+// Écouter saisie téléphone
+document.addEventListener('DOMContentLoaded', () => {
+  $('payPhone')?.addEventListener('input', checkPayReady);
+});
+
+async function payNow() {
+  const phone = $('payPhone').value.trim();
+  $('payErr').textContent = '';
+
+  if (!s.selectedPayOp) { $('payErr').textContent = 'Choisissez votre opérateur (Orange Money ou MTN MoMo)'; return; }
+  if (!phone || phone.length < 9) { $('payErr').textContent = 'Entrez votre numéro Mobile Money (9 chiffres)'; return; }
+  if (!s.playerId) { $('payErr').textContent = 'Rejoignez une partie d\'abord'; return; }
+
+  // Mettre à jour le numéro dans la session
+  const saved = localStorage.getItem('otm_session');
+  if (saved) {
+    try {
+      const sd = JSON.parse(saved);
+      sd.phone = '237' + phone;
+      localStorage.setItem('otm_session', JSON.stringify(sd));
+    } catch(e) {}
+  }
+
+  setLoading('payBtn', true, 'PAYER AVEC MOBILE MONEY');
+  $('payStatus').className = 'pay-status pending';
+  $('payStatus').textContent = 'Initialisation du paiement...';
+
+  try {
+    const r = await fetch(BASE + '/api/payment/init', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        player_id: s.playerId,
+        phone: '237' + phone,           // Envoyer le numéro complet au backend
+        operator: s.selectedPayOp       // Orange ou MTN
+      })
+    });
+    const d = await r.json();
+
+    if (d.already_paid) {
+      afterPaid();
+      return;
+    }
+    if (!r.ok) throw new Error(d.detail || 'Erreur');
+
+    s.pendingPayRef = d.reference;
+
+    if (d.authorization_url) {
+      // Afficher panel de vérification
+      $('payPanel').classList.add('hidden');
+      $('verifyPanel').classList.remove('hidden');
+      $('vstep1').className = 'verify-step done';
+      $('vstep2').className = 'verify-step active';
+      $('payStatus').textContent = '';
+
+      // Sauvegarder référence
+      localStorage.setItem('otm_pay_ref', JSON.stringify({
+        ref: d.reference, playerId: s.playerId
+      }));
+
+      // Ouvrir NotchPay dans un popup ou redirection
+      const popup = window.open(d.authorization_url, 'notchpay_payment',
+        'width=480,height=700,scrollbars=yes,resizable=yes');
+
+      // Vérification automatique toutes les 5s
+      startPayVerification(d.reference, popup);
+    } else {
+      throw new Error('URL de paiement non reçue');
+    }
+  } catch(e) {
+    $('payErr').textContent = e.message;
+    $('payStatus').className = 'pay-status err';
+    $('payStatus').textContent = 'Échec — ' + e.message;
+  }
+  setLoading('payBtn', false, 'PAYER AVEC MOBILE MONEY');
+}
+
+// Vérification automatique du paiement mise (polling)
+function startPayVerification(ref, popup) {
+  s.payVerifyCount = 0;
+  clearInterval(s.payVerifyIv);
+  s.payVerifyIv = setInterval(async () => {
+    s.payVerifyCount++;
+    // Arrêter après 3 minutes (36 tentatives × 5s)
+    if (s.payVerifyCount > 36) {
+      clearInterval(s.payVerifyIv);
+      cancelPaymentVerif();
+      toast('Délai expiré. Vérifiez manuellement.', '#FFD700');
+      return;
+    }
+    try {
+      // Appeler le callback backend pour vérifier via NotchPay
+      const r = await fetch(BASE + '/api/payment/verify', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({reference: ref, player_id: s.playerId})
+      });
+      const d = await r.json();
+      if (d.confirmed || d.paid) {
+        clearInterval(s.payVerifyIv);
+        if (popup && !popup.closed) popup.close();
+        $('vstep2').className = 'verify-step done';
+        $('vstep3').className = 'verify-step done';
+        setTimeout(() => {
+          $('verifyPanel').classList.add('hidden');
+          afterPaid();
+        }, 1000);
+      }
+    } catch(e) { /* continuer */ }
+  }, 5000);
+}
+
+function verifyPaymentManual() {
+  // Déclencher une vérification manuelle immédiate
+  if (!s.pendingPayRef || !s.playerId) { toast('Aucun paiement en attente', '#ff4455'); return; }
+  $('payPanel').classList.add('hidden');
+  $('verifyPanel').classList.remove('hidden');
+  startPayVerification(s.pendingPayRef, null);
+  toast('Vérification en cours...', '#FFD700');
+}
+
+function cancelPaymentVerif() {
+  clearInterval(s.payVerifyIv);
+  $('verifyPanel').classList.add('hidden');
+  $('payPanel').classList.remove('hidden');
+  $('payStatus').textContent = '';
+  $('payStatus').className = 'pay-status';
+  setLoading('payBtn', false, 'PAYER AVEC MOBILE MONEY');
+  $('payBtn').disabled = false;
+}
+
+function afterPaid() {
+  s.paid = true;
+  $('payPanel').classList.add('hidden');
+  $('verifyPanel').classList.add('hidden');
+  $('phaseMsg').textContent = 'Paiement confirmé — attendez le signal !';
+  localStorage.removeItem('otm_pay_ref');
+  toast('Paiement confirmé ! Vous êtes prêt à jouer.', '#00ff88');
+  connectWS();
+  // Rafraîchir le solde
+  loadWallet();
+}
+
+// ─── REJOINDRE UNE PARTIE ─────────────────────────────────────────────────────
 async function joinGame() {
   try {
     const r = await fetch(BASE + '/api/join', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({account_id: s.accountId})
     });
     const d = await r.json();
@@ -562,7 +951,10 @@ async function joinGame() {
     s.playerId = d.player_id;
     s.myGrp = d.group;
     applyState(d.state);
-    localStorage.setItem('otm_session', JSON.stringify({playerId: d.player_id, accountId: s.accountId, name: s.myName, group: d.group}));
+    localStorage.setItem('otm_session', JSON.stringify({
+      playerId: d.player_id, accountId: s.accountId,
+      name: s.myName, group: d.group
+    }));
     $('joinPanel').classList.add('hidden');
     $('payPanel').classList.remove('hidden');
     $('grpNote').textContent = d.group_label + ' — payez pour jouer';
@@ -572,48 +964,14 @@ async function joinGame() {
   }
 }
 
-// ─── PAIEMENT ────────────────────────────────────────────────────────────
-async function payNow() {
-  $('payBtn').disabled = true;
-  $('payBtn').textContent = 'Chargement...';
-  try {
-    const r = await fetch(BASE + '/api/payment/init', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({player_id: s.playerId})
-    });
-    const d = await r.json();
-    if (d.already_paid) { afterPaid(); return; }
-    if (d.authorization_url) {
-      window.location.href = d.authorization_url;
-    } else {
-      throw new Error('URL de paiement non reçue');
-    }
-  } catch(e) {
-    toast(e.message || 'Erreur paiement', '#ff4455');
-    $('payBtn').disabled = false;
-    $('payBtn').textContent = 'PAYER AVEC MOBILE MONEY';
-  }
-}
-
-function afterPaid() {
-  s.paid = true;
-  $('payPanel').classList.add('hidden');
-  $('phaseMsg').textContent = 'Paiement confirmé — attendez le signal !';
-  toast('Vous êtes prêt à jouer !', '#00ff88');
-  connectWS();
-}
-
-// ─── WEBSOCKET ────────────────────────────────────────────────────────────
+// ─── WEBSOCKET ────────────────────────────────────────────────────────────────
 function connectWS() {
   if (!s.playerId) return;
   if (s.ws && s.ws.readyState < 2) return;
   const ws = new WebSocket(WS_BASE + '/ws/' + s.playerId);
   s.ws = ws;
-  ws.binaryType = 'arraybuffer';
   ws.onopen = () => {
     $('dot').classList.add('ok');
-    // Ping léger toutes les 20s pour garder la connexion vivante
     s._ping = setInterval(() => ws.readyState === 1 && ws.send(JSON.stringify({action:'ping'})), 20000);
   };
   ws.onmessage = e => handleMsg(JSON.parse(e.data));
@@ -624,45 +982,35 @@ function connectWS() {
   };
 }
 
-// ─── CLIC ULTRA-RAPIDE ────────────────────────────────────────────────────
-// Double méthode : ontouchstart (mobile) + onclick (desktop)
-// Évite le délai de 300ms des navigateurs mobiles
+// ─── CLIC ULTRA-RAPIDE ────────────────────────────────────────────────────────
 let _clickSent = false;
-
 function fastClick(e) {
-  // Déclenché immédiatement au toucher sur mobile
   e.preventDefault();
   if (s.phase !== 'active' || s.clicked || _clickSent) return;
   if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
   _sendClick();
 }
-
 function doClick() {
-  if (_clickSent) return; // déjà envoyé via fastClick
+  if (_clickSent) return;
   if (s.phase !== 'active' || s.clicked) return;
   if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
   _sendClick();
 }
-
 function _sendClick() {
-  _clickSent = true;
-  s.clicked = true;
-  $('clickBtn').disabled = true;
-  $('clickBtn').textContent = '⚡';
-  // Envoi WebSocket immédiat (pas de fetch — latence minimale)
+  _clickSent = true; s.clicked = true;
+  $('clickBtn').disabled = true; $('clickBtn').textContent = '⚡';
   if (s.ws && s.ws.readyState === 1) {
     s.ws.send(JSON.stringify({action:'click'}));
   } else {
-    // Fallback HTTP si WS non dispo
     fetch(BASE + '/api/click', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({player_id: s.playerId})
     }).then(r=>r.json()).then(d => handleMsg({type:'click_result',...d})).catch(()=>{});
   }
-  setTimeout(() => { _clickSent = false; }, 500); // reset après 500ms
+  setTimeout(() => { _clickSent = false; }, 500);
 }
 
+// ─── MESSAGES WS ──────────────────────────────────────────────────────────────
 function handleMsg(msg) {
   switch(msg.type) {
     case 'connected':
@@ -673,8 +1021,17 @@ function handleMsg(msg) {
     case 'payment_confirmed':
       afterPaid();
       break;
+    case 'deposit_confirmed':
+      // Mise à jour solde en temps réel
+      s.wallet = msg.new_balance || s.wallet;
+      updateWalletUI();
+      closeDeposit();
+      toast(msg.message || 'Dépôt confirmé !', '#00ff88');
+      confetti();
+      break;
     case 'prize_sent':
       toast(msg.message, '#00ff88');
+      loadWallet(); // Rafraîchir le solde après gain
       break;
     case 'prize_error':
       toast(msg.message, '#ff4455');
@@ -717,7 +1074,6 @@ function handleMsg(msg) {
       $('phaseMsg').textContent = s.myRank > 0
         ? 'Félicitations ! Rang #' + s.myRank + ' — gain en cours d\'envoi !'
         : 'Round ' + msg.round + ' terminé. ' + msg.total_winners + ' gagnants.';
-      // Réafficher bouton paiement pour le prochain round
       if (s.paid) {
         setTimeout(() => {
           s.paid = false; _clickSent = false;
@@ -728,11 +1084,12 @@ function handleMsg(msg) {
     case 'click_result':
       if (msg.ok) {
         s.myRank = msg.rank;
-        toast('GAGNÉ ! Rang #' + msg.rank + ' — ' + fmt(msg.prize) + ' FCFA envoyé !', '#FFD700');
+        toast('GAGNÉ ! Rang #' + msg.rank + ' — ' + fmt(msg.prize) + ' FCFA en route !', '#FFD700');
         confetti();
         $('clickBtn').textContent = '✓ #' + msg.rank;
         $('clickBtn').style.background = 'linear-gradient(135deg,#00ff88,#00aa55)';
         $('clickBtn').disabled = true;
+        loadWallet();
       } else if (msg.reason === 'not_paid') {
         s.clicked = false; _clickSent = false;
         toast('Payez la mise d\'abord !', '#ff4455');
@@ -750,9 +1107,9 @@ function handleMsg(msg) {
   }
 }
 
+// ─── TIMER ────────────────────────────────────────────────────────────────────
 function startLocalTick() {
   clearInterval(s.tickIv);
-  // 16ms = ~60fps pour le timer ultra-fluide
   s.tickIv = setInterval(() => {
     if (s.phase !== 'active') return;
     const rem = Math.max(0, s.roundDuration - (performance.now() - s.roundStart) / 1000);
@@ -760,7 +1117,6 @@ function startLocalTick() {
     if (rem <= 0) clearInterval(s.tickIv);
   }, 16);
 }
-
 function renderTimer(rem) {
   const ss = Math.floor(rem), ds = Math.floor((rem - ss) * 10);
   $('timer').textContent = (ss < 10 ? '0' : '') + ss + ':' + ds;
@@ -768,6 +1124,7 @@ function renderTimer(rem) {
   $('timer').className = 'timer' + (rem <= 10 ? ' danger' : ' active');
 }
 
+// ─── WINNERS ──────────────────────────────────────────────────────────────────
 function addWinner(w) {
   s.winners.push(w);
   const li = document.createElement('div'); li.className = 'witem';
@@ -782,6 +1139,7 @@ function addWinner(w) {
   $('wCount').textContent = s.winners.length + '/50';
 }
 
+// ─── GRILLE GROUPES ──────────────────────────────────────────────────────────
 function buildGrid() {
   const g = $('grpGrid'); g.innerHTML = '';
   for (let i = 0; i < 10; i++) {
@@ -792,7 +1150,6 @@ function buildGrid() {
     g.appendChild(d);
   }
 }
-
 function refreshStats() {
   $('totalPlayers').textContent = fmt(s.players);
   const ag = Math.max(1, Math.ceil(s.players / 100000));
@@ -805,13 +1162,13 @@ function refreshStats() {
     d.innerHTML = 'G-' + (i+1) + '<br><span style="font-size:9px;color:' + (me?'#00ff88':s.groups[i]>=100000?'#333':'#444') + '">' + fmt(s.groups[i]) + '</span>';
   }
 }
-
 function applyState(st) {
   s.players = st.total_players; s.groups = st.groups; s.round = st.round;
   $('roundNum').textContent = st.round;
   refreshStats();
 }
 
+// ─── CONFETTI ─────────────────────────────────────────────────────────────────
 function confetti() {
   const box = $('cbox');
   const cols = ['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
@@ -822,7 +1179,7 @@ function confetti() {
   }
 }
 
-// ─── INIT JEU ─────────────────────────────────────────────────────────────
+// ─── INIT JEU ─────────────────────────────────────────────────────────────────
 async function initGame() {
   buildGrid();
   try {
@@ -830,7 +1187,7 @@ async function initGame() {
     applyState(await r.json());
   } catch(e) {}
 
-  // Restaurer session de jeu active
+  // Restaurer session de jeu
   const sess = localStorage.getItem('otm_session');
   if (sess) {
     try {
@@ -840,11 +1197,28 @@ async function initGame() {
         s.myGrp    = sd.group;
         $('joinPanel').classList.add('hidden');
         $('payPanel').classList.remove('hidden');
+        // Pré-remplir tel si dispo
+        if (sd.phone) {
+          const local = sd.phone.replace(/^237/, '');
+          $('payPhone').value = local;
+        }
+        // Vérifier si en attente de vérification de paiement
+        const payRef = localStorage.getItem('otm_pay_ref');
+        if (payRef) {
+          try {
+            const pr = JSON.parse(payRef);
+            if (pr.playerId === s.playerId) {
+              s.pendingPayRef = pr.ref;
+              // Re-lancer vérification silencieuse
+              startPayVerification(pr.ref, null);
+            }
+          } catch(e) {}
+        }
       }
     } catch(e) {}
   }
 
-  // Callback paiement
+  // Callback retour depuis NotchPay
   const p = new URLSearchParams(window.location.search);
   if (p.get('payment') === 'success') {
     history.replaceState({}, '', '/');
@@ -852,8 +1226,7 @@ async function initGame() {
     if (sess2) {
       try {
         const sd = JSON.parse(sess2);
-        s.playerId = sd.playerId;
-        s.myGrp    = sd.group;
+        s.playerId = sd.playerId; s.myGrp = sd.group;
         s.paid = true;
         afterPaid();
       } catch(e) {}
@@ -863,9 +1236,21 @@ async function initGame() {
     history.replaceState({}, '', '/');
     toast('Paiement échoué. Réessayez.', '#ff4455');
   }
+
+  // Callback retour depuis dépôt
+  if (p.get('deposit') === 'success') {
+    history.replaceState({}, '', '/');
+    localStorage.removeItem('otm_deposit_pending');
+    loadWallet();
+    toast('Dépôt confirmé ! Votre solde a été mis à jour.', '#00ff88');
+    confetti();
+  } else if (p.get('deposit') === 'failed') {
+    history.replaceState({}, '', '/');
+    toast('Dépôt échoué. Réessayez.', '#ff4455');
+  }
 }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
 (function boot() {
   const ageOk    = localStorage.getItem('otm_age_ok');
   const policyOk = localStorage.getItem('otm_policy_ok');
@@ -879,25 +1264,11 @@ async function initGame() {
     switchTab('reset');
     return;
   }
-
-  if (!ageOk) {
-    showOverlay('overlayAge');
-    return;
-  }
-  if (!policyOk) {
-    showOverlay('overlayPolicy');
-    return;
-  }
-  // Vérifier compte sauvegardé
+  if (!ageOk) { showOverlay('overlayAge'); return; }
+  if (!policyOk) { showOverlay('overlayPolicy'); return; }
   const saved = localStorage.getItem('otm_account');
   if (saved) {
-    try {
-      const acc = JSON.parse(saved);
-      s.accountId = acc.id;
-      s.myName = acc.name;
-      afterLogin(acc);
-      return;
-    } catch(e) {}
+    try { const acc = JSON.parse(saved); afterLogin(acc); return; } catch(e) {}
   }
   showOverlay('overlayAuth');
 })();
