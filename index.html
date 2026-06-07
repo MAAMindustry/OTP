@@ -317,7 +317,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 
       <div class="stats-row">
         <div class="stat-card"><div class="stat-label">Joueurs</div><div class="stat-value" id="totalPlayers">0</div></div>
-        <div class="stat-card"><div class="stat-label">Groupes</div><div class="stat-value" id="totalGroups">0</div></div>
+        <div class="stat-card"><div class="stat-label">Groupes</div><div class="stat-value" id="totalGroups">1</div></div>
         <div class="stat-card"><div class="stat-label">Mise</div><div class="stat-value" style="color:#00ff88">500F</div></div>
       </div>
 
@@ -393,7 +393,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
           <div class="amt-btn" onclick="selDep(5000)">5 000 F</div>
           <div class="amt-btn" onclick="selDep(10000)">10 000 F</div>
           <div class="amt-btn" onclick="selDep(20000)">20 000 F</div>
-          <div class="amt-btn" onclick="selDep(50000)">5 000 F</div>
+          <div class="amt-btn" onclick="selDep(50000)">50 000 F</div>
           <div class="amt-btn" onclick="selDep(100000)">100 000 F</div>
         </div>
         <div class="custom-row">
@@ -701,8 +701,12 @@ function initWebSocket(pid) {
     };
     
     ws.onmessage = (event) => {
-        const msg = JSON.parse(event.data);
-        handleServerMessage(msg);
+        try {
+            const msg = JSON.parse(event.data);
+            handleServerMessage(msg);
+        } catch(err) {
+            console.error("Erreur lecture message WebSocket", err);
+        }
     };
     
     ws.onclose = () => {
@@ -783,37 +787,47 @@ function handleServerMessage(msg) {
     }
 }
 
-// FIX TOTAL DU BUG NaN ET MISE EN PLACE DE GROUPES VALIDES
+/* ── SÉCURISATION INTÉGRALE CONTRE LE BUG NAN ── */
 function updateGlobalStats(state) {
     if(!state) return;
     
-    // Protection fallback s'il n'y a pas de valeur reçue
-    const totalPlayers = state.total_players || 0;
-    const currentRound = state.round || 1;
+    // Forçage de type entier propre. Si indéfini ou texte corrompu, prend 0 ou 1 automatiquement
+    let totalPlayers = parseInt(state.total_players);
+    if (isNaN(totalPlayers)) totalPlayers = 0;
     
-    if(document.getElementById('totalPlayers')) document.getElementById('totalPlayers').innerText = totalPlayers.toLocaleString('fr-FR');
-    if(document.getElementById('roundNum')) document.getElementById('roundNum').innerText = currentRound;
+    // Application sécurisée sur les cartes de statistiques supérieures
+    if(document.getElementById('totalPlayers')) {
+        document.getElementById('totalPlayers').innerText = totalPlayers.toLocaleString('fr-FR');
+    }
     
+    // Traitement et nettoyage des groupes
     if(state.groups && Array.isArray(state.groups)) {
-        const activeGroupsCount = state.groups.filter(g => g > 0).length || 1;
-        document.getElementById('totalGroups').innerText = activeGroupsCount;
-        
+        let activeGroupsCount = 0;
         let html = "";
+        
         state.groups.forEach((count, idx) => {
+            let grpCount = parseInt(count);
+            if(isNaN(grpCount)) grpCount = 0;
+            if(grpCount > 0) activeGroupsCount++;
+            
             const activeClass = (currentUser && idx === 0) ? "active" : ""; 
-            html += `<div class="group-pill ${activeClass}">G-${idx+1}<br><span style="font-size:9px;opacity:0.7">${count || 0}</span></div>`;
+            html += `<div class="group-pill ${activeClass}">G-${idx+1}<br><span style="font-size:9px;opacity:0.7">${grpCount}</span></div>`;
         });
-        document.getElementById('grpGrid').innerHTML = html;
-        document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
+        
+        if(activeGroupsCount === 0) activeGroupsCount = 1;
+        if(document.getElementById('totalGroups')) document.getElementById('totalGroups').innerText = activeGroupsCount;
+        if(document.getElementById('grpGrid')) document.getElementById('grpGrid').innerHTML = html;
+        if(document.getElementById('grpBadge')) document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
     } else {
-        // Fallback graphique par défaut si pas de structure groupes reçue
-        document.getElementById('totalGroups').innerText = "1";
-        document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
+        // Fallback propre en grille dynamique si le backend n'envoie aucun tableau
+        if(document.getElementById('totalGroups')) document.getElementById('totalGroups').innerText = "1";
+        if(document.getElementById('grpBadge')) document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
+        
         let html = `<div class="group-pill active">G-1<br><span style="font-size:9px;opacity:0.7">${totalPlayers}</span></div>`;
-        for(let i=2; i<=10; i++) {
+        for(let i = 2; i <= 10; i++) {
             html += `<div class="group-pill">G-${i}<br><span style="font-size:9px;opacity:0.7">0</span></div>`;
         }
-        document.getElementById('grpGrid').innerHTML = html;
+        if(document.getElementById('grpGrid')) document.getElementById('grpGrid').innerHTML = html;
     }
 }
 
