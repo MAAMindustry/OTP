@@ -64,7 +64,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .conn-dot.ok{background:#00ff88}
 
 /* ── USER BAR ── */
-.user-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:166px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.user-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .user-name{color:#FFD700;font-weight:700;font-size:14px}
 .wallet-badge{display:flex;align-items:center;gap:6px;background:#0a0a14;border:.5px solid #00ff8844;border-radius:8px;padding:6px 12px;cursor:pointer;transition:border-color .2s}
 .wallet-badge:hover{border-color:#00ff88}
@@ -100,6 +100,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 /* ── REJOINDRE ── */
 .join-panel{background:#12121f;border:.5px solid #FFD700;border-radius:12px;padding:20px;margin-bottom:16px;text-align:center}
 .join-title{font-size:14px;color:#FFD700;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.join-status-alert{background:rgba(255,68,85,0.1);border:1px solid #ff4455;color:#ff4455;border-radius:8px;padding:10px;font-size:13px;font-weight:600;margin-bottom:12px;display:none}
 .join-mise-info{background:#0a0a14;border-radius:10px;padding:12px;margin:14px 0;display:flex;justify-content:space-between;align-items:center}
 .mise-amount-big{font-family:'Black Ops One',cursive;font-size:32px;color:#FFD700}
 .mise-sub{font-size:12px;color:#8888aa;text-align:right}
@@ -322,11 +323,14 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 
       <div class="join-panel" id="joinPanel">
         <div class="join-title">🎮 Prêt à jouer ?</div>
-        <p style="font-size:13px;color:#8888aa;margin-bottom:12px">La mise de 500 FCFA est déduite immédiatement de votre solde.</p>
+        <p style="font-size:13px;color:#8888aa;margin-bottom:12px">La mise de 500 FCFA est déduite immédiatement de votre solde virtuel.</p>
+        
+        <div class="join-status-alert" id="joinStatusAlert">Solde insuffisant (0 FCFA). Mise requise : 500 FCFA. Veuillez recharger.</div>
+
         <div class="join-mise-info">
           <div>
-            <div style="font-size:11px;color:#6666aa">Mise requise</div>
-            <div class="mise-amount-big">500 FCFA</div>
+            <div style="font-size:11px;color:#6666aa">Mise unique</div>
+            <div class="mise-amount-big">500</div>
           </div>
           <div class="mise-sub">
             <div style="color:#00ff88" id="soldeAvant">Solde: 0 FCFA</div>
@@ -334,24 +338,24 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
           </div>
         </div>
         <div class="error-msg" id="joinErr"></div>
-        <button class="btn-modal btn-accept" style="font-size:16px;padding:14px" id="btnJoin" onclick="joinGame()">PAYER ET JOUER — 500 FCFA</button>
+        <button class="btn-modal btn-accept" style="font-size:16px;padding:14px;font-family:'Black Ops One',cursive;" id="btnJoin" onclick="joinGame()">REJOINDRE LE JEU →</button>
         <div style="margin-top:10px;font-size:12px;color:#6666aa;text-align:center">
           Solde insuffisant ? <span style="color:#00ff88;cursor:pointer" onclick="showPage('pageDeposit')">Recharger mon compte →</span>
         </div>
       </div>
 
       <div class="group-bar">
-        <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
+        <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">0 en ligne</span></div>
         <div class="groups-grid" id="grpGrid"></div>
       </div>
 
       <div class="arena">
         <div class="arena-bg"></div>
         <div class="arena-content">
-          <div class="round-label">Round <span id="roundNum">—</span></div>
+          <div class="round-label">ROUND</div>
           <div class="timer" id="timer">--:--</div>
-          <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
-          <div class="phase-msg" id="phaseMsg">Rechargez votre compte et rejoignez une partie</div>
+          <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:0%"></div></div>
+          <div class="phase-msg" id="phaseMsg">Choisissez votre mise et rejoignez une partie</div>
           <button class="big-btn btn-click" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>
             TOUCHER POUR GAGNER
             <span class="winners-count-badge" id="winnersCountBadge">0/50</span>
@@ -389,7 +393,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
           <div class="amt-btn" onclick="selDep(5000)">5 000 F</div>
           <div class="amt-btn" onclick="selDep(10000)">10 000 F</div>
           <div class="amt-btn" onclick="selDep(20000)">20 000 F</div>
-          <div class="amt-btn" onclick="selDep(50000)">50 000 F</div>
+          <div class="amt-btn" onclick="selDep(50000)">5 000 F</div>
           <div class="amt-btn" onclick="selDep(100000)">100 000 F</div>
         </div>
         <div class="custom-row">
@@ -506,7 +510,9 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
   </div>
 
-</div> <nav class="nav-bottom" id="navBottom" style="display:none">
+</div>
+
+<nav class="nav-bottom" id="navBottom" style="display:none">
   <button class="nav-item active" id="navGame" onclick="showPage('pageGame')">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     Jeu
@@ -529,7 +535,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 <div class="confetti-box" id="confettiBox"></div>
 
 <script>
-// ─── VARIABLES GLOBALES D'ÉTAT ───
 let currentUser = null;
 let userWallet = 0;
 let currentPid = null;
@@ -537,13 +542,15 @@ let ws = null;
 let selectedDepositAmount = 0;
 let historyData = [];
 
-// ─── GESTION DES ONGLETS / PAGES ───
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
     const targetPage = document.getElementById(pageId);
-    if(targetPage) targetPage.classList.remove('hidden'), targetPage.classList.add('active');
+    if(targetPage) {
+        targetPage.classList.remove('hidden');
+        targetPage.classList.add('active');
+    }
     
     if(pageId === 'pageGame') document.getElementById('navGame').classList.add('active');
     if(pageId === 'pageDeposit') {
@@ -560,7 +567,6 @@ function showPage(pageId) {
     }
 }
 
-// ─── SYNC ET MISE À JOUR DE L'AFFICHAGE DU SOLDE ───
 function updateUiBalances() {
     const formatted = userWallet.toLocaleString('fr-FR') + " FCFA";
     
@@ -572,14 +578,23 @@ function updateUiBalances() {
     if(document.getElementById('nbPartiesDispos')) {
         document.getElementById('nbPartiesDispos').innerText = Math.floor(userWallet / 500);
     }
+    
+    const alertBox = document.getElementById('joinStatusAlert');
+    const reste = userWallet - 500;
+    
     if(document.getElementById('soldeApres')) {
-        const reste = userWallet - 500;
         document.getElementById('soldeApres').innerText = reste >= 0 ? reste.toLocaleString('fr-FR') + " FCFA" : "Solde insuffisant";
         document.getElementById('soldeApres').style.color = reste >= 0 ? "#00ff88" : "#ff4455";
     }
+
+    if(reste < 0) {
+        alertBox.innerText = `Solde insuffisant (${userWallet.toLocaleString('fr-FR')} FCFA). Mise requise : 500 FCFA. Veuillez recharger.`;
+        alertBox.style.display = "block";
+    } else {
+        alertBox.style.display = "none";
+    }
 }
 
-// ─── SIMULATION DE DÉPÔT (SYNCHRONISÉE) ───
 function selDep(amt) {
     selectedDepositAmount = amt;
     document.getElementById('depCustom').value = "";
@@ -635,7 +650,6 @@ async function doDeposit() {
     }
 }
 
-// ─── REJOINDRE LE ROUND DE JEU ───
 async function joinGame() {
     if(!currentUser) return;
     const btn = document.getElementById('btnJoin');
@@ -647,7 +661,7 @@ async function joinGame() {
     }
     
     btn.disabled = true;
-    btn.innerHTML = `<span class="spinner"></span> Réservation...`;
+    btn.innerHTML = `<span class="spinner"></span> Inscription...`;
     err.innerText = "";
     
     try {
@@ -672,11 +686,10 @@ async function joinGame() {
     } catch(e) {
         err.innerText = e.message;
         btn.disabled = false;
-        btn.innerText = "PAYER ET JOUER — 500 FCFA";
+        btn.innerText = "REJOINDRE LE JEU →";
     }
 }
 
-// ─── CANAL WEBSOCKET ───
 function initWebSocket(pid) {
     if(ws) ws.close();
     
@@ -699,7 +712,6 @@ function initWebSocket(pid) {
     };
 }
 
-// ─── ACTIONS SERVEUR EN DIRECT ───
 function handleServerMessage(msg) {
     const timerEl = document.getElementById('timer');
     const phaseMsg = document.getElementById('phaseMsg');
@@ -714,13 +726,13 @@ function handleServerMessage(msg) {
         case "countdown":
             timerEl.innerText = msg.seconds;
             timerEl.className = "timer countdown-mode";
-            phaseMsg.innerText = `Préparez-vous ! Lancement du Round ${msg.round}...`;
+            phaseMsg.innerText = `Préparez-vous ! Lancement du Round ${msg.round || '...'}`;
             clickBtn.disabled = true;
             tbar.style.width = "100%";
             break;
             
         case "round_start":
-            timerEl.innerText = msg.duration;
+            timerEl.innerText = msg.duration || "30";
             timerEl.className = "timer active";
             phaseMsg.innerText = "🔥 CLIQUEZ MAINTENANT ! VITE !";
             clickBtn.disabled = false;
@@ -730,7 +742,7 @@ function handleServerMessage(msg) {
             
         case "tick":
             if(timerEl.classList.contains('active')) {
-                const rem = msg.remaining;
+                const rem = msg.remaining || 0;
                 timerEl.innerText = rem + "s";
                 if(rem <= 5) timerEl.className = "timer danger";
                 tbar.style.width = `${(rem / 30) * 100}%`;
@@ -738,9 +750,10 @@ function handleServerMessage(msg) {
             break;
             
         case "winner_added":
-            addWinnerRow(msg.winner);
-            document.getElementById('winnersCountBadge').innerText = `${msg.total}/50`;
-            document.getElementById('wCount').innerText = `${msg.total}/50`;
+            if (msg.winner) addWinnerRow(msg.winner);
+            const totalWinners = msg.total || 0;
+            document.getElementById('winnersCountBadge').innerText = `${totalWinners}/50`;
+            document.getElementById('wCount').innerText = `${totalWinners}/50`;
             break;
             
         case "prize_sent":
@@ -750,15 +763,9 @@ function handleServerMessage(msg) {
             triggerConfetti();
             break;
             
-        case "deposit_confirmed":
-            userWallet = msg.new_balance;
-            updateUiBalances();
-            showToast(msg.message);
-            break;
-            
         case "click_result":
             if(!msg.ok) {
-                phaseMsg.innerText = msg.reason === "too_late" ? "⏱️ Dommage ! Les 50 places sont complètes." : "Déjà enregistré !";
+                phaseMsg.innerText = msg.reason === "too_late" ? "Dommage ! Les 50 places sont complètes." : "Déjà cliqué !";
                 clickBtn.disabled = true;
             }
             break;
@@ -767,29 +774,46 @@ function handleServerMessage(msg) {
             timerEl.className = "timer";
             timerEl.innerText = "--:--";
             tbar.style.width = "0%";
-            phaseMsg.innerText = `Fin du Round ${msg.round}. Préparez vos jetons pour le prochain !`;
+            phaseMsg.innerText = `Fin du Round ${msg.round || ''}. Préparez-vous pour le prochain !`;
             clickBtn.disabled = true;
             document.getElementById('joinPanel').classList.remove('hidden');
             document.getElementById('btnJoin').disabled = false;
-            document.getElementById('btnJoin').innerText = "PAYER ET JOUER — 500 FCFA";
+            document.getElementById('btnJoin').innerText = "REJOINDRE LE JEU →";
             break;
     }
 }
 
+// FIX TOTAL DU BUG NaN ET MISE EN PLACE DE GROUPES VALIDES
 function updateGlobalStats(state) {
     if(!state) return;
-    if(state.total_players) document.getElementById('totalPlayers').innerText = state.total_players.toLocaleString('fr-FR');
-    if(state.round) document.getElementById('roundNum').innerText = state.round;
     
-    if(state.groups) {
-        document.getElementById('totalGroups').innerText = state.groups.filter(g => g > 0).length || 1;
+    // Protection fallback s'il n'y a pas de valeur reçue
+    const totalPlayers = state.total_players || 0;
+    const currentRound = state.round || 1;
+    
+    if(document.getElementById('totalPlayers')) document.getElementById('totalPlayers').innerText = totalPlayers.toLocaleString('fr-FR');
+    if(document.getElementById('roundNum')) document.getElementById('roundNum').innerText = currentRound;
+    
+    if(state.groups && Array.isArray(state.groups)) {
+        const activeGroupsCount = state.groups.filter(g => g > 0).length || 1;
+        document.getElementById('totalGroups').innerText = activeGroupsCount;
+        
         let html = "";
         state.groups.forEach((count, idx) => {
             const activeClass = (currentUser && idx === 0) ? "active" : ""; 
-            html += `<div class="group-pill ${activeClass}">G-${idx+1}<br><span style="font-size:9px;opacity:0.7">${count}</span></div>`;
+            html += `<div class="group-pill ${activeClass}">G-${idx+1}<br><span style="font-size:9px;opacity:0.7">${count || 0}</span></div>`;
         });
         document.getElementById('grpGrid').innerHTML = html;
-        document.getElementById('grpBadge').innerText = `${state.total_players || 0} en ligne`;
+        document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
+    } else {
+        // Fallback graphique par défaut si pas de structure groupes reçue
+        document.getElementById('totalGroups').innerText = "1";
+        document.getElementById('grpBadge').innerText = `${totalPlayers} en ligne`;
+        let html = `<div class="group-pill active">G-1<br><span style="font-size:9px;opacity:0.7">${totalPlayers}</span></div>`;
+        for(let i=2; i<=10; i++) {
+            html += `<div class="group-pill">G-${i}<br><span style="font-size:9px;opacity:0.7">0</span></div>`;
+        }
+        document.getElementById('grpGrid').innerHTML = html;
     }
 }
 
@@ -804,9 +828,9 @@ function addWinnerRow(w) {
     row.className = "witem";
     row.innerHTML = `
         <span class="wrank ${rCls}">#${w.rank}</span>
-        <span class="wname">${w.name} ${w.is_bot ? '🤖' : '⚡'}</span>
-        <span class="wtime">${w.time.toFixed(3)}s</span>
-        <span class="wprize">+${w.prize.toLocaleString('fr-FR')} F</span>
+        <span class="wname">${w.name || 'Joueur'} ${w.is_bot ? '🤖' : '⚡'}</span>
+        <span class="wtime">${typeof w.time === 'number' ? w.time.toFixed(3) : w.time}s</span>
+        <span class="wprize">+${(w.prize || 0).toLocaleString('fr-FR')} F</span>
     `;
     list.appendChild(row);
     list.scrollTop = list.scrollHeight;
@@ -823,7 +847,6 @@ function doClick() {
     }
 }
 
-// ─── SYSTEMES COMPTES & CONFIGURATION MODALES ───
 function switchTab(t) {
     document.getElementById('tabLogin').classList.toggle('active', t==='login');
     document.getElementById('tabRegister').classList.toggle('active', t==='register');
@@ -873,7 +896,7 @@ async function doRegister() {
 
 function connectUserSession(account) {
     currentUser = account;
-    userWallet = account.wallet;
+    userWallet = account.wallet || 0;
     
     document.getElementById('overlayAuth').classList.add('hidden');
     document.getElementById('mainContent').style.display = "block";
@@ -894,7 +917,6 @@ function logout() {
     switchTab('login');
 }
 
-// ─── APPELS DE SIMULATION HISTORIQUE/PROFIL ───
 async function fetchHistory() {
     if(!currentUser) return;
     try {
@@ -907,7 +929,7 @@ async function fetchHistory() {
 
 function renderHistoryRows(items) {
     const container = document.getElementById('historyList');
-    if(!items.length) {
+    if(!items || !items.length) {
         container.innerHTML = `<div class="empty-state"><div>📋</div><p>Aucune donnée disponible</p></div>`;
         return;
     }
@@ -922,7 +944,7 @@ function renderHistoryRows(items) {
                 <div class="hitem-icon">${icon}</div>
                 <div class="hitem-info">
                     <div class="hitem-result ${cls}">${title} ${h.rank ? '#'+h.rank : ''}</div>
-                    <div class="hitem-round">Round ${h.round} • Ticket 500F</div>
+                    <div class="hitem-round">Round ${h.round || ''} • Ticket 500F</div>
                 </div>
                 <div class="hitem-prize">
                     <div class="hitem-prize-val">${h.prize > 0 ? '+' + h.prize.toLocaleString('fr-FR') + ' F' : '0 F'}</div>
@@ -939,10 +961,10 @@ async function fetchProfile() {
         const res = await fetch(`/api/profile/${currentUser.account_id}`);
         const data = await res.json();
         
-        document.getElementById('profilAvatar').innerText = data.name.substring(0,2).toUpperCase();
-        document.getElementById('profilName').innerText = data.name;
-        document.getElementById('profilEmail').innerText = currentUser.email;
-        document.getElementById('profilGames').innerText = data.games_played;
+        document.getElementById('profilAvatar').innerText = data.name ? data.name.substring(0,2).toUpperCase() : "??";
+        document.getElementById('profilName').innerText = data.name || "—";
+        document.getElementById('profilEmail').innerText = currentUser.email || "—";
+        document.getElementById('profilGames').innerText = data.games_played || 0;
         document.getElementById('profilGains').innerText = data.total_gains ? data.total_gains.toLocaleString('fr-FR') + " F" : "0 F";
         
         const wr = data.games_played > 0 ? Math.round((data.games_won / data.games_played) * 100) : 0;
