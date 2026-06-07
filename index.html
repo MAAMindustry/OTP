@@ -64,7 +64,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .conn-dot.ok{background:#00ff88}
 
 /* ── USER BAR ── */
-.user-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.user-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:166px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .user-name{color:#FFD700;font-weight:700;font-size:14px}
 .wallet-badge{display:flex;align-items:center;gap:6px;background:#0a0a14;border:.5px solid #00ff8844;border-radius:8px;padding:6px 12px;cursor:pointer;transition:border-color .2s}
 .wallet-badge:hover{border-color:#00ff88}
@@ -79,7 +79,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .stat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
 .stat-value{font-size:22px;font-weight:700;color:var(--gold);margin-top:4px}
 
-/* ── GROUPES ── */
+/* ── GESTION DES GROUPES ── */
 .group-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:16px}
 .group-title{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between}
 .badge{background:#1a1a2e;border:.5px solid #2a2a4a;border-radius:6px;padding:2px 10px;font-size:11px;color:#6666aa}
@@ -160,13 +160,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .hitem-result.win{color:#00ff88}
 .hitem-result.loss{color:#ff4455}
 .hitem-result.too_late{color:#FFD700}
-.hitem-date{font-size:11px;color:#444466}
-.hitem-prize{text-align:right}
-.hitem-prize-val{font-size:16px;font-weight:700;color:#FFD700}
-.hitem-mise{font-size:11px;color:#ff4455}
-.empty-state{text-align:center;padding:40px 20px;color:#444466}
-.empty-state div{font-size:40px;margin-bottom:10px}
-.empty-state p{font-size:14px}
+.history-list .empty-state{text-align:center;padding:40px 20px;color:#444466}
 .filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .filter-btn{padding:6px 14px;border:.5px solid #2a2a4a;border-radius:20px;background:#12121f;color:#6666aa;font-size:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;transition:all .2s}
 .filter-btn.active{border-color:#FFD700;color:#FFD700;background:#1a1500}
@@ -192,7 +186,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .net-val{font-family:'Black Ops One',cursive;font-size:28px;margin-top:4px}
 
 /* ── TOAST ── */
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:12px 22px;color:#00ff88;font-size:14px;font-weight:700;z-index:999;display:none;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;white-space:normal;text-align:center}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:12px 22px;color:#00ff88;font-size:14px;font-weight:700;z-index:999;display:none;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;text-align:center}
 .confetti-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998;overflow:hidden}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .hidden{display:none!important}
@@ -203,7 +197,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 </head>
 <body>
 
-<!-- ══ OVERLAY ÂGE ══ -->
 <div class="overlay" id="overlayAge">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
@@ -223,7 +216,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 </div>
 
-<!-- ══ OVERLAY CGU ══ -->
 <div class="overlay hidden" id="overlayPolicy">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
@@ -252,7 +244,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 </div>
 
-<!-- ══ OVERLAY AUTH ══ -->
 <div class="overlay hidden" id="overlayAuth">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
@@ -295,10 +286,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 </div>
 
-<!-- ══ CONTENU PRINCIPAL ══ -->
 <div id="mainContent" style="display:none">
 
-  <!-- ── PAGE JEU ── -->
   <div class="page active" id="pageGame">
     <div class="container">
       <div class="header">
@@ -331,7 +320,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         <div class="stat-card"><div class="stat-label">Mise</div><div class="stat-value" style="color:#00ff88">500F</div></div>
       </div>
 
-      <!-- REJOINDRE -->
       <div class="join-panel" id="joinPanel">
         <div class="join-title">🎮 Prêt à jouer ?</div>
         <p style="font-size:13px;color:#8888aa;margin-bottom:12px">La mise de 500 FCFA est déduite immédiatement de votre solde.</p>
@@ -352,13 +340,11 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         </div>
       </div>
 
-      <!-- GROUPES -->
       <div class="group-bar">
         <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
         <div class="groups-grid" id="grpGrid"></div>
       </div>
 
-      <!-- ARÈNE -->
       <div class="arena">
         <div class="arena-bg"></div>
         <div class="arena-content">
@@ -373,7 +359,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         </div>
       </div>
 
-      <!-- WINNERS -->
       <div class="winners-panel" id="winPanel" style="display:none">
         <div class="winners-title"><span>🏆 Top 50 gagnants</span><span class="badge" id="wCount">0/50</span></div>
         <div class="wlist" id="wList"></div>
@@ -381,7 +366,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
   </div>
 
-  <!-- ── PAGE DÉPÔT ── -->
   <div class="page" id="pageDeposit">
     <div class="container">
       <div class="page-title">
@@ -421,7 +405,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
   </div>
 
-  <!-- ── PAGE HISTORIQUE ── -->
   <div class="page" id="pageHistory">
     <div class="container">
       <div class="page-title">
@@ -461,7 +444,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
     </div>
   </div>
 
-  <!-- ── PAGE PROFIL ── -->
   <div class="page" id="pageProfil">
     <div class="container">
       <div class="page-title">
@@ -495,16 +477,13 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         </div>
       </div>
 
-      <!-- Résultat net -->
       <div class="net-result" id="netResultBox">
         <div class="net-label">Résultat net</div>
         <div class="net-val" id="netResultVal">0 FCFA</div>
       </div>
 
-      <!-- Modifier le profil -->
       <div class="profile-card">
         <div class="section-label">✏️ Modifier mes informations</div>
-
         <div class="edit-row">
           <span class="edit-label">Pseudo</span>
           <input class="form-input" id="editName" placeholder="Nouveau pseudo" maxlength="20">
@@ -513,7 +492,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
           <span class="edit-label">Téléphone</span>
           <input class="form-input" id="editPhone" placeholder="Nouveau numéro" type="tel">
         </div>
-
         <div class="error-msg" id="editErr"></div>
         <button class="btn-modal btn-blue" id="btnEditSave" onclick="saveProfile()">ENREGISTRER LES MODIFICATIONS</button>
 
@@ -521,658 +499,508 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
         <div class="section-label">🔒 Changer le mot de passe</div>
         <input class="form-input" id="editOldPass" placeholder="Ancien mot de passe" type="password">
         <input class="form-input" id="editNewPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password">
-        <input class="form-input" id="editNewPass2" placeholder="Confirmer le nouveau" type="password">
-        <div class="error-msg" id="editPassErr"></div>
-        <button class="btn-modal btn-red" id="btnChangePass" onclick="changePassword()">CHANGER LE MOT DE PASSE</button>
+        <input class="form-input" id="editNewPass2" placeholder="Confirmer le nouveau mot de passe" type="password">
+        <div class="error-msg" id="passErr"></div>
+        <button class="btn-modal btn-accept" id="btnEditPass" onclick="savePassword()">METTRE À JOUR LE MOT DE PASSE</button>
       </div>
-
-      <button class="btn-modal btn-red" style="margin-top:10px" onclick="logout()">SE DÉCONNECTER</button>
     </div>
   </div>
 
-</div><!-- fin mainContent -->
-
-<!-- ── NAV BOTTOM ── -->
-<nav class="nav-bottom hidden" id="navBottom">
-  <button class="nav-item active" id="nav-pageGame" onclick="showPage('pageGame')">
-    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="m8 21 4-4 4 4"/><path d="M9 11h6M12 8v6"/></svg>
+</div> <nav class="nav-bottom" id="navBottom" style="display:none">
+  <button class="nav-item active" id="navGame" onclick="showPage('pageGame')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     Jeu
   </button>
-  <button class="nav-item" id="nav-pageDeposit" onclick="showPage('pageDeposit')">
-    <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  <button class="nav-item" id="navDeposit" onclick="showPage('pageDeposit')">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
     Recharger
   </button>
-  <button class="nav-item" id="nav-pageHistory" onclick="showPage('pageHistory');loadHistory()">
+  <button class="nav-item" id="navHistory" onclick="showPage('pageHistory')">
     <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     Historique
   </button>
-  <button class="nav-item" id="nav-pageProfil" onclick="showPage('pageProfil');loadProfil()">
+  <button class="nav-item" id="navProfil" onclick="showPage('pageProfil')">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     Profil
   </button>
 </nav>
 
 <div class="toast" id="toast"></div>
-<div class="confetti-box" id="cbox"></div>
+<div class="confetti-box" id="confettiBox"></div>
 
 <script>
-const BASE    = window.location.origin;
-const WS_BASE = BASE.replace(/^http/, 'ws');
+// ─── VARIABLES GLOBALES D'ÉTAT ───
+let currentUser = null;
+let userWallet = 0;
+let currentPid = null;
+let ws = null;
+let selectedDepositAmount = 0;
+let historyData = [];
 
-const s = {
-  accountId: null, myName: null, myEmail: null, myPhone: null,
-  wallet: 0, totalGains: 0, totalSpent: 0, gamesPlayed: 0, gamesWon: 0,
-  playerId: null, myGrp: -1, paid: false,
-  phase: 'idle', round: 1, roundDuration: 30,
-  roundStart: null, remaining: 30,
-  winners: [], myRank: -1, clicked: false,
-  players: 0, groups: Array(10).fill(0),
-  ws: null, tickIv: null,
-  historyData: [], historyFilter: 'all',
-  depAmount: 0
-};
-
-const $ = id => document.getElementById(id);
-const fmt = n => Math.round(n).toLocaleString('fr-FR');
-
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function toast(msg, col = '#00ff88') {
-  const t = $('toast');
-  t.textContent = msg;
-  t.style.borderColor = col;
-  t.style.color = col;
-  t.style.display = 'block';
-  clearTimeout(t._to);
-  t._to = setTimeout(() => t.style.display = 'none', 3500);
-}
-
-function setLoading(btnId, loading, label) {
-  const b = $(btnId); if (!b) return;
-  b.disabled = loading;
-  b.innerHTML = loading ? `<span class="spinner"></span>${label||''}` : (label||'');
-}
-
+// ─── GESTION DES ONGLETS / PAGES ───
 function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  $(pageId).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navBtn = $('nav-' + pageId);
-  if (navBtn) navBtn.classList.add('active');
-  // Mise à jour solde dépôt si on va sur la page dépôt
-  if (pageId === 'pageDeposit') {
-    $('depositSolde').textContent = fmt(s.wallet) + ' FCFA';
-    $('nbPartiesDispos').textContent = Math.floor(s.wallet / 500);
-  }
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    const targetPage = document.getElementById(pageId);
+    if(targetPage) targetPage.classList.remove('hidden'), targetPage.classList.add('active');
+    
+    if(pageId === 'pageGame') document.getElementById('navGame').classList.add('active');
+    if(pageId === 'pageDeposit') {
+        document.getElementById('navDeposit').classList.add('active');
+        updateUiBalances();
+    }
+    if(pageId === 'pageHistory') {
+        document.getElementById('navHistory').classList.add('active');
+        fetchHistory();
+    }
+    if(pageId === 'pageProfil') {
+        document.getElementById('navProfil').classList.add('active');
+        fetchProfile();
+    }
 }
 
-function updateWalletUI() {
-  const txt = fmt(s.wallet) + ' FCFA';
-  $('walletAmount').textContent = txt;
-  $('depositSolde').textContent = txt;
-  $('nbPartiesDispos').textContent = Math.floor(s.wallet / 500);
-  // Mise à jour affichage "avant/après mise"
-  $('soldeAvant').textContent = 'Solde: ' + fmt(s.wallet) + ' FCFA';
-  if (s.wallet >= 500) {
-    $('soldeApres').textContent = fmt(s.wallet - 500) + ' FCFA';
-    $('soldeApres').style.color = '#00ff88';
-  } else {
-    $('soldeApres').textContent = 'insuffisant';
-    $('soldeApres').style.color = '#ff4455';
-  }
+// ─── SYNC ET MISE À JOUR DE L'AFFICHAGE DU SOLDE ───
+function updateUiBalances() {
+    const formatted = userWallet.toLocaleString('fr-FR') + " FCFA";
+    
+    if(document.getElementById('walletAmount')) document.getElementById('walletAmount').innerText = formatted;
+    if(document.getElementById('depositSolde')) document.getElementById('depositSolde').innerText = formatted;
+    if(document.getElementById('soldeAvant')) document.getElementById('soldeAvant').innerText = "Solde: " + formatted;
+    if(document.getElementById('profilWallet')) document.getElementById('profilWallet').innerText = userWallet.toLocaleString('fr-FR') + " F";
+    
+    if(document.getElementById('nbPartiesDispos')) {
+        document.getElementById('nbPartiesDispos').innerText = Math.floor(userWallet / 500);
+    }
+    if(document.getElementById('soldeApres')) {
+        const reste = userWallet - 500;
+        document.getElementById('soldeApres').innerText = reste >= 0 ? reste.toLocaleString('fr-FR') + " FCFA" : "Solde insuffisant";
+        document.getElementById('soldeApres').style.color = reste >= 0 ? "#00ff88" : "#ff4455";
+    }
 }
 
-// ─── ÂGE ──────────────────────────────────────────────────────────────────────
-function confirmAge(yes) {
-  if (!yes) {
-    $('ageForms').classList.add('hidden');
-    $('ageBlocked').classList.remove('hidden');
-    return;
-  }
-  localStorage.setItem('otm_age_ok', '1');
-  showOverlay('overlayPolicy');
+// ─── SIMULATION DE DÉPÔT (SYNCHRONISÉE) ───
+function selDep(amt) {
+    selectedDepositAmount = amt;
+    document.getElementById('depCustom').value = "";
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('sel'));
+    event.target.classList.add('sel');
+    document.getElementById('btnDep').disabled = false;
 }
 
-// ─── CGU ──────────────────────────────────────────────────────────────────────
-function showOverlay(id) {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
-  $(id).classList.remove('hidden');
-}
-function hideAllOverlays() {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
-  $('mainContent').style.display = 'block';
-  $('navBottom').classList.remove('hidden');
+function onDepCustom() {
+    const val = parseInt(document.getElementById('depCustom').value) || 0;
+    selectedDepositAmount = val;
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('sel'));
+    document.getElementById('btnDep').disabled = (val < 100 || val > 100000);
 }
 
-function toggleCheck(id) { const cb=$(id); cb.checked=!cb.checked; checkConsents(); }
-function checkConsents() {
-  $('btnAcceptPolicy').disabled = !($('chkPolicy').checked && $('chkCgu').checked && $('chkAge21').checked);
-}
-function acceptPolicy() {
-  localStorage.setItem('otm_policy_ok', '1');
-  const p = new URLSearchParams(window.location.search);
-  const rt = p.get('reset_token');
-  if (rt) { showOverlay('overlayAuth'); switchTab('reset'); window._resetToken = rt; history.replaceState({},'','/'); return; }
-  const saved = localStorage.getItem('otm_account');
-  if (saved) { try { afterLogin(JSON.parse(saved)); return; } catch(e){} }
-  showOverlay('overlayAuth');
+async function doDeposit() {
+    if(!currentUser || selectedDepositAmount <= 0) return;
+    
+    const btn = document.getElementById('btnDep');
+    const err = document.getElementById('depErr');
+    const status = document.getElementById('depStatus');
+    
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span> Traitement...`;
+    err.innerText = "";
+    
+    try {
+        const res = await fetch('/api/deposit/fake', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ account_id: currentUser.account_id, amount: selectedDepositAmount })
+        });
+        const data = await res.json();
+        
+        if(!res.ok) throw new Error(data.detail || "Échec du dépôt");
+        
+        userWallet = data.new_balance;
+        updateUiBalances();
+        
+        showToast(`✅ Compte rechargé de +${selectedDepositAmount.toLocaleString('fr-FR')} FCFA !`);
+        status.innerHTML = `<span style="color:#00ff88">Fonds ajoutés avec succès !</span>`;
+        
+        setTimeout(() => {
+            status.innerText = "";
+            showPage('pageGame');
+        }, 1000);
+        
+    } catch(e) {
+        err.innerText = e.message;
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "AJOUTER LES FONDS";
+    }
 }
 
-// ─── AUTH ──────────────────────────────────────────────────────────────────────
-function switchTab(tab) {
-  ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p => $(p).classList.add('hidden'));
-  ['tabLogin','tabRegister'].forEach(t => $(t)?.classList.remove('active'));
-  if(tab==='login')    { $('panelLogin').classList.remove('hidden');    $('tabLogin').classList.add('active'); }
-  else if(tab==='register') { $('panelRegister').classList.remove('hidden'); $('tabRegister').classList.add('active'); }
-  else if(tab==='forgot')   { $('panelForgot').classList.remove('hidden'); }
-  else if(tab==='reset')    { $('panelReset').classList.remove('hidden'); }
+// ─── REJOINDRE LE ROUND DE JEU ───
+async function joinGame() {
+    if(!currentUser) return;
+    const btn = document.getElementById('btnJoin');
+    const err = document.getElementById('joinErr');
+    
+    if(userWallet < 500) {
+        err.innerText = "Solde insuffisant. Veuillez recharger votre compte d'abord.";
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span> Réservation...`;
+    err.innerText = "";
+    
+    try {
+        const res = await fetch('/api/join', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ account_id: currentUser.account_id })
+        });
+        const data = await res.json();
+        
+        if(!res.ok) throw new Error(data.detail || "Impossible de rejoindre");
+        
+        currentPid = data.player_id;
+        userWallet = data.new_balance;
+        updateUiBalances();
+        
+        document.getElementById('joinPanel').classList.add('hidden');
+        showToast("🎮 Ticket validé ! Connexion en cours...");
+        
+        initWebSocket(currentPid);
+        
+    } catch(e) {
+        err.innerText = e.message;
+        btn.disabled = false;
+        btn.innerText = "PAYER ET JOUER — 500 FCFA";
+    }
+}
+
+// ─── CANAL WEBSOCKET ───
+function initWebSocket(pid) {
+    if(ws) ws.close();
+    
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    ws = new WebSocket(`${protocol}//${window.location.host}/ws/${pid}`);
+    
+    ws.onopen = () => {
+        document.getElementById('dot').className = "conn-dot ok";
+    };
+    
+    ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        handleServerMessage(msg);
+    };
+    
+    ws.onclose = () => {
+        document.getElementById('dot').className = "conn-dot";
+        document.getElementById('joinPanel').classList.remove('hidden');
+        document.getElementById('clickBtn').disabled = true;
+    };
+}
+
+// ─── ACTIONS SERVEUR EN DIRECT ───
+function handleServerMessage(msg) {
+    const timerEl = document.getElementById('timer');
+    const phaseMsg = document.getElementById('phaseMsg');
+    const clickBtn = document.getElementById('clickBtn');
+    const tbar = document.getElementById('tbar');
+    
+    if(msg.type === "connected" || msg.type === "tick") {
+        updateGlobalStats(msg.state || msg);
+    }
+    
+    switch(msg.type) {
+        case "countdown":
+            timerEl.innerText = msg.seconds;
+            timerEl.className = "timer countdown-mode";
+            phaseMsg.innerText = `Préparez-vous ! Lancement du Round ${msg.round}...`;
+            clickBtn.disabled = true;
+            tbar.style.width = "100%";
+            break;
+            
+        case "round_start":
+            timerEl.innerText = msg.duration;
+            timerEl.className = "timer active";
+            phaseMsg.innerText = "🔥 CLIQUEZ MAINTENANT ! VITE !";
+            clickBtn.disabled = false;
+            document.getElementById('winPanel').style.display = "block";
+            document.getElementById('wList').innerHTML = "";
+            break;
+            
+        case "tick":
+            if(timerEl.classList.contains('active')) {
+                const rem = msg.remaining;
+                timerEl.innerText = rem + "s";
+                if(rem <= 5) timerEl.className = "timer danger";
+                tbar.style.width = `${(rem / 30) * 100}%`;
+            }
+            break;
+            
+        case "winner_added":
+            addWinnerRow(msg.winner);
+            document.getElementById('winnersCountBadge').innerText = `${msg.total}/50`;
+            document.getElementById('wCount').innerText = `${msg.total}/50`;
+            break;
+            
+        case "prize_sent":
+            userWallet = msg.new_balance;
+            updateUiBalances();
+            showToast(msg.message);
+            triggerConfetti();
+            break;
+            
+        case "deposit_confirmed":
+            userWallet = msg.new_balance;
+            updateUiBalances();
+            showToast(msg.message);
+            break;
+            
+        case "click_result":
+            if(!msg.ok) {
+                phaseMsg.innerText = msg.reason === "too_late" ? "⏱️ Dommage ! Les 50 places sont complètes." : "Déjà enregistré !";
+                clickBtn.disabled = true;
+            }
+            break;
+            
+        case "round_end":
+            timerEl.className = "timer";
+            timerEl.innerText = "--:--";
+            tbar.style.width = "0%";
+            phaseMsg.innerText = `Fin du Round ${msg.round}. Préparez vos jetons pour le prochain !`;
+            clickBtn.disabled = true;
+            document.getElementById('joinPanel').classList.remove('hidden');
+            document.getElementById('btnJoin').disabled = false;
+            document.getElementById('btnJoin').innerText = "PAYER ET JOUER — 500 FCFA";
+            break;
+    }
+}
+
+function updateGlobalStats(state) {
+    if(!state) return;
+    if(state.total_players) document.getElementById('totalPlayers').innerText = state.total_players.toLocaleString('fr-FR');
+    if(state.round) document.getElementById('roundNum').innerText = state.round;
+    
+    if(state.groups) {
+        document.getElementById('totalGroups').innerText = state.groups.filter(g => g > 0).length || 1;
+        let html = "";
+        state.groups.forEach((count, idx) => {
+            const activeClass = (currentUser && idx === 0) ? "active" : ""; 
+            html += `<div class="group-pill ${activeClass}">G-${idx+1}<br><span style="font-size:9px;opacity:0.7">${count}</span></div>`;
+        });
+        document.getElementById('grpGrid').innerHTML = html;
+        document.getElementById('grpBadge').innerText = `${state.total_players || 0} en ligne`;
+    }
+}
+
+function addWinnerRow(w) {
+    const list = document.getElementById('wList');
+    let rCls = "o";
+    if(w.rank === 1) rCls = "g";
+    else if(w.rank === 2) rCls = "s";
+    else if(w.rank === 3) rCls = "b";
+    
+    const row = document.createElement('div');
+    row.className = "witem";
+    row.innerHTML = `
+        <span class="wrank ${rCls}">#${w.rank}</span>
+        <span class="wname">${w.name} ${w.is_bot ? '🤖' : '⚡'}</span>
+        <span class="wtime">${w.time.toFixed(3)}s</span>
+        <span class="wprize">+${w.prize.toLocaleString('fr-FR')} F</span>
+    `;
+    list.appendChild(row);
+    list.scrollTop = list.scrollHeight;
+}
+
+function fastClick(e) {
+    e.preventDefault();
+    doClick();
+}
+
+function doClick() {
+    if(ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({action: "click"}));
+    }
+}
+
+// ─── SYSTEMES COMPTES & CONFIGURATION MODALES ───
+function switchTab(t) {
+    document.getElementById('tabLogin').classList.toggle('active', t==='login');
+    document.getElementById('tabRegister').classList.toggle('active', t==='register');
+    document.getElementById('panelLogin').classList.toggle('hidden', t!=='login');
+    document.getElementById('panelRegister').classList.toggle('hidden', t!=='register');
+    document.getElementById('panelForgot').classList.toggle('hidden', t!=='forgot');
+    document.getElementById('panelReset').classList.toggle('hidden', t!=='reset');
 }
 
 async function doLogin() {
-  const email=$('loginEmail').value.trim().toLowerCase(), pass=$('loginPass').value;
-  $('loginErr').textContent='';
-  if(!email||!pass){$('loginErr').textContent='Email et mot de passe requis';return;}
-  setLoading('btnLogin',true,'SE CONNECTER');
-  try {
-    const r=await fetch(BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    afterLogin({id:d.account_id,name:d.name,email:d.email,phone:d.phone||'',wallet:d.wallet||0,total_gains:d.total_gains||0});
-  } catch(e){$('loginErr').textContent=e.message;}
-  setLoading('btnLogin',false,'SE CONNECTER');
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPass').value;
+    const err = document.getElementById('loginErr');
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.detail || "Identifiants invalides");
+        connectUserSession(data);
+    } catch(e) { err.innerText = e.message; }
 }
 
 async function doRegister() {
-  const name=$('regName').value.trim(),phone=$('regPhone').value.trim(),
-        email=$('regEmail').value.trim().toLowerCase(),pass=$('regPass').value,pass2=$('regPass2').value;
-  $('regErr').textContent='';
-  if(!name){$('regErr').textContent='Pseudo requis';return;}
-  if(!phone){$('regErr').textContent='Numéro requis';return;}
-  if(!email||!email.includes('@')){$('regErr').textContent='Email invalide';return;}
-  if(pass.length<6){$('regErr').textContent='Mot de passe trop court';return;}
-  if(pass!==pass2){$('regErr').textContent='Mots de passe différents';return;}
-  setLoading('btnRegister',true,'CRÉER MON COMPTE');
-  try {
-    const r=await fetch(BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,password:pass})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    afterLogin({id:d.account_id,name:d.name,email:d.email,phone,wallet:0,total_gains:0});
-    toast('Bienvenue '+d.name+' ! Rechargez votre compte pour jouer.','#00ff88');
-  } catch(e){$('regErr').textContent=e.message;}
-  setLoading('btnRegister',false,'CRÉER MON COMPTE');
+    const name = document.getElementById('regName').value;
+    const phone = document.getElementById('regPhone').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPass').value;
+    const p2 = document.getElementById('regPass2').value;
+    const err = document.getElementById('regErr');
+    
+    if(password !== p2) { err.innerText = "Les mots de passe diffèrent"; return; }
+    
+    try {
+        const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name, phone, email, password })
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.detail || "Erreur d'inscription");
+        connectUserSession(data);
+    } catch(e) { err.innerText = e.message; }
 }
 
-async function doForgot() {
-  const email=$('forgotEmail').value.trim().toLowerCase();
-  $('forgotErr').textContent='';
-  if(!email){$('forgotErr').textContent='Email requis';return;}
-  setLoading('btnForgot',true,'ENVOYER LE LIEN');
-  try {
-    await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
-    toast('Lien envoyé si cet email existe.','#4488ff');
-    switchTab('login');
-  } catch(e){$('forgotErr').textContent='Erreur réseau.';}
-  setLoading('btnForgot',false,'ENVOYER LE LIEN');
-}
-
-async function doReset() {
-  const pass=$('resetPass').value, pass2=$('resetPass2').value;
-  $('resetErr').textContent='';
-  if(pass.length<6){$('resetErr').textContent='Mot de passe trop court';return;}
-  if(pass!==pass2){$('resetErr').textContent='Mots de passe différents';return;}
-  setLoading('btnReset',true,'CHANGER LE MOT DE PASSE');
-  try {
-    const r=await fetch(BASE+'/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:window._resetToken,password:pass})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Lien invalide');
-    toast('Mot de passe modifié !','#00ff88');
-    switchTab('login');
-  } catch(e){$('resetErr').textContent=e.message;}
-  setLoading('btnReset',false,'CHANGER LE MOT DE PASSE');
-}
-
-function afterLogin(acc) {
-  s.accountId=acc.id; s.myName=acc.name; s.myEmail=acc.email;
-  s.myPhone=acc.phone||''; s.wallet=acc.wallet||0; s.totalGains=acc.total_gains||0;
-  localStorage.setItem('otm_account',JSON.stringify({id:acc.id,name:acc.name,email:acc.email,phone:acc.phone||'',wallet:acc.wallet||0,total_gains:acc.total_gains||0}));
-  hideAllOverlays();
-  $('displayName').textContent=acc.name;
-  updateWalletUI();
-  loadWallet();
-  initGame();
+function connectUserSession(account) {
+    currentUser = account;
+    userWallet = account.wallet;
+    
+    document.getElementById('overlayAuth').classList.add('hidden');
+    document.getElementById('mainContent').style.display = "block";
+    document.getElementById('navBottom').style.display = "flex";
+    document.getElementById('displayName').innerText = account.name;
+    
+    updateUiBalances();
+    showPage('pageGame');
+    showToast(`👋 Salut ${account.name}, c'est parti !`);
 }
 
 function logout() {
-  localStorage.removeItem('otm_account');
-  if(s.ws) s.ws.close();
-  location.reload();
+    currentUser = null;
+    if(ws) ws.close();
+    document.getElementById('mainContent').style.display = "none";
+    document.getElementById('navBottom').style.display = "none";
+    document.getElementById('overlayAuth').classList.remove('hidden');
+    switchTab('login');
 }
 
-// ─── WALLET ───────────────────────────────────────────────────────────────────
-async function loadWallet() {
-  if(!s.accountId) return;
-  try {
-    const r=await fetch(BASE+'/api/wallet/'+s.accountId);
-    if(r.ok) {
-      const d=await r.json();
-      s.wallet=d.wallet||0; s.totalGains=d.total_gains||0;
-      s.totalSpent=d.total_spent||0; s.gamesPlayed=d.games_played||0;
-      s.gamesWon=d.games_won||0;
-      updateWalletUI();
-      const saved=localStorage.getItem('otm_account');
-      if(saved){const a=JSON.parse(saved);a.wallet=s.wallet;a.total_gains=s.totalGains;localStorage.setItem('otm_account',JSON.stringify(a));}
+// ─── APPELS DE SIMULATION HISTORIQUE/PROFIL ───
+async function fetchHistory() {
+    if(!currentUser) return;
+    try {
+        const res = await fetch(`/api/history/${currentUser.account_id}`);
+        const data = await res.json();
+        historyData = data.history || [];
+        renderHistoryRows(historyData);
+    } catch(e) { console.error(e); }
+}
+
+function renderHistoryRows(items) {
+    const container = document.getElementById('historyList');
+    if(!items.length) {
+        container.innerHTML = `<div class="empty-state"><div>📋</div><p>Aucune donnée disponible</p></div>`;
+        return;
     }
-  } catch(e){}
+    let html = "";
+    items.forEach(h => {
+        let cls = "loss", icon = "❌", title = "Défaite";
+        if(h.result === "win") { cls = "win"; icon = "🏆"; title = "Victoire"; }
+        if(h.result === "too_late") { cls = "too_late"; icon = "⏱️"; title = "Trop tard"; }
+        
+        html += `
+            <div class="hitem ${cls}">
+                <div class="hitem-icon">${icon}</div>
+                <div class="hitem-info">
+                    <div class="hitem-result ${cls}">${title} ${h.rank ? '#'+h.rank : ''}</div>
+                    <div class="hitem-round">Round ${h.round} • Ticket 500F</div>
+                </div>
+                <div class="hitem-prize">
+                    <div class="hitem-prize-val">${h.prize > 0 ? '+' + h.prize.toLocaleString('fr-FR') + ' F' : '0 F'}</div>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
 }
 
-// ─── DÉPÔT FICTIF ─────────────────────────────────────────────────────────────
-function selDep(amount) {
-  s.depAmount=amount;
-  $('depCustom').value='';
-  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
-  document.querySelectorAll('.amt-btn').forEach(b=>{
-    if(b.textContent.replace(/\s/g,'').includes(amount.toString())) b.classList.add('sel');
-  });
-  $('btnDep').disabled=false;
-  $('depErr').textContent='';
-}
-function onDepCustom() {
-  const v=parseInt($('depCustom').value);
-  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
-  if(!isNaN(v)&&v>=100&&v<=100000){s.depAmount=v;$('btnDep').disabled=false;}
-  else{s.depAmount=0;$('btnDep').disabled=true;}
-}
-async function doDeposit() {
-  if(!s.depAmount||s.depAmount<100){$('depErr').textContent='Montant invalide';return;}
-  setLoading('btnDep',true,'TRAITEMENT...');
-  $('depStatus').textContent='Simulation du paiement...';$('depStatus').style.color='#FFD700';
-  $('depErr').textContent='';
-  try {
-    const r=await fetch(BASE+'/api/deposit/fake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account_id:s.accountId,amount:s.depAmount})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    s.wallet=d.new_balance||s.wallet;
-    updateWalletUI();
-    $('depStatus').textContent='✅ '+fmt(s.depAmount)+' FCFA ajoutés !';
-    $('depStatus').style.color='#00ff88';
-    s.depAmount=0;
-    document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
-    $('depCustom').value='';
-    $('btnDep').disabled=true;
-    toast(fmt(s.depAmount||d.new_balance-s.wallet+1)+' FCFA crédités sur votre compte !','#00ff88');
-    confetti();
-    setTimeout(()=>{$('depStatus').textContent='';},4000);
-  } catch(e){$('depErr').textContent=e.message;$('depStatus').textContent='';}
-  setLoading('btnDep',false,'AJOUTER LES FONDS');
+async function fetchProfile() {
+    if(!currentUser) return;
+    try {
+        const res = await fetch(`/api/profile/${currentUser.account_id}`);
+        const data = await res.json();
+        
+        document.getElementById('profilAvatar').innerText = data.name.substring(0,2).toUpperCase();
+        document.getElementById('profilName').innerText = data.name;
+        document.getElementById('profilEmail').innerText = currentUser.email;
+        document.getElementById('profilGames').innerText = data.games_played;
+        document.getElementById('profilGains').innerText = data.total_gains ? data.total_gains.toLocaleString('fr-FR') + " F" : "0 F";
+        
+        const wr = data.games_played > 0 ? Math.round((data.games_won / data.games_played) * 100) : 0;
+        document.getElementById('profilWinRate').innerText = wr + "%";
+    } catch(e) { console.error(e); }
 }
 
-// ─── REJOINDRE + PAIEMENT AUTOMATIQUE ─────────────────────────────────────────
-async function joinGame() {
-  if(s.wallet<500){toast('Solde insuffisant ! Rechargez votre compte.','#ff4455');showPage('pageDeposit');return;}
-  setLoading('btnJoin',true,'TRAITEMENT...');
-  $('joinErr').textContent='';
-  try {
-    const r=await fetch(BASE+'/api/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account_id:s.accountId})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    s.playerId=d.player_id; s.myGrp=d.group; s.paid=true;
-    s.wallet=d.new_balance; updateWalletUI();
-    applyState(d.state);
-    $('joinPanel').classList.add('hidden');
-    $('phaseMsg').textContent='Mise payée ✓ — attendez le signal !';
-    toast('500 FCFA déduits — Bonne chance !','#FFD700');
-    connectWS();
-  } catch(e){$('joinErr').textContent=e.message;}
-  setLoading('btnJoin',false,'PAYER ET JOUER — 500 FCFA');
+function confirmAge(isOfAge) {
+    if(isOfAge) {
+        document.getElementById('overlayAge').classList.add('hidden');
+        document.getElementById('overlayPolicy').classList.remove('hidden');
+    } else {
+        document.getElementById('ageForms').classList.add('hidden');
+        document.getElementById('ageBlocked').classList.remove('hidden');
+    }
 }
 
-// ─── WEBSOCKET ─────────────────────────────────────────────────────────────────
-function connectWS() {
-  if(!s.playerId) return;
-  if(s.ws&&s.ws.readyState<2) return;
-  const ws=new WebSocket(WS_BASE+'/ws/'+s.playerId);
-  s.ws=ws;
-  ws.onopen=()=>{$('dot').classList.add('ok');s._ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({action:'ping'})),20000);};
-  ws.onmessage=e=>handleMsg(JSON.parse(e.data));
-  ws.onclose=()=>{$('dot').classList.remove('ok');clearInterval(s._ping);setTimeout(()=>connectWS(),3000);};
+function toggleCheck(id) {
+    const chk = document.getElementById(id);
+    chk.checked = !chk.checked;
+    checkConsents();
 }
 
-// ─── CLIC ──────────────────────────────────────────────────────────────────────
-let _clickSent=false;
-function fastClick(e) {
-  e.preventDefault();
-  if(s.phase!=='active'||s.clicked||_clickSent) return;
-  _sendClick();
-}
-function doClick() {
-  if(_clickSent||s.phase!=='active'||s.clicked) return;
-  _sendClick();
-}
-function _sendClick() {
-  _clickSent=true; s.clicked=true;
-  $('clickBtn').disabled=true; $('clickBtn').innerHTML='⚡ <span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
-  if(s.ws&&s.ws.readyState===1) {
-    s.ws.send(JSON.stringify({action:'click'}));
-  } else {
-    fetch(BASE+'/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})})
-      .then(r=>r.json()).then(d=>handleMsg({type:'click_result',...d})).catch(()=>{});
-  }
-  setTimeout(()=>{_clickSent=false;},500);
+function checkConsents() {
+    const p = document.getElementById('chkPolicy').checked;
+    const c = document.getElementById('chkCgu').checked;
+    const a = document.getElementById('chkAge21').checked;
+    document.getElementById('btnAcceptPolicy').disabled = !(p && c && a);
 }
 
-// ─── MESSAGES WS ──────────────────────────────────────────────────────────────
-function handleMsg(msg) {
-  switch(msg.type) {
-    case 'connected':
-      applyState(msg.state);
-      break;
-    case 'pong': break;
-
-    case 'deposit_confirmed':
-      s.wallet=msg.new_balance||s.wallet;
-      updateWalletUI();
-      toast(msg.message||'Dépôt confirmé !','#00ff88');
-      confetti();
-      break;
-
-    case 'prize_sent':
-      s.wallet=msg.new_balance||s.wallet;
-      updateWalletUI();
-      toast(msg.message||'Gain crédité !','#FFD700');
-      break;
-
-    case 'countdown':
-      s.phase='countdown'; s.round=msg.round;
-      $('roundNum').textContent=msg.round;
-      $('timer').textContent='0'+msg.seconds;
-      $('timer').className='timer countdown-mode';
-      $('phaseMsg').textContent='⚡ Lancement dans '+msg.seconds+'s — préparez-vous !';
-      $('clickBtn').disabled=true;
-      $('tbar').style.width='100%';
-      break;
-
-    case 'round_start':
-      s.phase='active'; s.round=msg.round; s.roundDuration=msg.duration;
-      s.roundStart=performance.now(); s.remaining=msg.duration;
-      s.clicked=false; _clickSent=false; s.winners=[];
-      $('winPanel').style.display='block';
-      $('wList').innerHTML=''; $('wCount').textContent='0/50';
-      $('winnersCountBadge').textContent='0/50';
-      $('clickBtn').disabled=!s.paid;
-      $('clickBtn').innerHTML='TOUCHER POUR GAGNER<span class="winners-count-badge" id="winnersCountBadge">0/50</span>';
-      $('clickBtn').style.background='linear-gradient(135deg,#FFD700,#FFA500)';
-      $('phaseMsg').textContent=s.paid?'🔥 GO ! Cliquez maintenant !':'Rejoignez pour le prochain round';
-      startLocalTick();
-      break;
-
-    case 'tick':
-      s.remaining=msg.remaining;
-      renderTimer(msg.remaining);
-      const wc=msg.winners_count||s.winners.length;
-      $('phaseMsg').textContent=wc<50?'🏆 '+wc+' gagnant'+(wc>1?'s':'')+' — soyez rapide !':'✅ 50 gagnants confirmés !';
-      const badge=$('winnersCountBadge');
-      if(badge) badge.textContent=wc+'/50';
-      break;
-
-    case 'winner_added':
-      addWinner(msg.winner);
-      break;
-
-    case 'round_end':
-      s.phase='ended';
-      clearInterval(s.tickIv);
-      $('timer').textContent='00:0';
-      $('timer').className='timer';
-      $('tbar').style.width='0%';
-      $('clickBtn').disabled=true;
-      if(s.myRank>0) {
-        $('phaseMsg').textContent='🏆 Félicitations ! Rang #'+s.myRank+' — Gain crédité !';
-      } else if(s.paid && !s.clicked) {
-        $('phaseMsg').textContent='⏱ Trop lent ! Retentez votre chance.';
-      } else {
-        $('phaseMsg').textContent='Round '+msg.round+' terminé. '+msg.total_winners+' gagnants.';
-      }
-      s.paid=false; s.playerId=null; _clickSent=false;
-      loadWallet();
-      setTimeout(()=>{
-        $('joinPanel').classList.remove('hidden');
-        $('phaseMsg').textContent='Rechargez et rejoignez la prochaine partie !';
-      },8000);
-      break;
-
-    case 'click_result':
-      if(msg.ok) {
-        s.myRank=msg.rank;
-        const prizeStr=fmt(msg.prize);
-        toast('🏆 GAGNÉ ! Rang #'+msg.rank+' — '+prizeStr+' FCFA !','#FFD700');
-        confetti();
-        $('clickBtn').innerHTML='✓ Rang #'+msg.rank+' — '+prizeStr+' FCFA<span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
-        $('clickBtn').style.background='linear-gradient(135deg,#00ff88,#00aa55)';
-        $('clickBtn').disabled=true;
-      } else if(msg.reason==='too_late') {
-        toast('Trop tard ! 50 gagnants déjà trouvés.','#ff4455');
-        $('clickBtn').innerHTML='❌ Trop tard<span class="winners-count-badge" id="winnersCountBadge">50/50</span>';
-      } else if(msg.reason==='round_not_active') {
-        s.clicked=false; _clickSent=false;
-        $('clickBtn').disabled=false;
-        $('clickBtn').innerHTML='TOUCHER POUR GAGNER<span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
-      }
-      break;
-  }
+function acceptPolicy() {
+    document.getElementById('overlayPolicy').classList.add('hidden');
+    document.getElementById('overlayAuth').classList.remove('hidden');
 }
 
-// ─── TIMER ────────────────────────────────────────────────────────────────────
-function startLocalTick() {
-  clearInterval(s.tickIv);
-  s.tickIv=setInterval(()=>{
-    if(s.phase!=='active') return;
-    const rem=Math.max(0,s.roundDuration-(performance.now()-s.roundStart)/1000);
-    renderTimer(rem);
-    if(rem<=0) clearInterval(s.tickIv);
-  },16);
-}
-function renderTimer(rem) {
-  const ss=Math.floor(rem), ds=Math.floor((rem-ss)*10);
-  $('timer').textContent=(ss<10?'0':'')+ss+':'+ds;
-  $('tbar').style.width=((rem/(s.roundDuration||30))*100)+'%';
-  $('timer').className='timer'+(rem<=8?' danger':' active');
+function showToast(m) {
+    const t = document.getElementById('toast');
+    t.innerText = m;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3500);
 }
 
-// ─── WINNERS ──────────────────────────────────────────────────────────────────
-function addWinner(w) {
-  s.winners.push(w);
-  const li=document.createElement('div'); li.className='witem';
-  const isMe=s.myName&&w.name.trim().startsWith(s.myName.trim());
-  if(isMe){li.style.background='#0d1f0d';li.style.border='.5px solid #00ff88';}
-  const rc=w.rank===1?'g':w.rank===2?'s':w.rank===3?'b':'o';
-  li.innerHTML='<span class="wrank '+rc+'">#'+w.rank+'</span>'
-    +'<span class="wname">'+(isMe?'🌟 ':'')+w.name.trim()+'</span>'
-    +'<span class="wtime">+'+parseFloat(w.time).toFixed(2)+'s</span>'
-    +'<span class="wprize">'+fmt(w.prize)+' F</span>';
-  $('wList').appendChild(li); $('wList').scrollTop=9999;
-  $('wCount').textContent=s.winners.length+'/50';
-  const badge=$('winnersCountBadge');
-  if(badge) badge.textContent=s.winners.length+'/50';
+function triggerConfetti() {
+    const box = document.getElementById('confettiBox');
+    for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.style.position = 'absolute';
+        c.style.width = '7px';
+        c.style.height = '7px';
+        c.style.background = ['#FFD700','#00ff88','#4488ff','#ff4455'][Math.floor(Math.random()*4)];
+        c.style.left = Math.random() * 100 + '%';
+        c.style.top = '-10px';
+        c.style.borderRadius = '50%';
+        c.style.animation = `fall ${1.5 + Math.random()*1.5}s linear forwards`;
+        box.appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+    }
 }
-
-// ─── GROUPES ──────────────────────────────────────────────────────────────────
-function buildGrid() {
-  const g=$('grpGrid'); g.innerHTML='';
-  for(let i=0;i<10;i++) {
-    const d=document.createElement('div');
-    d.id='gp'+i;
-    d.className='group-pill'+(i===s.myGrp?' active':'');
-    d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':'#444')+'">'+fmt(s.groups[i])+'</span>';
-    g.appendChild(d);
-  }
-}
-function applyState(st) {
-  s.players=st.total_players; s.groups=st.groups||Array(10).fill(0); s.round=st.round;
-  $('roundNum').textContent=st.round;
-  $('totalPlayers').textContent=fmt(s.players);
-  const ag=Math.max(1,Math.ceil(s.players/100000));
-  $('totalGroups').textContent=ag;
-  $('grpBadge').textContent=ag+' groupe'+(ag>1?'s':'');
-  buildGrid();
-}
-
-// ─── HISTORIQUE ───────────────────────────────────────────────────────────────
-async function loadHistory() {
-  try {
-    const r=await fetch(BASE+'/api/history/'+s.accountId+'?limit=100');
-    if(!r.ok) return;
-    const d=await r.json();
-    s.historyData=d.history||[];
-    // Stats résumé
-    $('hGamesPlayed').textContent=s.gamesPlayed;
-    $('hGamesWon').textContent=s.gamesWon;
-    $('hTotalSpent').textContent=fmt(s.totalSpent)+' F';
-    $('hTotalGains').textContent=fmt(s.totalGains)+' F';
-    renderHistory();
-  } catch(e){}
-}
-
-function filterHistory(f, btn) {
-  s.historyFilter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistory();
-}
-
-function renderHistory() {
-  const list=$('historyList');
-  let data=s.historyData;
-  if(s.historyFilter!=='all') data=data.filter(h=>h.result===s.historyFilter);
-  if(!data.length) {
-    list.innerHTML='<div class="empty-state"><div>📋</div><p>Aucune partie dans cette catégorie</p></div>';
-    return;
-  }
-  list.innerHTML=data.map(h=>{
-    const icons={win:'🏆',loss:'❌',too_late:'⏱'};
-    const labels={win:'Victoire','loss':'Défaite',too_late:'Trop tard'};
-    const date=new Date(h.timestamp*1000);
-    const dateStr=date.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const rankStr=h.rank?'Rang #'+h.rank:'—';
-    return `<div class="hitem ${h.result}">
-      <div class="hitem-icon">${icons[h.result]||'?'}</div>
-      <div class="hitem-info">
-        <div class="hitem-round">Round ${h.round} · ${rankStr}</div>
-        <div class="hitem-result ${h.result}">${labels[h.result]||h.result}</div>
-        <div class="hitem-date">${dateStr}</div>
-      </div>
-      <div class="hitem-prize">
-        ${h.prize>0?`<div class="hitem-prize-val">+${fmt(h.prize)} F</div>`:'<div style="color:#555577;font-size:14px">+0 F</div>'}
-        <div class="hitem-mise">-${fmt(h.mise)} F</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ─── PROFIL ───────────────────────────────────────────────────────────────────
-async function loadProfil() {
-  try {
-    const r=await fetch(BASE+'/api/profile/'+s.accountId);
-    if(!r.ok) return;
-    const d=await r.json();
-    s.wallet=d.wallet||0; s.totalGains=d.total_gains||0;
-    s.totalSpent=d.total_spent||0; s.gamesPlayed=d.games_played||0;
-    s.gamesWon=d.games_won||0;
-    updateWalletUI();
-
-    const initials=(d.name||'?').substring(0,2).toUpperCase();
-    $('profilAvatar').textContent=initials;
-    $('profilName').textContent=d.name;
-    $('profilEmail').textContent=d.email;
-    const since=new Date(d.member_since*1000).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-    $('profilSince').textContent='Membre depuis le '+since;
-    $('profilWallet').textContent=fmt(d.wallet)+' FCFA';
-    $('profilGains').textContent=fmt(d.total_gains)+' FCFA';
-    $('profilGames').textContent=d.games_played+' partie'+(d.games_played>1?'s':'');
-    $('profilWinRate').textContent=d.win_rate+'%';
-
-    // Résultat net
-    const net=d.net_result||0;
-    const box=$('netResultBox');
-    box.className='net-result '+(net>=0?'pos':'neg');
-    $('netResultVal').textContent=(net>=0?'+':'')+fmt(net)+' FCFA';
-    $('netResultVal').style.color=net>=0?'#00ff88':'#ff4455';
-
-    // Pré-remplir édition
-    $('editName').value=d.name;
-    $('editPhone').value=(d.phone||'').replace(/^\+237/,'');
-  } catch(e){}
-}
-
-async function saveProfile() {
-  const name=$('editName').value.trim();
-  const phone=$('editPhone').value.trim();
-  $('editErr').textContent='';
-  if(!name){$('editErr').textContent='Pseudo requis';return;}
-  setLoading('btnEditSave',true,'ENREGISTREMENT...');
-  try {
-    const r=await fetch(BASE+'/api/profile/'+s.accountId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone:phone?'+237'+phone.replace(/^0/,''):undefined})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    s.myName=d.name; s.myPhone=d.phone||s.myPhone;
-    $('displayName').textContent=s.myName;
-    $('profilName').textContent=s.myName;
-    $('profilAvatar').textContent=s.myName.substring(0,2).toUpperCase();
-    const saved=localStorage.getItem('otm_account');
-    if(saved){const a=JSON.parse(saved);a.name=s.myName;a.phone=s.myPhone;localStorage.setItem('otm_account',JSON.stringify(a));}
-    toast('Profil mis à jour !','#00ff88');
-  } catch(e){$('editErr').textContent=e.message;}
-  setLoading('btnEditSave',false,'ENREGISTRER LES MODIFICATIONS');
-}
-
-async function changePassword() {
-  const old=$('editOldPass').value, nw=$('editNewPass').value, nw2=$('editNewPass2').value;
-  $('editPassErr').textContent='';
-  if(!old){$('editPassErr').textContent='Ancien mot de passe requis';return;}
-  if(nw.length<6){$('editPassErr').textContent='Nouveau mot de passe trop court';return;}
-  if(nw!==nw2){$('editPassErr').textContent='Mots de passe différents';return;}
-  setLoading('btnChangePass',true,'MODIFICATION...');
-  try {
-    const r=await fetch(BASE+'/api/profile/'+s.accountId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,password:nw})});
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.detail||'Erreur');
-    $('editOldPass').value=''; $('editNewPass').value=''; $('editNewPass2').value='';
-    toast('Mot de passe modifié !','#00ff88');
-  } catch(e){$('editPassErr').textContent=e.message;}
-  setLoading('btnChangePass',false,'CHANGER LE MOT DE PASSE');
-}
-
-// ─── CONFETTI ─────────────────────────────────────────────────────────────────
-function confetti() {
-  const box=$('cbox');
-  const cols=['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
-  for(let i=0;i<80;i++) {
-    const p=document.createElement('div'); const sz=Math.random()*9+4;
-    p.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';
-    box.appendChild(p); setTimeout(()=>p.remove(),4500);
-  }
-}
-
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-async function initGame() {
-  buildGrid();
-  try {
-    const r=await fetch(BASE+'/api/state');
-    applyState(await r.json());
-  } catch(e){}
-  $('joinPanel').classList.remove('hidden');
-  setInterval(loadWallet,30000); // Rafraîchir le solde toutes les 30s
-}
-
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
-(function boot() {
-  const p=new URLSearchParams(window.location.search);
-  const rt=p.get('reset_token');
-  if(rt){window._resetToken=rt;history.replaceState({},'','/');showOverlay('overlayAuth');switchTab('reset');return;}
-  if(!localStorage.getItem('otm_age_ok')){showOverlay('overlayAge');return;}
-  if(!localStorage.getItem('otm_policy_ok')){showOverlay('overlayPolicy');return;}
-  const saved=localStorage.getItem('otm_account');
-  if(saved){try{afterLogin(JSON.parse(saved));return;}catch(e){}}
-  showOverlay('overlayAuth');
-})();
 </script>
 </body>
 </html>
