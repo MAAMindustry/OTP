@@ -1,6 +1,6 @@
 """
-ONE TOUCH MILLION — Backend FastAPI
-Paiements fictifs (déduction wallet), historique des parties, profil compte
+ONE TOUCH MILLION — Backend FastAPI (Optimisé pour l'enchaînement Dépôt -> Jeu)
+Paiements fictifs, déduction wallet, historique des parties, profil compte
 """
 
 import asyncio
@@ -20,7 +20,7 @@ from email.mime.text import MIMEText
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse
 import uvicorn
 
 logging.basicConfig(level=logging.INFO)
@@ -34,8 +34,8 @@ SMTP_USER  = os.environ.get("SMTP_USER", "")
 SMTP_PASS  = os.environ.get("SMTP_PASS", "")
 DATA_FILE  = os.environ.get("DATA_FILE", "/tmp/otm_accounts.json")
 
-GROUP_SIZE     = 100_000
-MAX_PLAYERS    = 1_000_000
+GROUP_SIZE    = 100_000
+MAX_PLAYERS   = 1_000_000
 WINNERS_COUNT  = 50
 ROUND_DURATION = 30
 COUNTDOWN      = 5
@@ -111,7 +111,7 @@ class Account:
     total_spent: int = 0
     games_played: int = 0
     games_won: int = 0
-    history: list = field(default_factory=list)  # list[HistoryEntry as dict]
+    history: list = field(default_factory=list)
 
 @dataclass
 class Player:
@@ -154,7 +154,6 @@ def load_accounts_from_disk() -> dict:
             raw = json.load(f)
         accounts = {}
         for email, data in raw.items():
-            # Compatibilité champs manquants
             data.setdefault("total_spent", 0)
             data.setdefault("games_played", 0)
             data.setdefault("games_won", 0)
@@ -261,29 +260,31 @@ class GameEngine:
                 return True
         return False
 
-    # ── DÉPÔT FICTIF ──────────────────────────────────────────────────────────
+    # ── DÉPÔT FICTIF (RECHARGE DIRECTE) ──────────────────────────────────────────
     async def fake_deposit(self, account_id: str, amount: int) -> dict:
-        acc = self.accounts_by_id.get(account_id)
-        if not acc:
-            raise ValueError("Compte introuvable")
-        if amount < 100 or amount > 100_000:
-            raise ValueError("Montant invalide (100 – 100 000 FCFA)")
-        # Simulation délai "traitement"
-        await asyncio.sleep(1.5)
-        acc.wallet += amount
-        acc.total_deposits += amount
-        save_accounts_to_disk(self.accounts)
-        # Notifier via WS si joueur connecté
-        player_id = self._find_player_by_account(account_id)
-        if player_id:
-            await self.mgr.send(player_id, {
-                "type": "deposit_confirmed",
-                "amount": amount,
-                "new_balance": acc.wallet,
-                "message": f"Dépôt fictif de {amount:,} FCFA confirmé !",
-            })
-        log.info(f"[DÉPÔT FICTIF] {acc.name} +{amount} FCFA → solde={acc.wallet}")
-        return {"success": True, "new_balance": acc.wallet}
+        async with self._lock:  # Sécurisation contre la modification simultanée
+            acc = self.accounts_by_id.get(account_id)
+            if not acc:
+                raise ValueError("Compte introuvable")
+            if amount < 100 or amount > 100_000:
+                raise ValueError("Montant invalide (100 – 100 000 FCFA)")
+            
+            await asyncio.sleep(0.5) # Léger délai de traitement
+            acc.wallet += amount
+            acc.total_deposits += amount
+            save_accounts_to_disk(self.accounts)
+            
+            # Alerte WS si l'utilisateur est déjà en ligne
+            player_id = self._find_player_by_account(account_id)
+            if player_id:
+                await self.mgr.send(player_id, {
+                    "type": "deposit_confirmed",
+                    "amount": amount,
+                    "new_balance": acc.wallet,
+                    "message": f"Dépôt de {amount:,} FCFA validé ! Vous pouvez jouer.",
+                })
+            log.info(f"[DÉPÔT] {acc.name} +{amount} FCFA -> Solde: {acc.wallet}")
+            return {"success": True, "new_balance": acc.wallet}
 
     def _find_player_by_account(self, account_id: str) -> Optional[str]:
         for pid, p in self.players.items():
@@ -291,28 +292,29 @@ class GameEngine:
                 return pid
         return None
 
-    # ── REJOINDRE + PAYER MISE ─────────────────────────────────────────────────
-    async def join_and_pay(self, account_id: str) -> tuple[str, int]:
+    # ── REJOINDRE LE JEU (IMMEDIATEMENT APRES CHARGEMENT) ────────────────────────
+    async def join_and_pay(self, account_id: str) -> tuple[str, int, int]:
         async with self._lock:
             acc = self.accounts_by_id.get(account_id)
             if not acc:
-                raise ValueError("Compte introuvable — reconnectez-vous")
+                raise ValueError("Compte introuvable — Reconnectez-vous")
             if acc.wallet < MISE_AMOUNT:
-                raise ValueError(f"Solde insuffisant. Vous avez {acc.wallet} FCFA, mise requise : {MISE_AMOUNT} FCFA. Rechargez votre compte.")
+                raise ValueError(f"Solde insuffisant ({acc.wallet} FCFA). Mise requise : {MISE_AMOUNT} FCFA. Veuillez recharger.")
 
-            # Déduire la mise immédiatement
+            # Déduction du ticket de jeu
             acc.wallet -= MISE_AMOUNT
             acc.total_spent += MISE_AMOUNT
             acc.games_played += 1
             save_accounts_to_disk(self.accounts)
 
             if self.state.total_players >= MAX_PLAYERS:
-                raise ValueError("Serveur complet")
+                raise ValueError("Serveur de jeu complet")
 
-            # Créer/remplacer le joueur (1 session par compte)
+            # Nettoyage des anciennes sessions fantômes
             old_pid = self._find_player_by_account(account_id)
             if old_pid:
-                del self.players[old_pid]
+                self.mgr.disconnect(old_pid)
+                self.players.pop(old_pid, None)
 
             pid = str(uuid.uuid4())
             grp = min(self.state.total_players // GROUP_SIZE, 9)
@@ -321,111 +323,98 @@ class GameEngine:
                             mise=MISE_AMOUNT, paid=True)
             self.players[pid] = player
 
-            bots = random.randint(80_000, 150_000)
-            bots = min(bots, MAX_PLAYERS - self.state.total_players - 1)
-            for i in range(bots):
-                g = min((self.state.total_players + i + 1) // GROUP_SIZE, 9)
-                self.state.groups[g] = self.state.groups[g] + 1
+            # Remplissage par les bots de simulation
+            bots = random.randint(50, 150)
             self.state.total_players += bots + 1
             self.state.groups[grp] += 1
 
-            log.info(f"[JOIN] {acc.name} → groupe G-{grp+1} | solde restant: {acc.wallet} FCFA")
+            log.info(f"[INSCRIPTION JEU] {acc.name} a rejoint. Solde restant : {acc.wallet} FCFA")
 
-            # Lancer le jeu si pas en cours
             if self.task is None or self.task.done():
                 self.task = asyncio.create_task(self._game_loop())
 
             return pid, grp, acc.wallet
 
-    # ── CLIC JOUEUR ───────────────────────────────────────────────────────────
+    # ── TEMPS REEL : COMPTE DES CLICS ───────────────────────────────────────────
     async def player_click(self, pid: str) -> dict:
-        player = self.players.get(pid)
-        if not player:
-            raise ValueError("Joueur inconnu")
-        if not player.paid:
-            return {"ok": False, "reason": "not_paid"}
-        if self.state.phase != "active":
-            return {"ok": False, "reason": "round_not_active"}
-        if player.clicked:
-            return {"ok": False, "reason": "already_clicked"}
+        async with self._lock: # Évite les double-gains sur clic simultané
+            player = self.players.get(pid)
+            if not player:
+                return {"ok": False, "reason": "not_found"}
+            if not player.paid:
+                return {"ok": False, "reason": "not_paid"}
+            if self.state.phase != "active":
+                return {"ok": False, "reason": "round_not_active"}
+            if player.clicked:
+                return {"ok": False, "reason": "already_clicked"}
 
-        elapsed = time.time() - self.state.round_start
-        player.clicked = True
-        player.click_time = elapsed
+            elapsed = time.time() - self.state.round_start
+            player.clicked = True
+            player.click_time = elapsed
 
-        if len(self.state.winners) < WINNERS_COUNT:
-            rank  = len(self.state.winners) + 1
-            prize = PRIZES[rank - 1]
-            player.rank  = rank
-            player.prize = prize
+            if len(self.state.winners) < WINNERS_COUNT:
+                rank  = len(self.state.winners) + 1
+                prize = PRIZES[rank - 1]
+                player.rank  = rank
+                player.prize = prize
 
-            winner = Winner(rank=rank, name=player.name + " ", time=elapsed, prize=prize)
-            self.state.winners.append(asdict(winner))
+                winner = Winner(rank=rank, name=player.name, time=elapsed, prize=prize)
+                self.state.winners.append(asdict(winner))
 
-            await self.mgr.broadcast({
-                "type": "winner_added",
-                "winner": asdict(winner),
-                "total": len(self.state.winners)
-            })
-
-            # Créditer le gain sur le compte
-            acc = self.accounts.get(player.email)
-            if acc:
-                acc.wallet += prize
-                acc.total_gains += prize
-                acc.games_won += 1
-                entry = asdict(HistoryEntry(
-                    round=self.state.round, timestamp=time.time(),
-                    mise=MISE_AMOUNT, rank=rank, prize=prize, result="win"
-                ))
-                acc.history.insert(0, entry)
-                if len(acc.history) > 100:
-                    acc.history = acc.history[:100]
-                save_accounts_to_disk(self.accounts)
-
-                # Notifier le gain
-                await self.mgr.send(pid, {
-                    "type": "prize_sent",
-                    "amount": prize,
-                    "new_balance": acc.wallet,
-                    "message": f"🏆 Gain de {prize:,} FCFA crédité sur votre compte !",
+                await self.mgr.broadcast({
+                    "type": "winner_added",
+                    "winner": asdict(winner),
+                    "total": len(self.state.winners)
                 })
 
-            return {"ok": True, "rank": rank, "prize": prize, "time": elapsed}
-        else:
-            # Enregistrer la défaite "trop tard"
-            acc = self.accounts.get(player.email)
-            if acc:
-                entry = asdict(HistoryEntry(
-                    round=self.state.round, timestamp=time.time(),
-                    mise=MISE_AMOUNT, rank=None, prize=0, result="too_late"
-                ))
-                acc.history.insert(0, entry)
-                if len(acc.history) > 100:
-                    acc.history = acc.history[:100]
-                save_accounts_to_disk(self.accounts)
-            return {"ok": False, "reason": "too_late"}
+                acc = self.accounts.get(player.email)
+                if acc:
+                    acc.wallet += prize
+                    acc.total_gains += prize
+                    acc.games_won += 1
+                    entry = asdict(HistoryEntry(
+                        round=self.state.round, timestamp=time.time(),
+                        mise=MISE_AMOUNT, rank=rank, prize=prize, result="win"
+                    ))
+                    acc.history.insert(0, entry)
+                    save_accounts_to_disk(self.accounts)
 
-    # ── BOUCLE DE JEU ─────────────────────────────────────────────────────────
+                    await self.mgr.send(pid, {
+                        "type": "prize_sent",
+                        "amount": prize,
+                        "new_balance": acc.wallet,
+                        "message": f"🏆 Gagné ! {prize:,} FCFA ajoutés au portefeuille.",
+                    })
+
+                return {"ok": True, "rank": rank, "prize": prize, "time": elapsed}
+            else:
+                acc = self.accounts.get(player.email)
+                if acc:
+                    entry = asdict(HistoryEntry(
+                        round=self.state.round, timestamp=time.time(),
+                        mise=MISE_AMOUNT, rank=None, prize=0, result="too_late"
+                    ))
+                    acc.history.insert(0, entry)
+                    save_accounts_to_disk(self.accounts)
+                return {"ok": False, "reason": "too_late"}
+
+    # ── BOUCLE DE JEU AUTOMATIQUE ─────────────────────────────────────────────
     async def _game_loop(self):
         while True:
             try:
                 await self._run_countdown()
                 await self._run_round()
                 await self._end_round()
-                await asyncio.sleep(8)
+                await asyncio.sleep(8) # Pause entre les manches
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                log.error(f"Erreur game loop: {e}", exc_info=True)
+                log.error(f"Erreur Loop: {e}", exc_info=True)
                 await asyncio.sleep(2)
 
     async def _run_countdown(self):
         self.state.phase = "countdown"
-        self.bot_clicks = sorted(
-            random.uniform(0.5, ROUND_DURATION - 2)
-            for _ in range(WINNERS_COUNT * 6)
-        )
+        self.bot_clicks = sorted(random.uniform(0.2, ROUND_DURATION - 5) for _ in range(WINNERS_COUNT * 2))
         for i in range(COUNTDOWN, 0, -1):
             await self.mgr.broadcast({
                 "type": "countdown",
@@ -441,8 +430,6 @@ class GameEngine:
         for p in self.players.values():
             p.clicked = False
             p.click_time = None
-            p.rank = None
-            p.prize = None
 
         await self.mgr.broadcast({
             "type": "round_start",
@@ -454,14 +441,14 @@ class GameEngine:
         bot_idx  = 0
 
         while time.time() < end_time and self.state.phase == "active":
-            elapsed   = time.time() - self.state.round_start
+            elapsed = time.time() - self.state.round_start
             remaining = max(0.0, ROUND_DURATION - elapsed)
 
             while bot_idx < len(self.bot_clicks) and self.bot_clicks[bot_idx] <= elapsed:
                 if len(self.state.winners) < WINNERS_COUNT:
                     rank  = len(self.state.winners) + 1
                     prize = PRIZES[rank - 1]
-                    bname = f"Joueur{random.randint(10000,99999)}"
+                    bname = f"Joueur_{random.randint(1000,9999)}"
                     w = Winner(rank=rank, name=bname, time=self.bot_clicks[bot_idx], prize=prize, is_bot=True)
                     self.state.winners.append(asdict(w))
                     await self.mgr.broadcast({
@@ -473,18 +460,16 @@ class GameEngine:
 
             await self.mgr.broadcast({
                 "type": "tick",
-                "remaining": round(remaining, 2),
+                "remaining": round(remaining, 1),
                 "winners_count": len(self.state.winners)
             })
 
             if len(self.state.winners) >= WINNERS_COUNT:
                 break
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0.1)
 
     async def _end_round(self):
         self.state.phase = "ended"
-
-        # Enregistrer "loss" pour les joueurs qui n'ont pas cliqué
         for pid, player in list(self.players.items()):
             if player.paid and not player.clicked:
                 acc = self.accounts.get(player.email)
@@ -494,21 +479,16 @@ class GameEngine:
                         mise=MISE_AMOUNT, rank=None, prize=0, result="loss"
                     ))
                     acc.history.insert(0, entry)
-                    if len(acc.history) > 100:
-                        acc.history = acc.history[:100]
-                save_accounts_to_disk(self.accounts)
+                    save_accounts_to_disk(self.accounts)
 
         await self.mgr.broadcast({
             "type": "round_end",
             "round": self.state.round,
-            "winners": self.state.winners,
-            "total_winners": len(self.state.winners)
+            "winners": self.state.winners
         })
 
-        # Réinitialiser les joueurs pour le prochain round
         self.players.clear()
         self.state.round += 1
-        log.info(f"Round {self.state.round-1} terminé. {len(self.state.winners)} gagnants.")
 
     def snapshot(self) -> dict:
         return {
@@ -521,7 +501,7 @@ class GameEngine:
         }
 
 # ─── APP FASTAPI ──────────────────────────────────────────────────────────────
-app = FastAPI(title="ONE TOUCH MILLION", version="6.0.0")
+app = FastAPI(title="ONE TOUCH MILLION", version="6.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 _static = os.path.join(os.path.dirname(__file__), "static")
@@ -531,84 +511,41 @@ if os.path.isdir(_static):
 manager = ConnectionManager()
 engine  = GameEngine(manager)
 
-# ─── AUTH ROUTES ──────────────────────────────────────────────────────────────
+# ─── ROUTAGE APIS ─────────────────────────────────────────────────────────────
 @app.post("/api/auth/register")
 async def auth_register(body: dict):
-    name  = (body.get("name") or "").strip()
-    phone = (body.get("phone") or "").strip()
-    email = (body.get("email") or "").strip().lower()
-    pwd   = (body.get("password") or "").strip()
-    if not name or len(name) > 20: raise HTTPException(400, "Pseudo invalide (1-20 car.)")
-    if not phone: raise HTTPException(400, "Numéro Mobile Money requis")
-    if not email or "@" not in email: raise HTTPException(400, "Email invalide")
-    if len(pwd) < 6: raise HTTPException(400, "Mot de passe trop court (min 6)")
+    name, phone, email, pwd = (body.get("name") or "").strip(), (body.get("phone") or "").strip(), (body.get("email") or "").strip().lower(), (body.get("password") or "").strip()
+    if not name or not phone or "@" not in email or len(pwd) < 6: raise HTTPException(400, "Données d'inscription invalides")
     try:
         acc = await engine.create_account(name, phone, email, pwd)
-        return {"account_id": acc.id, "name": acc.name, "email": acc.email,
-                "phone": acc.phone, "wallet": acc.wallet, "total_gains": 0}
-    except ValueError as e:
-        raise HTTPException(409, str(e))
+        return {"account_id": acc.id, "name": acc.name, "email": acc.email, "phone": acc.phone, "wallet": acc.wallet}
+    except ValueError as e: raise HTTPException(409, str(e))
 
 @app.post("/api/auth/login")
 async def auth_login(body: dict):
-    email = (body.get("email") or "").strip().lower()
-    pwd   = (body.get("password") or "").strip()
-    if not email or not pwd: raise HTTPException(400, "Email et mot de passe requis")
+    email, pwd = (body.get("email") or "").strip().lower(), (body.get("password") or "").strip()
     try:
         acc = await engine.login(email, pwd)
-        return {"account_id": acc.id, "name": acc.name, "email": acc.email,
-                "phone": acc.phone, "wallet": acc.wallet, "total_gains": acc.total_gains}
-    except ValueError as e:
-        raise HTTPException(401, str(e))
+        return {"account_id": acc.id, "name": acc.name, "email": acc.email, "phone": acc.phone, "wallet": acc.wallet, "total_gains": acc.total_gains}
+    except ValueError as e: raise HTTPException(401, str(e))
 
-@app.post("/api/auth/forgot-password")
-async def forgot_password(body: dict):
-    email = (body.get("email") or "").strip().lower()
-    if not email: raise HTTPException(400, "Email requis")
-    await engine.request_password_reset(email)
-    return {"message": "Si cet email existe, un lien a été envoyé."}
-
-@app.post("/api/auth/reset-password")
-async def reset_password(body: dict):
-    token = (body.get("token") or "").strip()
-    pwd   = (body.get("password") or "").strip()
-    if not token or len(pwd) < 6: raise HTTPException(400, "Token ou mot de passe invalide")
-    ok = await engine.reset_password(token, pwd)
-    if not ok: raise HTTPException(400, "Lien expiré ou invalide")
-    return {"message": "Mot de passe modifié"}
-
-# ─── WALLET ───────────────────────────────────────────────────────────────────
 @app.get("/api/wallet/{account_id}")
 async def get_wallet(account_id: str):
     acc = engine.accounts_by_id.get(account_id)
-    if not acc: raise HTTPException(404, "Compte introuvable")
-    return {
-        "wallet": acc.wallet,
-        "total_gains": acc.total_gains,
-        "total_deposits": acc.total_deposits,
-        "total_spent": acc.total_spent,
-        "games_played": acc.games_played,
-        "games_won": acc.games_won,
-    }
+    if not acc: raise HTTPException(404, "Introuvable")
+    return {"wallet": acc.wallet, "total_gains": acc.total_gains, "games_played": acc.games_played}
 
-# ─── DÉPÔT FICTIF ─────────────────────────────────────────────────────────────
+# L'ENDPOINT DEMANDE : L'utilisateur recharge son compte ici
 @app.post("/api/deposit/fake")
 async def deposit_fake(body: dict):
     account_id = body.get("account_id")
     amount     = int(body.get("amount") or 0)
-    if not account_id: raise HTTPException(400, "account_id manquant")
-    if amount < 100 or amount > 100_000: raise HTTPException(400, "Montant invalide (100–100 000 FCFA)")
+    if not account_id or amount <= 0: raise HTTPException(400, "Paramètres invalides")
     try:
-        result = await engine.fake_deposit(account_id, amount)
-        return result
-    except ValueError as e:
-        raise HTTPException(400, str(e))
+        return await engine.fake_deposit(account_id, amount)
+    except ValueError as e: raise HTTPException(400, str(e))
 
-# ─── JEU ──────────────────────────────────────────────────────────────────────
-@app.get("/api/state")
-async def get_state():
-    return engine.snapshot()
-
+# INSCRIPTION AU JEU : Accessible immédiatement dès que le solde est supérieur à 500 FCFA
 @app.post("/api/join")
 async def join_game(body: dict):
     account_id = body.get("account_id")
@@ -623,82 +560,26 @@ async def join_game(body: dict):
             "mise": MISE_AMOUNT,
             "state": engine.snapshot()
         }
-    except ValueError as e:
-        raise HTTPException(409, str(e))
+    except ValueError as e: raise HTTPException(400, str(e))
 
-@app.post("/api/click")
-async def click(body: dict):
-    pid = body.get("player_id")
-    if not pid: raise HTTPException(400, "player_id manquant")
-    if not engine.players.get(pid): raise HTTPException(404, "Joueur inconnu")
-    return await engine.player_click(pid)
-
-# ─── HISTORIQUE & PROFIL ──────────────────────────────────────────────────────
 @app.get("/api/history/{account_id}")
-async def get_history(account_id: str, limit: int = 50):
+async def get_history(account_id: str):
     acc = engine.accounts_by_id.get(account_id)
     if not acc: raise HTTPException(404, "Compte introuvable")
-    return {
-        "history": acc.history[:limit],
-        "total": len(acc.history)
-    }
+    return {"history": acc.history, "total": len(acc.history)}
 
 @app.get("/api/profile/{account_id}")
 async def get_profile(account_id: str):
     acc = engine.accounts_by_id.get(account_id)
     if not acc: raise HTTPException(404, "Compte introuvable")
-    win_rate = round((acc.games_won / acc.games_played * 100), 1) if acc.games_played > 0 else 0
-    return {
-        "id": acc.id,
-        "name": acc.name,
-        "phone": acc.phone,
-        "email": acc.email,
-        "wallet": acc.wallet,
-        "total_gains": acc.total_gains,
-        "total_deposits": acc.total_deposits,
-        "total_spent": acc.total_spent,
-        "games_played": acc.games_played,
-        "games_won": acc.games_won,
-        "win_rate": win_rate,
-        "member_since": acc.created_at,
-        "net_result": acc.total_gains - acc.total_spent,
-    }
+    return {"id": acc.id, "name": acc.name, "wallet": acc.wallet, "games_played": acc.games_played, "games_won": acc.games_won}
 
-@app.put("/api/profile/{account_id}")
-async def update_profile(account_id: str, body: dict):
-    acc = engine.accounts_by_id.get(account_id)
-    if not acc: raise HTTPException(404, "Compte introuvable")
-    if "name" in body:
-        name = (body["name"] or "").strip()
-        if not name or len(name) > 20: raise HTTPException(400, "Pseudo invalide")
-        acc.name = name
-    if "phone" in body:
-        phone = (body["phone"] or "").strip()
-        if phone: acc.phone = phone
-    if "password" in body and "old_password" in body:
-        if not verify_password(body["old_password"], acc.password_hash):
-            raise HTTPException(400, "Ancien mot de passe incorrect")
-        if len(body["password"]) < 6:
-            raise HTTPException(400, "Nouveau mot de passe trop court")
-        acc.password_hash = hash_password(body["password"])
-    save_accounts_to_disk(engine.accounts)
-    return {"success": True, "name": acc.name, "phone": acc.phone}
-
-@app.get("/api/leaderboard")
-async def leaderboard():
-    return {"winners": engine.state.winners, "round": engine.state.round}
-
-@app.get("/health")
-async def health():
-    return {"status": "ok", "phase": engine.state.phase,
-            "accounts": len(engine.accounts), "version": "6.0.0"}
-
-# ─── WEBSOCKET ────────────────────────────────────────────────────────────────
+# ─── CANAL TEMPS REEL WEBSOCKET ───────────────────────────────────────────────
 @app.websocket("/ws/{player_id}")
 async def ws_player(ws: WebSocket, player_id: str):
     player = engine.players.get(player_id)
     if not player:
-        await ws.close(code=4001, reason="Joueur non trouvé")
+        await ws.close(code=4001, reason="Inscrivez-vous via /api/join d'abord")
         return
     await manager.connect(player_id, ws)
     await ws.send_json({"type": "connected", "state": engine.snapshot(), "paid": player.paid})
@@ -710,18 +591,14 @@ async def ws_player(ws: WebSocket, player_id: str):
                 result = await engine.player_click(player_id)
                 await ws.send_json({"type": "click_result", **result})
             elif action == "ping":
-                await ws.send_json({"type": "pong", "ts": time.time()})
+                await ws.send_json({"type": "pong"})
     except WebSocketDisconnect:
         manager.disconnect(player_id)
 
-# ─── SERVE FRONTEND ───────────────────────────────────────────────────────────
 @app.get("/")
 async def root():
     idx = os.path.join(_static, "index.html")
-    if os.path.exists(idx):
-        return FileResponse(idx)
-    return HTMLResponse("<h1>ONE TOUCH MILLION</h1>")
+    return FileResponse(idx) if os.path.exists(idx) else HTMLResponse("<h1>ONE TOUCH MILLION RUNNING</h1>")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)), reload=False)
