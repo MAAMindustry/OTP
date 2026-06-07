@@ -8,17 +8,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#FFD700;--gold2:#FFA500;--dark:#0a0a14;--panel:#12121f;--border:#2a2a4a;--green:#00ff88;--red:#ff4455;--blue:#4488ff;--text:#e0e0ff}
-body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:20px}
-.container{max-width:700px;margin:0 auto}
+body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:0 0 80px}
+.container{max-width:700px;margin:0 auto;padding:0 16px}
 
-/* ── OVERLAY MODALS ── */
-.overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+/* ── OVERLAYS ── */
+.overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .modal{background:#12121f;border:1px solid #2a2a4a;border-radius:18px;padding:28px 24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
 .modal-logo{font-family:'Black Ops One',cursive;font-size:22px;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:6px;letter-spacing:2px}
-.modal-title{font-size:15px;color:#8888aa;text-align:center;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px}
-.modal-section{font-size:13px;color:#8888aa;line-height:1.8;margin-bottom:14px;background:#0a0a14;border-radius:10px;padding:12px 14px;border:0.5px solid #1e1e35;max-height:200px;overflow-y:auto}
-.modal-section strong{color:#aaaacc}
+.modal-title{font-size:14px;color:#8888aa;text-align:center;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px}
+.modal-section{font-size:13px;color:#8888aa;line-height:1.8;margin-bottom:14px;background:#0a0a14;border-radius:10px;padding:12px 14px;border:.5px solid #1e1e35;max-height:200px;overflow-y:auto}
 .modal-section h4{color:#FFD700;margin-bottom:6px;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.modal-section strong{color:#aaaacc}
 .checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:13px;color:#aaaacc;line-height:1.6;cursor:pointer}
 .checkbox-row input{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--gold);cursor:pointer}
 .btn-modal{width:100%;padding:13px;font-family:'Black Ops One',cursive;font-size:14px;letter-spacing:2px;border:none;border-radius:10px;cursor:pointer;margin-top:8px;transition:filter .15s}
@@ -29,205 +29,220 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 .btn-blue:not(:disabled):hover{filter:brightness(1.15)}
 .btn-green{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14}
 .btn-green:not(:disabled):hover{filter:brightness(1.1)}
+.btn-red{background:linear-gradient(135deg,#ff4455,#cc2233);color:#fff}
 .age-big{font-family:'Black Ops One',cursive;font-size:64px;text-align:center;color:#FFD700;margin:14px 0}
 .age-sub{text-align:center;font-size:14px;color:#8888aa;margin-bottom:20px}
 .age-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-.btn-no{background:linear-gradient(135deg,#ff4455,#cc2233);color:#fff;padding:13px;font-family:'Black Ops One',cursive;font-size:14px;border:none;border-radius:10px;cursor:pointer}
 .age-block{text-align:center;padding:20px 0;color:#ff4455}
-.age-block h2{font-size:22px;margin-bottom:8px}
 
-/* ── AUTH TABS ── */
+/* ── AUTH ── */
 .auth-tabs{display:flex;gap:2px;margin-bottom:20px;background:#0a0a14;border-radius:10px;padding:3px}
 .auth-tab{flex:1;padding:9px;text-align:center;font-family:'Black Ops One',cursive;font-size:12px;letter-spacing:1px;cursor:pointer;border-radius:8px;color:#6666aa;transition:all .2s;border:none;background:transparent}
-.auth-tab.active{background:#1e1e35;color:#FFD700;border:0.5px solid #2a2a4a}
-.form-input{width:100%;padding:11px 14px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:10px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border .2s;margin-bottom:10px}
+.auth-tab.active{background:#1e1e35;color:#FFD700;border:.5px solid #2a2a4a}
+.form-input{width:100%;padding:11px 14px;background:#0a0a14;border:.5px solid #2a2a4a;border-radius:10px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border .2s;margin-bottom:10px}
 .form-input:focus{border-color:#4488ff}
 .forgot-link{text-align:right;font-size:12px;color:#4488ff;cursor:pointer;margin-bottom:12px;margin-top:-6px}
-.forgot-link:hover{text-decoration:underline}
 .auth-switch{text-align:center;font-size:13px;color:#6666aa;margin-top:14px}
 .auth-switch span{color:#4488ff;cursor:pointer}
-.auth-switch span:hover{text-decoration:underline}
-.divider{border:none;border-top:0.5px solid #1e1e35;margin:16px 0}
+.error-msg{color:#ff4455;font-size:12px;text-align:center;margin-top:4px;min-height:18px}
+
+/* ── NAV BOTTOM ── */
+.nav-bottom{position:fixed;bottom:0;left:0;right:0;background:#0d0d1a;border-top:.5px solid #1e1e35;display:flex;z-index:100;padding:6px 0 10px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 4px;transition:color .2s;color:#6666aa;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border:none;background:none;font-family:'Rajdhani',sans-serif}
+.nav-item.active{color:#FFD700}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:20px}
+.page.active{display:block}
 
 /* ── HEADER ── */
-.header{text-align:center;margin-bottom:24px;padding-top:8px}
-.logo{font-family:'Black Ops One',cursive;font-size:36px;background:linear-gradient(135deg,#FFD700,#FFA500,#FF6B35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:3px}
-.subtitle{font-size:13px;color:#8888aa;margin-top:6px;letter-spacing:3px;text-transform:uppercase}
+.header{text-align:center;margin-bottom:20px;padding-top:8px}
+.logo{font-family:'Black Ops One',cursive;font-size:32px;background:linear-gradient(135deg,#FFD700,#FFA500,#FF6B35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:3px}
+.subtitle{font-size:12px;color:#8888aa;margin-top:4px;letter-spacing:3px;text-transform:uppercase}
 .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff4455;margin-right:6px;transition:background .3s}
 .conn-dot.ok{background:#00ff88}
 
 /* ── USER BAR ── */
-.user-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:10px;flex-wrap:wrap}
+.user-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .user-name{color:#FFD700;font-weight:700;font-size:14px}
-.wallet-display{display:flex;align-items:center;gap:6px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:8px;padding:5px 10px;cursor:pointer;transition:border-color .2s}
-.wallet-display:hover{border-color:#FFD700}
-.wallet-amount{color:#00ff88;font-weight:700;font-size:13px}
-.wallet-label{color:#6666aa;font-size:11px}
-.wallet-icon{font-size:14px}
-.user-actions{display:flex;gap:8px;align-items:center}
+.wallet-badge{display:flex;align-items:center;gap:6px;background:#0a0a14;border:.5px solid #00ff8844;border-radius:8px;padding:6px 12px;cursor:pointer;transition:border-color .2s}
+.wallet-badge:hover{border-color:#00ff88}
+.wallet-amount{color:#00ff88;font-weight:700;font-size:15px}
+.wallet-label{color:#6666aa;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
 .logout-btn{color:#6666aa;cursor:pointer;font-size:12px;background:none;border:none;font-family:'Rajdhani',sans-serif}
 .logout-btn:hover{color:#ff4455}
-.deposit-mini-btn{background:linear-gradient(135deg,#00ff88,#00aa55);color:#0a0a14;border:none;border-radius:6px;padding:5px 10px;font-family:'Black Ops One',cursive;font-size:10px;cursor:pointer;letter-spacing:1px}
-.deposit-mini-btn:hover{filter:brightness(1.1)}
 
 /* ── STATS ── */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
-.stat-card{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:12px 14px;text-align:center}
-.stat-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-card{background:#12121f;border:.5px solid #2a2a4a;border-radius:12px;padding:12px;text-align:center}
+.stat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
 .stat-value{font-size:22px;font-weight:700;color:var(--gold);margin-top:4px}
-.group-bar{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px}
-.group-title{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-.badge{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:6px;padding:2px 10px;font-size:11px;color:#6666aa}
-.groups-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
-.group-pill{background:#1a1a2e;border:0.5px solid #2a2a4a;border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;color:#8888cc;transition:all .3s}
+
+/* ── GROUPES ── */
+.group-bar{background:#12121f;border:.5px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:16px}
+.group-title{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between}
+.badge{background:#1a1a2e;border:.5px solid #2a2a4a;border-radius:6px;padding:2px 10px;font-size:11px;color:#6666aa}
+.groups-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.group-pill{background:#1a1a2e;border:.5px solid #2a2a4a;border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;color:#8888cc;transition:all .3s}
 .group-pill.active{background:#0d1f0d;border-color:#00ff88;color:#00ff88;font-weight:700}
-.group-pill.full{background:#111;border-color:#333;color:#333}
-.progress-note{font-size:12px;color:#6666aa;text-align:center;margin-top:10px}
 
-/* ── PAIEMENT MISE ── */
-.pay-panel{background:#12121f;border:0.5px solid #FFD700;border-radius:12px;padding:18px;margin-bottom:18px;text-align:center}
-.pay-title{font-size:14px;color:#FFD700;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-.pay-amount{font-family:'Black Ops One',cursive;font-size:40px;color:#FFD700;margin:8px 0}
-.pay-sub{font-size:13px;color:#8888aa;margin-bottom:16px}
-.pay-methods-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
-.pay-method-btn{flex:1;max-width:160px;padding:11px 8px;border:1px solid #2a2a4a;border-radius:10px;background:#0a0a14;cursor:pointer;transition:all .2s;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#aaaacc;display:flex;align-items:center;justify-content:center;gap:6px}
-.pay-method-btn:hover{border-color:#FFD700;color:#FFD700}
-.pay-method-btn.selected{border-color:#FFD700;background:#1a1500;color:#FFD700}
-.pay-method-btn .op-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.op-orange{background:#FF6600}
-.op-mtn{background:#FFCC00}
-.phone-input-row{display:flex;gap:8px;margin-bottom:10px}
-.phone-prefix{background:#1e1e35;border:0.5px solid #2a2a4a;border-radius:10px;padding:11px 12px;color:#aaaacc;font-size:14px;font-weight:700;white-space:nowrap;display:flex;align-items:center}
-.btn-pay{width:100%;padding:16px;font-family:'Black Ops One',cursive;font-size:18px;letter-spacing:2px;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14;transition:filter .15s}
-.btn-pay:not(:disabled):hover{filter:brightness(1.1)}
-.btn-pay:disabled{opacity:.5;cursor:not-allowed}
-.pay-status{font-size:13px;margin-top:10px;min-height:20px}
-.pay-status.pending{color:#FFD700}
-.pay-status.ok{color:#00ff88}
-.pay-status.err{color:#ff4455}
-
-/* ── WALLET / DÉPÔT ── */
-.wallet-panel{background:#12121f;border:0.5px solid #00ff88;border-radius:12px;padding:18px;margin-bottom:18px}
-.wallet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.wallet-title{font-size:14px;color:#00ff88;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.wallet-balance-big{font-family:'Black Ops One',cursive;font-size:32px;color:#00ff88;margin:6px 0}
-.wallet-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.wallet-stat{background:#0a0a14;border-radius:8px;padding:10px 12px;text-align:center}
-.wallet-stat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:1px}
-.wallet-stat-val{font-size:16px;font-weight:700;color:#aaaacc;margin-top:2px}
-.deposit-amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
-.dep-amount-btn{padding:9px 4px;background:#0a0a14;border:0.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
-.dep-amount-btn:hover,.dep-amount-btn.selected{border-color:#00ff88;background:#0d1f0d;color:#00ff88}
-.custom-amount-row{display:flex;gap:8px;margin-bottom:10px}
-.custom-amount-row .form-input{margin-bottom:0;flex:1}
+/* ── DÉPÔT PANEL ── */
+.deposit-panel{background:#12121f;border:.5px solid #00ff8844;border-radius:12px;padding:18px;margin-bottom:16px}
+.deposit-title{font-size:14px;color:#00ff88;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.amounts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.amt-btn{padding:10px 4px;background:#0a0a14;border:.5px solid #2a2a4a;border-radius:8px;color:#aaaacc;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
+.amt-btn:hover,.amt-btn.sel{border-color:#00ff88;background:#0d1f0d;color:#00ff88}
+.custom-row{display:flex;gap:8px;margin-bottom:12px}
+.custom-row .form-input{margin-bottom:0;flex:1}
+.deposit-note{font-size:12px;color:#4488ff;text-align:center;margin-top:8px;background:#0a1020;border-radius:6px;padding:8px}
 
 /* ── REJOINDRE ── */
-.join-panel{background:#12121f;border:0.5px solid #4488ff;border-radius:12px;padding:18px;margin-bottom:18px;text-align:center}
-.join-title{font-size:14px;color:#4488ff;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.join-panel{background:#12121f;border:.5px solid #FFD700;border-radius:12px;padding:20px;margin-bottom:16px;text-align:center}
+.join-title{font-size:14px;color:#FFD700;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.join-mise-info{background:#0a0a14;border-radius:10px;padding:12px;margin:14px 0;display:flex;justify-content:space-between;align-items:center}
+.mise-amount-big{font-family:'Black Ops One',cursive;font-size:32px;color:#FFD700}
+.mise-sub{font-size:12px;color:#8888aa;text-align:right}
 
-/* ── ARENA ── */
-.arena{background:#12121f;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
+/* ── ARÈNE ── */
+.arena{background:#12121f;border:1px solid #2a2a4a;border-radius:16px;padding:24px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
 .arena-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,#181830 0%,#0a0a14 70%)}
 .arena-content{position:relative;z-index:1}
-.round-label{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
-.timer{font-family:'Black Ops One',cursive;font-size:72px;color:#fff;line-height:1;user-select:none;transition:color .3s}
+.round-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.timer-wrap{position:relative;display:inline-block;margin:8px 0}
+.timer{font-family:'Black Ops One',cursive;font-size:80px;line-height:1;user-select:none;transition:color .3s;color:#fff}
 .timer.danger{color:#ff4455;animation:blink .5s infinite alternate}
 .timer.active{color:var(--gold)}
+.timer.countdown-mode{color:#4488ff;font-size:64px}
 @keyframes blink{from{opacity:1}to{opacity:.4}}
-.tbar-wrap{background:#1e1e35;border-radius:4px;height:8px;margin:14px 0}
+.tbar-wrap{background:#1e1e35;border-radius:4px;height:10px;margin:14px 0}
 .tbar{height:100%;border-radius:4px;background:linear-gradient(90deg,#00ff88,#FFD700,#ff4455);transition:width .05s linear}
-.phase-msg{font-size:15px;color:#aaaacc;margin-top:10px;min-height:24px;font-weight:600}
-.big-btn{width:100%;padding:20px;font-family:'Black Ops One',cursive;font-size:24px;letter-spacing:3px;border:none;border-radius:14px;cursor:pointer;transition:all .08s;margin-top:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.phase-msg{font-size:14px;color:#aaaacc;margin-top:8px;min-height:22px;font-weight:600}
+.big-btn{width:100%;padding:22px;font-family:'Black Ops One',cursive;font-size:26px;letter-spacing:3px;border:none;border-radius:14px;cursor:pointer;transition:all .08s;margin-top:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
 .big-btn:disabled{cursor:not-allowed;opacity:.5}
 .btn-click{background:linear-gradient(135deg,#FFD700,#FFA500);color:#0a0a14}
 .btn-click:not(:disabled):active{transform:scale(.95)}
 .btn-click:not(:disabled):hover{filter:brightness(1.1)}
+.winners-count-badge{position:absolute;top:8px;right:12px;background:rgba(0,0,0,.3);border-radius:20px;padding:3px 10px;font-size:12px;letter-spacing:1px}
 
 /* ── WINNERS ── */
-.winners-panel{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:16px;margin-bottom:16px}
-.winners-title{font-size:13px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.wlist{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
-.witem{display:flex;align-items:center;gap:12px;padding:7px 12px;background:#1a1a2e;border-radius:8px;font-size:13px}
-.wrank{font-family:'Black Ops One',cursive;font-size:13px;min-width:32px}
-.wrank.g{color:#FFD700}.wrank.s{color:#C0C0C0}.wrank.b{color:#CD7F32}.wrank.o{color:#555588}
+.winners-panel{background:#12121f;border:.5px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:14px}
+.winners-title{font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.wlist{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.witem{display:flex;align-items:center;gap:10px;padding:7px 12px;background:#1a1a2e;border-radius:8px;font-size:13px}
+.wrank{font-family:'Black Ops One',cursive;font-size:12px;min-width:30px}
+.wrank.g{color:#FFD700}.wrank.s{color:#C0C0C0}.wrank.b{color:#CD7F32}.wrank.o{color:#556677}
 .wname{flex:1;color:#ccccee}
-.wtime{color:#00ff88;font-size:12px;min-width:48px;text-align:right}
-.wprize{color:#FFD700;font-weight:700;font-size:12px;min-width:100px;text-align:right}
-.rules{background:#12121f;border:0.5px solid #2a2a4a;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#8888aa;line-height:1.8}
+.wtime{color:#4488ff;font-size:11px;min-width:44px;text-align:right}
+.wprize{color:#FFD700;font-weight:700;font-size:12px;min-width:90px;text-align:right}
+.rules{background:#12121f;border:.5px solid #2a2a4a;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#8888aa;line-height:1.8}
 .rules strong{color:#aaaacc}
 
+/* ── HISTORIQUE ── */
+.page-title{font-family:'Black Ops One',cursive;font-size:20px;color:#FFD700;margin-bottom:16px;letter-spacing:2px;display:flex;align-items:center;gap:10px}
+.history-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.hist-stat{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:12px;text-align:center}
+.hist-stat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:.8px}
+.hist-stat-val{font-size:20px;font-weight:700;margin-top:4px}
+.hist-stat-val.green{color:#00ff88}
+.hist-stat-val.gold{color:#FFD700}
+.hist-stat-val.red{color:#ff4455}
+.hist-stat-val.blue{color:#4488ff}
+.history-list{display:flex;flex-direction:column;gap:8px}
+.hitem{background:#12121f;border:.5px solid #2a2a4a;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.hitem.win{border-left:3px solid #00ff88}
+.hitem.loss{border-left:3px solid #ff4455}
+.hitem.too_late{border-left:3px solid #FFD700}
+.hitem-icon{font-size:20px;min-width:28px;text-align:center}
+.hitem-info{flex:1}
+.hitem-round{font-size:12px;color:#6666aa}
+.hitem-result{font-size:14px;font-weight:700}
+.hitem-result.win{color:#00ff88}
+.hitem-result.loss{color:#ff4455}
+.hitem-result.too_late{color:#FFD700}
+.hitem-date{font-size:11px;color:#444466}
+.hitem-prize{text-align:right}
+.hitem-prize-val{font-size:16px;font-weight:700;color:#FFD700}
+.hitem-mise{font-size:11px;color:#ff4455}
+.empty-state{text-align:center;padding:40px 20px;color:#444466}
+.empty-state div{font-size:40px;margin-bottom:10px}
+.empty-state p{font-size:14px}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border:.5px solid #2a2a4a;border-radius:20px;background:#12121f;color:#6666aa;font-size:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;transition:all .2s}
+.filter-btn.active{border-color:#FFD700;color:#FFD700;background:#1a1500}
+
+/* ── PROFIL ── */
+.profile-card{background:#12121f;border:.5px solid #2a2a4a;border-radius:14px;padding:20px;margin-bottom:14px}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#FFA500);display:flex;align-items:center;justify-content:center;font-family:'Black Ops One',cursive;font-size:24px;color:#0a0a14;margin:0 auto 12px}
+.profile-name{font-family:'Black Ops One',cursive;font-size:20px;color:#FFD700;text-align:center;letter-spacing:2px}
+.profile-email{font-size:13px;color:#6666aa;text-align:center;margin-top:4px}
+.profile-since{font-size:11px;color:#444466;text-align:center;margin-top:4px}
+.profile-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:16px}
+.pstat{background:#0a0a14;border-radius:8px;padding:10px 12px}
+.pstat-label{font-size:10px;color:#6666aa;text-transform:uppercase;letter-spacing:.8px}
+.pstat-val{font-size:16px;font-weight:700;margin-top:3px}
+.section-label{font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px;margin:16px 0 10px}
+.edit-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.edit-row .form-input{margin-bottom:0;flex:1}
+.edit-label{font-size:12px;color:#6666aa;min-width:70px}
+.net-result{text-align:center;padding:12px;border-radius:10px;margin-bottom:14px}
+.net-result.pos{background:#0d1f0d;border:.5px solid #00ff8844}
+.net-result.neg{background:#1f0d0d;border:.5px solid #ff445544}
+.net-label{font-size:11px;color:#6666aa;text-transform:uppercase}
+.net-val{font-family:'Black Ops One',cursive;font-size:28px;margin-top:4px}
+
 /* ── TOAST ── */
-.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:14px 24px;color:#00ff88;font-size:15px;font-weight:700;z-index:999;display:none;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;white-space:normal;text-align:center}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d0d1a;border:1px solid #00ff88;border-radius:12px;padding:12px 22px;color:#00ff88;font-size:14px;font-weight:700;z-index:999;display:none;white-space:nowrap;font-family:'Rajdhani',sans-serif;letter-spacing:1px;max-width:90vw;white-space:normal;text-align:center}
 .confetti-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998;overflow:hidden}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .hidden{display:none!important}
-.error-msg{color:#ff4455;font-size:12px;text-align:center;margin-top:6px;min-height:18px}
-
-/* ── MODAL DÉPÔT (overlay interne) ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(5,5,15,.95);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#6666aa;font-size:20px;cursor:pointer;line-height:1}
-.modal-close:hover{color:#ff4455}
-.modal-inner{position:relative}
-
-/* ── SPINNER ── */
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── VÉRIFICATION PAIEMENT ── */
-.verify-panel{background:#12121f;border:0.5px solid #FFD700;border-radius:12px;padding:16px;margin-bottom:18px;text-align:center}
-.verify-steps{display:flex;flex-direction:column;gap:8px;margin:12px 0}
-.verify-step{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#0a0a14;border-radius:8px;font-size:13px;color:#8888aa}
-.verify-step.done{color:#00ff88;border:0.5px solid #00ff8833}
-.verify-step.active{color:#FFD700;border:0.5px solid #FFD70033}
-.step-icon{font-size:16px;min-width:20px}
+.divider{border:none;border-top:.5px solid #1e1e35;margin:14px 0}
 </style>
 </head>
 <body>
 
-<!-- ══════ OVERLAY 1 — ÂGE ══════ -->
+<!-- ══ OVERLAY ÂGE ══ -->
 <div class="overlay" id="overlayAge">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
-    <div class="modal-title">Vérification d'âge requise</div>
+    <div class="modal-title">Vérification d'âge</div>
     <div class="age-big">21+</div>
-    <div class="age-sub">Ce jeu est réservé aux personnes de <strong>21 ans et plus</strong>.<br>Confirmez votre âge pour continuer.</div>
+    <div class="age-sub">Ce jeu est réservé aux personnes de <strong>21 ans et plus</strong>.</div>
     <div id="ageForms">
       <div class="age-btns">
         <button class="btn-modal btn-accept" onclick="confirmAge(true)">J'AI 21 ANS OU PLUS</button>
-        <button class="btn-no" onclick="confirmAge(false)">J'AI MOINS DE 21 ANS</button>
+        <button class="btn-modal btn-red" onclick="confirmAge(false)">MOINS DE 21 ANS</button>
       </div>
     </div>
     <div id="ageBlocked" class="age-block hidden">
       <h2>⛔ Accès refusé</h2>
-      <p style="color:#8888aa;font-size:14px;margin-top:8px">Ce jeu est réservé aux joueurs de 21 ans et plus.</p>
+      <p style="color:#8888aa;font-size:14px;margin-top:8px">Réservé aux joueurs de 21 ans et plus.</p>
     </div>
   </div>
 </div>
 
-<!-- ══════ OVERLAY 2 — CGU ══════ -->
+<!-- ══ OVERLAY CGU ══ -->
 <div class="overlay hidden" id="overlayPolicy">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
     <div class="modal-title">Conditions d'utilisation</div>
     <div class="modal-section">
-      <h4>🔒 Politique de Confidentialité</h4>
-      <p>ONE TOUCH MILLION collecte votre nom, numéro de téléphone, email et données de paiement uniquement pour le bon fonctionnement du jeu et le versement de vos gains. Vos données ne sont <strong>jamais vendues</strong> à des tiers. Les paiements sont traités par <strong>NotchPay</strong>.</p>
-    </div>
-    <div class="modal-section">
       <h4>📜 Conditions Générales</h4>
-      <p><strong>1. Jeu d'argent réel :</strong> La mise de 500 FCFA est débitée de votre Mobile Money. Les gains sont versés sur votre numéro enregistré.</p><br>
-      <p><strong>2. Âge minimum :</strong> 21 ans. Toute fraude entraîne l'annulation des gains.</p><br>
-      <p><strong>3. Jeu responsable :</strong> Ne jouez que les sommes que vous pouvez perdre.</p><br>
-      <p><strong>4. Gains :</strong> Versés sous 24h ouvrées. Réclamations traitées sous 48h.</p><br>
+      <p><strong>1. Paiements fictifs (démo) :</strong> Les mises sont déduites du solde virtuel de votre compte. Rechargez votre compte pour jouer.</p><br>
+      <p><strong>2. Âge minimum :</strong> 21 ans. Jeu réservé aux adultes.</p><br>
+      <p><strong>3. Jeu responsable :</strong> Ne jouez que les sommes que vous pouvez vous permettre de perdre.</p><br>
+      <p><strong>4. Gains :</strong> Crédités instantanément sur votre solde de compte.</p><br>
       <p><strong>5. Juridiction :</strong> Droit camerounais — Yaoundé.</p>
     </div>
     <div class="checkbox-row" onclick="toggleCheck('chkPolicy')">
       <input type="checkbox" id="chkPolicy" onclick="event.stopPropagation();checkConsents()">
-      <span>J'accepte la <strong>Politique de Confidentialité</strong> et le traitement de mes données.</span>
+      <span>J'accepte la <strong>Politique de Confidentialité</strong>.</span>
     </div>
     <div class="checkbox-row" onclick="toggleCheck('chkCgu')">
       <input type="checkbox" id="chkCgu" onclick="event.stopPropagation();checkConsents()">
-      <span>J'accepte les <strong>CGU</strong> et je comprends que ce jeu implique de l'argent réel.</span>
+      <span>J'accepte les <strong>CGU</strong> et comprends que ce jeu implique de l'argent.</span>
     </div>
     <div class="checkbox-row" onclick="toggleCheck('chkAge21')">
       <input type="checkbox" id="chkAge21" onclick="event.stopPropagation();checkConsents()">
@@ -237,213 +252,305 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
   </div>
 </div>
 
-<!-- ══════ OVERLAY 3 — AUTH ══════ -->
+<!-- ══ OVERLAY AUTH ══ -->
 <div class="overlay hidden" id="overlayAuth">
   <div class="modal">
     <div class="modal-logo">ONE TOUCH MILLION</div>
-    <div class="auth-tabs" id="authTabs">
+    <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">CONNEXION</button>
       <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">INSCRIPTION</button>
     </div>
-    <!-- LOGIN -->
     <div id="panelLogin">
-      <input class="form-input" id="loginEmail" placeholder="Votre email" type="email" autocomplete="email">
-      <input class="form-input" id="loginPass" placeholder="Mot de passe" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <input class="form-input" id="loginEmail" placeholder="Votre email" type="email">
+      <input class="form-input" id="loginPass" placeholder="Mot de passe" type="password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="forgot-link" onclick="switchTab('forgot')">Mot de passe oublié ?</div>
       <div class="error-msg" id="loginErr"></div>
       <button class="btn-modal btn-blue" id="btnLogin" onclick="doLogin()">SE CONNECTER</button>
       <div class="auth-switch">Pas de compte ? <span onclick="switchTab('register')">S'inscrire</span></div>
     </div>
-    <!-- REGISTER -->
     <div id="panelRegister" class="hidden">
-      <input class="form-input" id="regName" placeholder="Pseudo (ex: Champion237)" maxlength="20" autocomplete="nickname">
-      <input class="form-input" id="regPhone" placeholder="Numéro Mobile Money (6XXXXXXXX)" type="tel" autocomplete="tel">
-      <input class="form-input" id="regEmail" placeholder="Votre email" type="email" autocomplete="email">
-      <input class="form-input" id="regPass" placeholder="Mot de passe (min 6 caractères)" type="password" autocomplete="new-password">
-      <input class="form-input" id="regPass2" placeholder="Confirmer le mot de passe" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()">
+      <input class="form-input" id="regName" placeholder="Pseudo (ex: Champion237)" maxlength="20">
+      <input class="form-input" id="regPhone" placeholder="Numéro Mobile Money (6XXXXXXXX)" type="tel">
+      <input class="form-input" id="regEmail" placeholder="Votre email" type="email">
+      <input class="form-input" id="regPass" placeholder="Mot de passe (min 6 car.)" type="password">
+      <input class="form-input" id="regPass2" placeholder="Confirmer le mot de passe" type="password" onkeydown="if(event.key==='Enter')doRegister()">
       <div class="error-msg" id="regErr"></div>
       <button class="btn-modal btn-accept" id="btnRegister" onclick="doRegister()">CRÉER MON COMPTE</button>
       <div class="auth-switch">Déjà un compte ? <span onclick="switchTab('login')">Se connecter</span></div>
     </div>
-    <!-- FORGOT -->
     <div id="panelForgot" class="hidden">
       <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Entrez votre email pour recevoir un lien de réinitialisation.</p>
-      <input class="form-input" id="forgotEmail" placeholder="Votre email" type="email" autocomplete="email" onkeydown="if(event.key==='Enter')doForgot()">
+      <input class="form-input" id="forgotEmail" placeholder="Votre email" type="email" onkeydown="if(event.key==='Enter')doForgot()">
       <div class="error-msg" id="forgotErr"></div>
       <button class="btn-modal btn-blue" id="btnForgot" onclick="doForgot()">ENVOYER LE LIEN</button>
       <div class="auth-switch"><span onclick="switchTab('login')">← Retour</span></div>
     </div>
-    <!-- RESET -->
     <div id="panelReset" class="hidden">
       <p style="font-size:13px;color:#8888aa;margin-bottom:14px;text-align:center">Créez votre nouveau mot de passe.</p>
-      <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password" autocomplete="new-password">
-      <input class="form-input" id="resetPass2" placeholder="Confirmer" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
+      <input class="form-input" id="resetPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password">
+      <input class="form-input" id="resetPass2" placeholder="Confirmer" type="password" onkeydown="if(event.key==='Enter')doReset()">
       <div class="error-msg" id="resetErr"></div>
       <button class="btn-modal btn-accept" id="btnReset" onclick="doReset()">CHANGER LE MOT DE PASSE</button>
     </div>
   </div>
 </div>
 
-<!-- ══════ MODAL DÉPÔT (popup interne) ══════ -->
-<div class="modal-overlay hidden" id="overlayDeposit">
-  <div class="modal modal-inner" style="max-width:420px">
-    <button class="modal-close" onclick="closeDeposit()">✕</button>
-    <div class="modal-logo" style="font-size:18px">RECHARGER MON COMPTE</div>
-    <div class="modal-title" style="margin-bottom:16px">Dépôt Mobile Money</div>
+<!-- ══ CONTENU PRINCIPAL ══ -->
+<div id="mainContent" style="display:none">
 
-    <!-- Solde actuel -->
-    <div style="background:#0a0a14;border-radius:10px;padding:12px;margin-bottom:14px;text-align:center">
-      <div style="font-size:12px;color:#6666aa;text-transform:uppercase;letter-spacing:1px">Solde actuel</div>
-      <div style="font-family:'Black Ops One',cursive;font-size:28px;color:#00ff88;margin-top:4px" id="depositCurrentBalance">0 FCFA</div>
-    </div>
-
-    <!-- Montants rapides -->
-    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Montant à recharger</div>
-    <div class="deposit-amounts" id="depositAmountBtns">
-      <div class="dep-amount-btn" onclick="selectDepositAmount(500)">500 F</div>
-      <div class="dep-amount-btn" onclick="selectDepositAmount(1000)">1 000 F</div>
-      <div class="dep-amount-btn" onclick="selectDepositAmount(2000)">2 000 F</div>
-      <div class="dep-amount-btn" onclick="selectDepositAmount(5000)">5 000 F</div>
-    </div>
-    <div class="custom-amount-row">
-      <input class="form-input" id="depositCustomAmount" type="number" placeholder="Montant personnalisé (100 - 10 000)" min="100" max="10000" oninput="onCustomAmountInput()">
-    </div>
-
-    <!-- Opérateur -->
-    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Opérateur</div>
-    <div class="pay-methods-row" style="margin-bottom:14px">
-      <button class="pay-method-btn" id="depBtnOrange" onclick="selectDepositOp('orange')">
-        <span class="op-dot op-orange"></span> Orange Money
-      </button>
-      <button class="pay-method-btn" id="depBtnMtn" onclick="selectDepositOp('mtn')">
-        <span class="op-dot op-mtn"></span> MTN MoMo
-      </button>
-    </div>
-
-    <div class="error-msg" id="depositErr"></div>
-    <button class="btn-modal btn-green" id="btnDeposit" onclick="doDeposit()" disabled>RECHARGER MON COMPTE</button>
-    <div class="pay-status" id="depositStatus"></div>
-  </div>
-</div>
-
-<!-- ══════ CONTENU PRINCIPAL ══════ -->
-<div class="container" id="mainContent" style="display:none">
-  <div class="header">
-    <div class="logo">ONE TOUCH MILLION</div>
-    <div class="subtitle"><span class="conn-dot" id="dot"></span>La minute d'or</div>
-  </div>
-
-  <!-- Barre utilisateur -->
-  <div class="user-bar" id="userBar">
-    <div>
-      <div style="font-size:11px;color:#6666aa">Connecté</div>
-      <div class="user-name" id="displayName">—</div>
-    </div>
-    <!-- Wallet avec bouton dépôt -->
-    <div class="wallet-display" onclick="openDeposit()" title="Recharger mon compte">
-      <span class="wallet-icon">💰</span>
-      <div>
-        <div class="wallet-label">Mon solde</div>
-        <div class="wallet-amount" id="walletAmount">0 FCFA</div>
+  <!-- ── PAGE JEU ── -->
+  <div class="page active" id="pageGame">
+    <div class="container">
+      <div class="header">
+        <div class="logo">ONE TOUCH MILLION</div>
+        <div class="subtitle"><span class="conn-dot" id="dot"></span>La minute d'or</div>
       </div>
-      <span style="color:#6666aa;font-size:11px;margin-left:4px">+</span>
-    </div>
-    <div class="user-actions">
-      <button class="deposit-mini-btn" onclick="openDeposit()">RECHARGER</button>
-      <button class="logout-btn" onclick="logout()">Déconnexion</button>
-    </div>
-  </div>
 
-  <div class="rules">
-    <strong>Règles :</strong> Payez la mise de <strong>500 FCFA</strong> via Orange Money ou MTN MoMo →
-    au signal, cliquez avant les autres. Les <strong>50 premiers</strong> remportent jusqu'à <strong>5 000 000 FCFA</strong> versés sur votre Mobile Money.
-  </div>
+      <div class="user-bar">
+        <div>
+          <div style="font-size:10px;color:#6666aa">Connecté</div>
+          <div class="user-name" id="displayName">—</div>
+        </div>
+        <div class="wallet-badge" onclick="showPage('pageDeposit')">
+          <div>
+            <div class="wallet-label">Mon solde</div>
+            <div class="wallet-amount" id="walletAmount">0 FCFA</div>
+          </div>
+          <span style="color:#00ff88;font-size:16px;margin-left:4px">+</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Déco.</button>
+      </div>
 
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-label">Joueurs inscrits</div><div class="stat-value" id="totalPlayers">0</div></div>
-    <div class="stat-card"><div class="stat-label">Groupes actifs</div><div class="stat-value" id="totalGroups">0</div></div>
-    <div class="stat-card"><div class="stat-label">Mise d'entrée</div><div class="stat-value" style="color:#00ff88">500F</div></div>
-  </div>
+      <div class="rules">
+        <strong>Comment jouer :</strong> Rechargez votre compte → Payez la mise de <strong>500 FCFA</strong> (déduite automatiquement) → Cliquez le plus vite possible au signal. Les <strong>50 premiers</strong> remportent jusqu'à <strong>5 000 000 FCFA</strong>.
+      </div>
 
-  <!-- ── ÉTAPE 1 : REJOINDRE ── -->
-  <div class="join-panel hidden" id="joinPanel">
-    <div class="join-title">🎮 Rejoindre une partie</div>
-    <div style="font-size:13px;color:#8888aa;margin-bottom:14px">Rejoignez la file d'attente pour participer au prochain round.</div>
-    <button class="btn-modal btn-blue" style="width:100%;padding:14px;font-size:16px" onclick="joinGame()">REJOINDRE LE JEU</button>
-  </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Joueurs</div><div class="stat-value" id="totalPlayers">0</div></div>
+        <div class="stat-card"><div class="stat-label">Groupes</div><div class="stat-value" id="totalGroups">0</div></div>
+        <div class="stat-card"><div class="stat-label">Mise</div><div class="stat-value" style="color:#00ff88">500F</div></div>
+      </div>
 
-  <!-- ── ÉTAPE 2 : PAYER LA MISE ── -->
-  <div class="pay-panel hidden" id="payPanel">
-    <div class="pay-title">💳 Payer la mise pour jouer</div>
-    <div class="pay-amount">500 FCFA</div>
-    <div class="pay-sub">Paiement sécurisé via NotchPay · Gagner jusqu'à 5 000 000 FCFA</div>
+      <!-- REJOINDRE -->
+      <div class="join-panel" id="joinPanel">
+        <div class="join-title">🎮 Prêt à jouer ?</div>
+        <p style="font-size:13px;color:#8888aa;margin-bottom:12px">La mise de 500 FCFA est déduite immédiatement de votre solde.</p>
+        <div class="join-mise-info">
+          <div>
+            <div style="font-size:11px;color:#6666aa">Mise requise</div>
+            <div class="mise-amount-big">500 FCFA</div>
+          </div>
+          <div class="mise-sub">
+            <div style="color:#00ff88" id="soldeAvant">Solde: 0 FCFA</div>
+            <div style="color:#8888aa;margin-top:4px">Après mise: <span id="soldeApres">-</span></div>
+          </div>
+        </div>
+        <div class="error-msg" id="joinErr"></div>
+        <button class="btn-modal btn-accept" style="font-size:16px;padding:14px" id="btnJoin" onclick="joinGame()">PAYER ET JOUER — 500 FCFA</button>
+        <div style="margin-top:10px;font-size:12px;color:#6666aa;text-align:center">
+          Solde insuffisant ? <span style="color:#00ff88;cursor:pointer" onclick="showPage('pageDeposit')">Recharger mon compte →</span>
+        </div>
+      </div>
 
-    <!-- Choix opérateur -->
-    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Choisir votre opérateur</div>
-    <div class="pay-methods-row">
-      <button class="pay-method-btn" id="payBtnOrange" onclick="selectPayOp('orange')">
-        <span class="op-dot op-orange"></span> Orange Money
-      </button>
-      <button class="pay-method-btn" id="payBtnMtn" onclick="selectPayOp('mtn')">
-        <span class="op-dot op-mtn"></span> MTN MoMo
-      </button>
-    </div>
+      <!-- GROUPES -->
+      <div class="group-bar">
+        <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
+        <div class="groups-grid" id="grpGrid"></div>
+      </div>
 
-    <!-- Numéro de paiement -->
-    <div style="font-size:12px;color:#6666aa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Numéro Mobile Money</div>
-    <div class="phone-input-row">
-      <div class="phone-prefix">+237</div>
-      <input class="form-input" id="payPhone" placeholder="6XXXXXXXX" type="tel" style="margin-bottom:0;flex:1" maxlength="9">
-    </div>
-    <div style="font-size:12px;color:#6666aa;margin-bottom:14px;text-align:left">Le débit sera effectué sur ce numéro.</div>
+      <!-- ARÈNE -->
+      <div class="arena">
+        <div class="arena-bg"></div>
+        <div class="arena-content">
+          <div class="round-label">Round <span id="roundNum">—</span></div>
+          <div class="timer" id="timer">--:--</div>
+          <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
+          <div class="phase-msg" id="phaseMsg">Rechargez votre compte et rejoignez une partie</div>
+          <button class="big-btn btn-click" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>
+            TOUCHER POUR GAGNER
+            <span class="winners-count-badge" id="winnersCountBadge">0/50</span>
+          </button>
+        </div>
+      </div>
 
-    <div class="error-msg" id="payErr"></div>
-    <button class="btn-pay" id="payBtn" onclick="payNow()" disabled>PAYER AVEC MOBILE MONEY</button>
-    <div class="pay-status" id="payStatus"></div>
-
-    <!-- Vérification manuelle -->
-    <div style="margin-top:12px;font-size:12px;color:#555577">
-      Paiement en attente ? <span style="color:#4488ff;cursor:pointer" onclick="verifyPaymentManual()">Vérifier manuellement</span>
-    </div>
-  </div>
-
-  <!-- ── ÉTAPE 2b : VÉRIFICATION EN COURS ── -->
-  <div class="verify-panel hidden" id="verifyPanel">
-    <div style="font-size:14px;color:#FFD700;font-weight:700;margin-bottom:8px">⏳ Vérification du paiement</div>
-    <div class="verify-steps" id="verifySteps">
-      <div class="verify-step active" id="vstep1"><span class="step-icon">📱</span> Paiement initié sur votre téléphone</div>
-      <div class="verify-step" id="vstep2"><span class="step-icon">🔄</span> En attente de confirmation NotchPay</div>
-      <div class="verify-step" id="vstep3"><span class="step-icon">✅</span> Paiement confirmé</div>
-    </div>
-    <div style="font-size:12px;color:#8888aa;margin-top:8px">Confirmez le paiement sur votre téléphone puis patientez.</div>
-    <button class="btn-modal btn-blue" style="margin-top:12px;font-size:12px;padding:10px" onclick="cancelPaymentVerif()">Annuler</button>
-  </div>
-
-  <!-- GROUPES -->
-  <div class="group-bar">
-    <div class="group-title">Groupes de 100 000 joueurs <span class="badge" id="grpBadge">—</span></div>
-    <div class="groups-grid" id="grpGrid"></div>
-    <div class="progress-note" id="grpNote">Rejoignez une partie pour intégrer un groupe</div>
-  </div>
-
-  <!-- ARENA -->
-  <div class="arena">
-    <div class="arena-bg"></div>
-    <div class="arena-content">
-      <div class="round-label">Groupe actif · Round <span id="roundNum">—</span></div>
-      <div class="timer" id="timer">--:--</div>
-      <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
-      <div class="phase-msg" id="phaseMsg">Rejoignez une partie et payez pour jouer</div>
-      <button class="big-btn btn-click" id="clickBtn" ontouchstart="fastClick(event)" onclick="doClick()" disabled>TOUCHER POUR GAGNER</button>
+      <!-- WINNERS -->
+      <div class="winners-panel" id="winPanel" style="display:none">
+        <div class="winners-title"><span>🏆 Top 50 gagnants</span><span class="badge" id="wCount">0/50</span></div>
+        <div class="wlist" id="wList"></div>
+      </div>
     </div>
   </div>
 
-  <!-- WINNERS -->
-  <div class="winners-panel" id="winPanel" style="display:none">
-    <div class="winners-title"><span>Tableau — Top 50 gagnants</span><span class="badge" id="wCount">0/50</span></div>
-    <div class="wlist" id="wList"></div>
+  <!-- ── PAGE DÉPÔT ── -->
+  <div class="page" id="pageDeposit">
+    <div class="container">
+      <div class="page-title">
+        <svg viewBox="0 0 24 24" style="width:26px;height:26px"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Recharger
+      </div>
+
+      <div style="background:#12121f;border:.5px solid #00ff8844;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center">
+        <div style="font-size:11px;color:#6666aa;text-transform:uppercase;letter-spacing:1px">Solde actuel</div>
+        <div style="font-family:'Black Ops One',cursive;font-size:36px;color:#00ff88;margin:6px 0" id="depositSolde">0 FCFA</div>
+        <div style="font-size:12px;color:#6666aa">≈ <span id="nbPartiesDispos">0</span> partie(s) disponible(s)</div>
+      </div>
+
+      <div class="deposit-panel">
+        <div class="deposit-title">💰 Dépôt fictif (simulation)</div>
+        <div style="font-size:12px;color:#6666aa;margin-bottom:8px">Choisissez le montant à ajouter :</div>
+        <div class="amounts-grid">
+          <div class="amt-btn" onclick="selDep(500)">500 F</div>
+          <div class="amt-btn" onclick="selDep(1000)">1 000 F</div>
+          <div class="amt-btn" onclick="selDep(2000)">2 000 F</div>
+          <div class="amt-btn" onclick="selDep(5000)">5 000 F</div>
+          <div class="amt-btn" onclick="selDep(10000)">10 000 F</div>
+          <div class="amt-btn" onclick="selDep(20000)">20 000 F</div>
+          <div class="amt-btn" onclick="selDep(50000)">50 000 F</div>
+          <div class="amt-btn" onclick="selDep(100000)">100 000 F</div>
+        </div>
+        <div class="custom-row">
+          <input class="form-input" id="depCustom" type="number" placeholder="Montant libre (100 – 100 000)" min="100" max="100000" oninput="onDepCustom()">
+        </div>
+        <div class="deposit-note">
+          🎮 Mode démo — Les fonds sont ajoutés instantanément à votre solde de jeu
+        </div>
+        <div class="error-msg" id="depErr"></div>
+        <button class="btn-modal btn-green" id="btnDep" onclick="doDeposit()" disabled style="margin-top:12px">AJOUTER LES FONDS</button>
+        <div style="min-height:18px;text-align:center;font-size:13px;margin-top:8px" id="depStatus"></div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- ── PAGE HISTORIQUE ── -->
+  <div class="page" id="pageHistory">
+    <div class="container">
+      <div class="page-title">
+        <svg viewBox="0 0 24 24" style="width:26px;height:26px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Historique
+      </div>
+
+      <div class="history-summary">
+        <div class="hist-stat">
+          <div class="hist-stat-label">Parties jouées</div>
+          <div class="hist-stat-val blue" id="hGamesPlayed">0</div>
+        </div>
+        <div class="hist-stat">
+          <div class="hist-stat-label">Parties gagnées</div>
+          <div class="hist-stat-val green" id="hGamesWon">0</div>
+        </div>
+        <div class="hist-stat">
+          <div class="hist-stat-label">Total misé</div>
+          <div class="hist-stat-val red" id="hTotalSpent">0 F</div>
+        </div>
+        <div class="hist-stat">
+          <div class="hist-stat-label">Total gagné</div>
+          <div class="hist-stat-val gold" id="hTotalGains">0 F</div>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterHistory('all',this)">Toutes</button>
+        <button class="filter-btn" onclick="filterHistory('win',this)">🏆 Victoires</button>
+        <button class="filter-btn" onclick="filterHistory('loss',this)">❌ Défaites</button>
+        <button class="filter-btn" onclick="filterHistory('too_late',this)">⏱ Trop tard</button>
+      </div>
+
+      <div class="history-list" id="historyList">
+        <div class="empty-state"><div>📋</div><p>Aucune partie jouée pour l'instant</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE PROFIL ── -->
+  <div class="page" id="pageProfil">
+    <div class="container">
+      <div class="page-title">
+        <svg viewBox="0 0 24 24" style="width:26px;height:26px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mon Profil
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar" id="profilAvatar">?</div>
+        <div class="profile-name" id="profilName">—</div>
+        <div class="profile-email" id="profilEmail">—</div>
+        <div class="profile-since" id="profilSince">Membre depuis —</div>
+
+        <div class="profile-stats">
+          <div class="pstat">
+            <div class="pstat-label">Solde</div>
+            <div class="pstat-val" style="color:#00ff88" id="profilWallet">0 F</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-label">Total gains</div>
+            <div class="pstat-val" style="color:#FFD700" id="profilGains">0 F</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-label">Parties</div>
+            <div class="pstat-val" style="color:#4488ff" id="profilGames">0</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-label">Taux victoire</div>
+            <div class="pstat-val" style="color:#00ff88" id="profilWinRate">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résultat net -->
+      <div class="net-result" id="netResultBox">
+        <div class="net-label">Résultat net</div>
+        <div class="net-val" id="netResultVal">0 FCFA</div>
+      </div>
+
+      <!-- Modifier le profil -->
+      <div class="profile-card">
+        <div class="section-label">✏️ Modifier mes informations</div>
+
+        <div class="edit-row">
+          <span class="edit-label">Pseudo</span>
+          <input class="form-input" id="editName" placeholder="Nouveau pseudo" maxlength="20">
+        </div>
+        <div class="edit-row">
+          <span class="edit-label">Téléphone</span>
+          <input class="form-input" id="editPhone" placeholder="Nouveau numéro" type="tel">
+        </div>
+
+        <div class="error-msg" id="editErr"></div>
+        <button class="btn-modal btn-blue" id="btnEditSave" onclick="saveProfile()">ENREGISTRER LES MODIFICATIONS</button>
+
+        <div class="divider"></div>
+        <div class="section-label">🔒 Changer le mot de passe</div>
+        <input class="form-input" id="editOldPass" placeholder="Ancien mot de passe" type="password">
+        <input class="form-input" id="editNewPass" placeholder="Nouveau mot de passe (min 6 car.)" type="password">
+        <input class="form-input" id="editNewPass2" placeholder="Confirmer le nouveau" type="password">
+        <div class="error-msg" id="editPassErr"></div>
+        <button class="btn-modal btn-red" id="btnChangePass" onclick="changePassword()">CHANGER LE MOT DE PASSE</button>
+      </div>
+
+      <button class="btn-modal btn-red" style="margin-top:10px" onclick="logout()">SE DÉCONNECTER</button>
+    </div>
+  </div>
+
+</div><!-- fin mainContent -->
+
+<!-- ── NAV BOTTOM ── -->
+<nav class="nav-bottom hidden" id="navBottom">
+  <button class="nav-item active" id="nav-pageGame" onclick="showPage('pageGame')">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="m8 21 4-4 4 4"/><path d="M9 11h6M12 8v6"/></svg>
+    Jeu
+  </button>
+  <button class="nav-item" id="nav-pageDeposit" onclick="showPage('pageDeposit')">
+    <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Recharger
+  </button>
+  <button class="nav-item" id="nav-pageHistory" onclick="showPage('pageHistory');loadHistory()">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Historique
+  </button>
+  <button class="nav-item" id="nav-pageProfil" onclick="showPage('pageProfil');loadProfil()">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profil
+  </button>
+</nav>
 
 <div class="toast" id="toast"></div>
 <div class="confetti-box" id="cbox"></div>
@@ -452,27 +559,23 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani',sans-serif;
 const BASE    = window.location.origin;
 const WS_BASE = BASE.replace(/^http/, 'ws');
 
-// ─── ÉTAT ─────────────────────────────────────────────────────────────────────
 const s = {
   accountId: null, myName: null, myEmail: null, myPhone: null,
-  wallet: 0, totalGains: 0, totalDeposits: 0,
+  wallet: 0, totalGains: 0, totalSpent: 0, gamesPlayed: 0, gamesWon: 0,
   playerId: null, myGrp: -1, paid: false,
   phase: 'idle', round: 1, roundDuration: 30,
   roundStart: null, remaining: 30,
   winners: [], myRank: -1, clicked: false,
   players: 0, groups: Array(10).fill(0),
   ws: null, tickIv: null,
-  // Paiement
-  selectedPayOp: null, pendingPayRef: null,
-  payVerifyIv: null, payVerifyCount: 0,
-  // Dépôt
-  depositAmount: 0, selectedDepositOp: null, depositRef: null
+  historyData: [], historyFilter: 'all',
+  depAmount: 0
 };
 
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(n).toLocaleString('fr-FR');
 
-// ─── UTILITAIRES ──────────────────────────────────────────────────────────────
+// ─── UTILS ────────────────────────────────────────────────────────────────────
 function toast(msg, col = '#00ff88') {
   const t = $('toast');
   t.textContent = msg;
@@ -484,28 +587,41 @@ function toast(msg, col = '#00ff88') {
 }
 
 function setLoading(btnId, loading, label) {
-  const b = $(btnId);
-  if (!b) return;
+  const b = $(btnId); if (!b) return;
   b.disabled = loading;
-  b.innerHTML = loading ? '<span class="spinner"></span>' + (label||'') : (label||'');
+  b.innerHTML = loading ? `<span class="spinner"></span>${label||''}` : (label||'');
 }
 
-function showOverlay(id) {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
-  const el = $(id);
-  if (el) el.classList.remove('hidden');
-}
-function hideAllOverlays() {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
-  $('mainContent').style.display = 'block';
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $(pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navBtn = $('nav-' + pageId);
+  if (navBtn) navBtn.classList.add('active');
+  // Mise à jour solde dépôt si on va sur la page dépôt
+  if (pageId === 'pageDeposit') {
+    $('depositSolde').textContent = fmt(s.wallet) + ' FCFA';
+    $('nbPartiesDispos').textContent = Math.floor(s.wallet / 500);
+  }
 }
 
 function updateWalletUI() {
-  $('walletAmount').textContent = fmt(s.wallet) + ' FCFA';
-  $('depositCurrentBalance').textContent = fmt(s.wallet) + ' FCFA';
+  const txt = fmt(s.wallet) + ' FCFA';
+  $('walletAmount').textContent = txt;
+  $('depositSolde').textContent = txt;
+  $('nbPartiesDispos').textContent = Math.floor(s.wallet / 500);
+  // Mise à jour affichage "avant/après mise"
+  $('soldeAvant').textContent = 'Solde: ' + fmt(s.wallet) + ' FCFA';
+  if (s.wallet >= 500) {
+    $('soldeApres').textContent = fmt(s.wallet - 500) + ' FCFA';
+    $('soldeApres').style.color = '#00ff88';
+  } else {
+    $('soldeApres').textContent = 'insuffisant';
+    $('soldeApres').style.color = '#ff4455';
+  }
 }
 
-// ─── ÉTAPE 1 : ÂGE ────────────────────────────────────────────────────────────
+// ─── ÂGE ──────────────────────────────────────────────────────────────────────
 function confirmAge(yes) {
   if (!yes) {
     $('ageForms').classList.add('hidden');
@@ -516,498 +632,231 @@ function confirmAge(yes) {
   showOverlay('overlayPolicy');
 }
 
-// ─── ÉTAPE 2 : CGU ─────────────────────────────────────────────────────────────
-function toggleCheck(id) {
-  const cb = $(id); cb.checked = !cb.checked; checkConsents();
+// ─── CGU ──────────────────────────────────────────────────────────────────────
+function showOverlay(id) {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+  $(id).classList.remove('hidden');
 }
+function hideAllOverlays() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+  $('mainContent').style.display = 'block';
+  $('navBottom').classList.remove('hidden');
+}
+
+function toggleCheck(id) { const cb=$(id); cb.checked=!cb.checked; checkConsents(); }
 function checkConsents() {
   $('btnAcceptPolicy').disabled = !($('chkPolicy').checked && $('chkCgu').checked && $('chkAge21').checked);
 }
 function acceptPolicy() {
   localStorage.setItem('otm_policy_ok', '1');
   const p = new URLSearchParams(window.location.search);
-  const resetToken = p.get('reset_token');
-  if (resetToken) {
-    showOverlay('overlayAuth');
-    switchTab('reset');
-    window._resetToken = resetToken;
-    history.replaceState({}, '', '/');
-    return;
-  }
+  const rt = p.get('reset_token');
+  if (rt) { showOverlay('overlayAuth'); switchTab('reset'); window._resetToken = rt; history.replaceState({},'','/'); return; }
   const saved = localStorage.getItem('otm_account');
-  if (saved) {
-    try { const acc = JSON.parse(saved); afterLogin(acc); return; } catch(e) {}
-  }
+  if (saved) { try { afterLogin(JSON.parse(saved)); return; } catch(e){} }
   showOverlay('overlayAuth');
 }
 
-// ─── ÉTAPE 3 : AUTH ─────────────────────────────────────────────────────────────
+// ─── AUTH ──────────────────────────────────────────────────────────────────────
 function switchTab(tab) {
   ['panelLogin','panelRegister','panelForgot','panelReset'].forEach(p => $(p).classList.add('hidden'));
   ['tabLogin','tabRegister'].forEach(t => $(t)?.classList.remove('active'));
-  if (tab === 'login')    { $('panelLogin').classList.remove('hidden');    $('tabLogin').classList.add('active'); }
-  else if (tab === 'register') { $('panelRegister').classList.remove('hidden'); $('tabRegister').classList.add('active'); }
-  else if (tab === 'forgot')   { $('panelForgot').classList.remove('hidden'); }
-  else if (tab === 'reset')    { $('panelReset').classList.remove('hidden'); }
+  if(tab==='login')    { $('panelLogin').classList.remove('hidden');    $('tabLogin').classList.add('active'); }
+  else if(tab==='register') { $('panelRegister').classList.remove('hidden'); $('tabRegister').classList.add('active'); }
+  else if(tab==='forgot')   { $('panelForgot').classList.remove('hidden'); }
+  else if(tab==='reset')    { $('panelReset').classList.remove('hidden'); }
 }
 
 async function doLogin() {
-  const email = $('loginEmail').value.trim().toLowerCase();
-  const pass  = $('loginPass').value;
-  $('loginErr').textContent = '';
-  if (!email || !pass) { $('loginErr').textContent = 'Email et mot de passe requis'; return; }
-  setLoading('btnLogin', true, 'SE CONNECTER');
+  const email=$('loginEmail').value.trim().toLowerCase(), pass=$('loginPass').value;
+  $('loginErr').textContent='';
+  if(!email||!pass){$('loginErr').textContent='Email et mot de passe requis';return;}
+  setLoading('btnLogin',true,'SE CONNECTER');
   try {
-    const r = await fetch(BASE + '/api/auth/login', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({email, password: pass})
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.detail || 'Erreur');
-    afterLogin({id: d.account_id, name: d.name, email: d.email, phone: d.phone||'',
-                wallet: d.wallet||0, total_gains: d.total_gains||0});
-  } catch(e) { $('loginErr').textContent = e.message; }
-  setLoading('btnLogin', false, 'SE CONNECTER');
+    const r=await fetch(BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    afterLogin({id:d.account_id,name:d.name,email:d.email,phone:d.phone||'',wallet:d.wallet||0,total_gains:d.total_gains||0});
+  } catch(e){$('loginErr').textContent=e.message;}
+  setLoading('btnLogin',false,'SE CONNECTER');
 }
 
 async function doRegister() {
-  const name  = $('regName').value.trim();
-  const phone = $('regPhone').value.trim();
-  const email = $('regEmail').value.trim().toLowerCase();
-  const pass  = $('regPass').value;
-  const pass2 = $('regPass2').value;
-  $('regErr').textContent = '';
-  if (!name) { $('regErr').textContent = 'Pseudo requis'; return; }
-  if (!phone) { $('regErr').textContent = 'Numéro Mobile Money requis'; return; }
-  if (!email || !email.includes('@')) { $('regErr').textContent = 'Email invalide'; return; }
-  if (pass.length < 6) { $('regErr').textContent = 'Mot de passe trop court (min 6 car.)'; return; }
-  if (pass !== pass2) { $('regErr').textContent = 'Mots de passe différents'; return; }
-  setLoading('btnRegister', true, 'CRÉER MON COMPTE');
+  const name=$('regName').value.trim(),phone=$('regPhone').value.trim(),
+        email=$('regEmail').value.trim().toLowerCase(),pass=$('regPass').value,pass2=$('regPass2').value;
+  $('regErr').textContent='';
+  if(!name){$('regErr').textContent='Pseudo requis';return;}
+  if(!phone){$('regErr').textContent='Numéro requis';return;}
+  if(!email||!email.includes('@')){$('regErr').textContent='Email invalide';return;}
+  if(pass.length<6){$('regErr').textContent='Mot de passe trop court';return;}
+  if(pass!==pass2){$('regErr').textContent='Mots de passe différents';return;}
+  setLoading('btnRegister',true,'CRÉER MON COMPTE');
   try {
-    const r = await fetch(BASE + '/api/auth/register', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({name, phone, email, password: pass})
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.detail || 'Erreur');
-    afterLogin({id: d.account_id, name: d.name, email: d.email, phone, wallet: 0, total_gains: 0});
-    toast('Bienvenue ' + d.name + ' !', '#00ff88');
-  } catch(e) { $('regErr').textContent = e.message; }
-  setLoading('btnRegister', false, 'CRÉER MON COMPTE');
+    const r=await fetch(BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,password:pass})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    afterLogin({id:d.account_id,name:d.name,email:d.email,phone,wallet:0,total_gains:0});
+    toast('Bienvenue '+d.name+' ! Rechargez votre compte pour jouer.','#00ff88');
+  } catch(e){$('regErr').textContent=e.message;}
+  setLoading('btnRegister',false,'CRÉER MON COMPTE');
 }
 
 async function doForgot() {
-  const email = $('forgotEmail').value.trim().toLowerCase();
-  $('forgotErr').textContent = '';
-  if (!email) { $('forgotErr').textContent = 'Email requis'; return; }
-  setLoading('btnForgot', true, 'ENVOYER LE LIEN');
+  const email=$('forgotEmail').value.trim().toLowerCase();
+  $('forgotErr').textContent='';
+  if(!email){$('forgotErr').textContent='Email requis';return;}
+  setLoading('btnForgot',true,'ENVOYER LE LIEN');
   try {
-    await fetch(BASE + '/api/auth/forgot-password', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({email})
-    });
-    toast('Lien envoyé si cet email existe.', '#4488ff');
+    await fetch(BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    toast('Lien envoyé si cet email existe.','#4488ff');
     switchTab('login');
-  } catch(e) { $('forgotErr').textContent = 'Erreur réseau. Réessayez.'; }
-  setLoading('btnForgot', false, 'ENVOYER LE LIEN');
+  } catch(e){$('forgotErr').textContent='Erreur réseau.';}
+  setLoading('btnForgot',false,'ENVOYER LE LIEN');
 }
 
 async function doReset() {
-  const pass  = $('resetPass').value;
-  const pass2 = $('resetPass2').value;
-  $('resetErr').textContent = '';
-  if (pass.length < 6) { $('resetErr').textContent = 'Mot de passe trop court'; return; }
-  if (pass !== pass2)  { $('resetErr').textContent = 'Mots de passe différents'; return; }
-  setLoading('btnReset', true, 'CHANGER LE MOT DE PASSE');
+  const pass=$('resetPass').value, pass2=$('resetPass2').value;
+  $('resetErr').textContent='';
+  if(pass.length<6){$('resetErr').textContent='Mot de passe trop court';return;}
+  if(pass!==pass2){$('resetErr').textContent='Mots de passe différents';return;}
+  setLoading('btnReset',true,'CHANGER LE MOT DE PASSE');
   try {
-    const r = await fetch(BASE + '/api/auth/reset-password', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({token: window._resetToken, password: pass})
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.detail || 'Lien invalide ou expiré');
-    toast('Mot de passe modifié !', '#00ff88');
+    const r=await fetch(BASE+'/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:window._resetToken,password:pass})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Lien invalide');
+    toast('Mot de passe modifié !','#00ff88');
     switchTab('login');
-  } catch(e) { $('resetErr').textContent = e.message; }
-  setLoading('btnReset', false, 'CHANGER LE MOT DE PASSE');
+  } catch(e){$('resetErr').textContent=e.message;}
+  setLoading('btnReset',false,'CHANGER LE MOT DE PASSE');
 }
 
 function afterLogin(acc) {
-  s.accountId   = acc.id;
-  s.myName      = acc.name;
-  s.myEmail     = acc.email;
-  s.myPhone     = acc.phone || '';
-  s.wallet      = acc.wallet || 0;
-  s.totalGains  = acc.total_gains || 0;
-  localStorage.setItem('otm_account', JSON.stringify({
-    id: acc.id, name: acc.name, email: acc.email,
-    phone: acc.phone||'', wallet: acc.wallet||0, total_gains: acc.total_gains||0
-  }));
+  s.accountId=acc.id; s.myName=acc.name; s.myEmail=acc.email;
+  s.myPhone=acc.phone||''; s.wallet=acc.wallet||0; s.totalGains=acc.total_gains||0;
+  localStorage.setItem('otm_account',JSON.stringify({id:acc.id,name:acc.name,email:acc.email,phone:acc.phone||'',wallet:acc.wallet||0,total_gains:acc.total_gains||0}));
   hideAllOverlays();
-  $('displayName').textContent = acc.name;
+  $('displayName').textContent=acc.name;
   updateWalletUI();
-  // Pré-remplir le numéro de téléphone dans le formulaire de paiement
-  if (acc.phone) {
-    const local = (acc.phone||'').replace(/^\+237/, '').replace(/^0/, '');
-    $('payPhone').value = local;
-  }
-  $('joinPanel').classList.remove('hidden');
-  loadWallet(); // Rafraîchir le solde depuis le serveur
+  loadWallet();
   initGame();
 }
 
 function logout() {
   localStorage.removeItem('otm_account');
-  localStorage.removeItem('otm_session');
-  if (s.ws) s.ws.close();
+  if(s.ws) s.ws.close();
   location.reload();
 }
 
-// ─── WALLET — CHARGEMENT SOLDE ────────────────────────────────────────────────
+// ─── WALLET ───────────────────────────────────────────────────────────────────
 async function loadWallet() {
-  if (!s.accountId) return;
+  if(!s.accountId) return;
   try {
-    const r = await fetch(BASE + '/api/wallet/' + s.accountId);
-    if (r.ok) {
-      const d = await r.json();
-      s.wallet      = d.wallet || 0;
-      s.totalGains  = d.total_gains || 0;
-      s.totalDeposits = d.total_deposits || 0;
+    const r=await fetch(BASE+'/api/wallet/'+s.accountId);
+    if(r.ok) {
+      const d=await r.json();
+      s.wallet=d.wallet||0; s.totalGains=d.total_gains||0;
+      s.totalSpent=d.total_spent||0; s.gamesPlayed=d.games_played||0;
+      s.gamesWon=d.games_won||0;
       updateWalletUI();
-      // Mettre à jour le localStorage
-      const saved = localStorage.getItem('otm_account');
-      if (saved) {
-        const acc = JSON.parse(saved);
-        acc.wallet = s.wallet;
-        acc.total_gains = s.totalGains;
-        localStorage.setItem('otm_account', JSON.stringify(acc));
-      }
+      const saved=localStorage.getItem('otm_account');
+      if(saved){const a=JSON.parse(saved);a.wallet=s.wallet;a.total_gains=s.totalGains;localStorage.setItem('otm_account',JSON.stringify(a));}
     }
-  } catch(e) { /* silencieux */ }
+  } catch(e){}
 }
 
-// ─── DÉPÔT — MODAL ────────────────────────────────────────────────────────────
-function openDeposit() {
-  $('depositErr').textContent = '';
-  $('depositStatus').textContent = '';
-  $('depositStatus').className = 'pay-status';
-  $('depositCustomAmount').value = '';
-  // Réinitialiser les boutons de montant
-  document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
-  // Réinitialiser opérateur
-  $('depBtnOrange').classList.remove('selected');
-  $('depBtnMtn').classList.remove('selected');
-  s.depositAmount = 0; s.selectedDepositOp = null;
-  $('btnDeposit').disabled = true;
-  $('depositCurrentBalance').textContent = fmt(s.wallet) + ' FCFA';
-  $('overlayDeposit').classList.remove('hidden');
-}
-
-function closeDeposit() {
-  $('overlayDeposit').classList.add('hidden');
-  s.depositAmount = 0; s.selectedDepositOp = null;
-}
-
-function selectDepositAmount(amount) {
-  s.depositAmount = amount;
-  $('depositCustomAmount').value = '';
-  document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
-  // Trouver et sélectionner le bon bouton
-  document.querySelectorAll('.dep-amount-btn').forEach(b => {
-    if (b.textContent.replace(/\s/g,'').includes(amount.toString())) b.classList.add('selected');
+// ─── DÉPÔT FICTIF ─────────────────────────────────────────────────────────────
+function selDep(amount) {
+  s.depAmount=amount;
+  $('depCustom').value='';
+  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.amt-btn').forEach(b=>{
+    if(b.textContent.replace(/\s/g,'').includes(amount.toString())) b.classList.add('sel');
   });
-  checkDepositReady();
+  $('btnDep').disabled=false;
+  $('depErr').textContent='';
 }
-
-function onCustomAmountInput() {
-  const v = parseInt($('depositCustomAmount').value);
-  if (!isNaN(v) && v >= 100 && v <= 10000) {
-    s.depositAmount = v;
-    document.querySelectorAll('.dep-amount-btn').forEach(b => b.classList.remove('selected'));
-  } else {
-    s.depositAmount = 0;
-  }
-  checkDepositReady();
+function onDepCustom() {
+  const v=parseInt($('depCustom').value);
+  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
+  if(!isNaN(v)&&v>=100&&v<=100000){s.depAmount=v;$('btnDep').disabled=false;}
+  else{s.depAmount=0;$('btnDep').disabled=true;}
 }
-
-function selectDepositOp(op) {
-  s.selectedDepositOp = op;
-  $('depBtnOrange').classList.toggle('selected', op === 'orange');
-  $('depBtnMtn').classList.toggle('selected', op === 'mtn');
-  checkDepositReady();
-}
-
-function checkDepositReady() {
-  $('btnDeposit').disabled = !(s.depositAmount >= 100 && s.selectedDepositOp);
-}
-
 async function doDeposit() {
-  $('depositErr').textContent = '';
-  if (!s.depositAmount || s.depositAmount < 100) { $('depositErr').textContent = 'Montant invalide'; return; }
-  if (!s.selectedDepositOp) { $('depositErr').textContent = 'Choisissez votre opérateur'; return; }
-
-  setLoading('btnDeposit', true, 'RECHARGER MON COMPTE');
-  $('depositStatus').className = 'pay-status pending';
-  $('depositStatus').textContent = 'Initialisation du paiement...';
-
+  if(!s.depAmount||s.depAmount<100){$('depErr').textContent='Montant invalide';return;}
+  setLoading('btnDep',true,'TRAITEMENT...');
+  $('depStatus').textContent='Simulation du paiement...';$('depStatus').style.color='#FFD700';
+  $('depErr').textContent='';
   try {
-    const r = await fetch(BASE + '/api/deposit/init', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        account_id: s.accountId,
-        amount: s.depositAmount,
-        operator: s.selectedDepositOp   // Info pour le backend / NotchPay
-      })
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.detail || 'Erreur initialisation');
-
-    s.depositRef = d.reference;
-
-    if (d.authorization_url) {
-      $('depositStatus').textContent = 'Redirection vers NotchPay...';
-      // Sauvegarder le contexte avant redirection
-      localStorage.setItem('otm_deposit_pending', JSON.stringify({
-        ref: d.reference,
-        amount: s.depositAmount,
-        accountId: s.accountId
-      }));
-      setTimeout(() => { window.location.href = d.authorization_url; }, 800);
-    } else {
-      throw new Error('URL de paiement non reçue');
-    }
-  } catch(e) {
-    $('depositErr').textContent = e.message;
-    $('depositStatus').textContent = '';
-    $('depositStatus').className = 'pay-status';
-  }
-  setLoading('btnDeposit', false, 'RECHARGER MON COMPTE');
+    const r=await fetch(BASE+'/api/deposit/fake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account_id:s.accountId,amount:s.depAmount})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    s.wallet=d.new_balance||s.wallet;
+    updateWalletUI();
+    $('depStatus').textContent='✅ '+fmt(s.depAmount)+' FCFA ajoutés !';
+    $('depStatus').style.color='#00ff88';
+    s.depAmount=0;
+    document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));
+    $('depCustom').value='';
+    $('btnDep').disabled=true;
+    toast(fmt(s.depAmount||d.new_balance-s.wallet+1)+' FCFA crédités sur votre compte !','#00ff88');
+    confetti();
+    setTimeout(()=>{$('depStatus').textContent='';},4000);
+  } catch(e){$('depErr').textContent=e.message;$('depStatus').textContent='';}
+  setLoading('btnDep',false,'AJOUTER LES FONDS');
 }
 
-// ─── PAIEMENT MISE ─────────────────────────────────────────────────────────────
-function selectPayOp(op) {
-  s.selectedPayOp = op;
-  $('payBtnOrange').classList.toggle('selected', op === 'orange');
-  $('payBtnMtn').classList.toggle('selected', op === 'mtn');
-  checkPayReady();
-}
-
-function checkPayReady() {
-  const phone = $('payPhone').value.trim();
-  $('payBtn').disabled = !(s.selectedPayOp && phone.length >= 9);
-  $('payErr').textContent = '';
-}
-
-// Écouter saisie téléphone
-document.addEventListener('DOMContentLoaded', () => {
-  $('payPhone')?.addEventListener('input', checkPayReady);
-});
-
-async function payNow() {
-  const phone = $('payPhone').value.trim();
-  $('payErr').textContent = '';
-
-  if (!s.selectedPayOp) { $('payErr').textContent = 'Choisissez votre opérateur (Orange Money ou MTN MoMo)'; return; }
-  if (!phone || phone.length < 9) { $('payErr').textContent = 'Entrez votre numéro Mobile Money (9 chiffres)'; return; }
-  if (!s.playerId) { $('payErr').textContent = 'Rejoignez une partie d\'abord'; return; }
-
-  // Mettre à jour le numéro dans la session
-  const saved = localStorage.getItem('otm_session');
-  if (saved) {
-    try {
-      const sd = JSON.parse(saved);
-      sd.phone = '237' + phone;
-      localStorage.setItem('otm_session', JSON.stringify(sd));
-    } catch(e) {}
-  }
-
-  setLoading('payBtn', true, 'PAYER AVEC MOBILE MONEY');
-  $('payStatus').className = 'pay-status pending';
-  $('payStatus').textContent = 'Initialisation du paiement...';
-
-  try {
-    const r = await fetch(BASE + '/api/payment/init', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        player_id: s.playerId,
-        phone: '237' + phone,           // Envoyer le numéro complet au backend
-        operator: s.selectedPayOp       // Orange ou MTN
-      })
-    });
-    const d = await r.json();
-
-    if (d.already_paid) {
-      afterPaid();
-      return;
-    }
-    if (!r.ok) throw new Error(d.detail || 'Erreur');
-
-    s.pendingPayRef = d.reference;
-
-    if (d.authorization_url) {
-      // Afficher panel de vérification
-      $('payPanel').classList.add('hidden');
-      $('verifyPanel').classList.remove('hidden');
-      $('vstep1').className = 'verify-step done';
-      $('vstep2').className = 'verify-step active';
-      $('payStatus').textContent = '';
-
-      // Sauvegarder référence
-      localStorage.setItem('otm_pay_ref', JSON.stringify({
-        ref: d.reference, playerId: s.playerId
-      }));
-
-      // Ouvrir NotchPay dans un popup ou redirection
-      const popup = window.open(d.authorization_url, 'notchpay_payment',
-        'width=480,height=700,scrollbars=yes,resizable=yes');
-
-      // Vérification automatique toutes les 5s
-      startPayVerification(d.reference, popup);
-    } else {
-      throw new Error('URL de paiement non reçue');
-    }
-  } catch(e) {
-    $('payErr').textContent = e.message;
-    $('payStatus').className = 'pay-status err';
-    $('payStatus').textContent = 'Échec — ' + e.message;
-  }
-  setLoading('payBtn', false, 'PAYER AVEC MOBILE MONEY');
-}
-
-// Vérification automatique du paiement mise (polling)
-function startPayVerification(ref, popup) {
-  s.payVerifyCount = 0;
-  clearInterval(s.payVerifyIv);
-  s.payVerifyIv = setInterval(async () => {
-    s.payVerifyCount++;
-    // Arrêter après 3 minutes (36 tentatives × 5s)
-    if (s.payVerifyCount > 36) {
-      clearInterval(s.payVerifyIv);
-      cancelPaymentVerif();
-      toast('Délai expiré. Vérifiez manuellement.', '#FFD700');
-      return;
-    }
-    try {
-      // Appeler le callback backend pour vérifier via NotchPay
-      const r = await fetch(BASE + '/api/payment/verify', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({reference: ref, player_id: s.playerId})
-      });
-      const d = await r.json();
-      if (d.confirmed || d.paid) {
-        clearInterval(s.payVerifyIv);
-        if (popup && !popup.closed) popup.close();
-        $('vstep2').className = 'verify-step done';
-        $('vstep3').className = 'verify-step done';
-        setTimeout(() => {
-          $('verifyPanel').classList.add('hidden');
-          afterPaid();
-        }, 1000);
-      }
-    } catch(e) { /* continuer */ }
-  }, 5000);
-}
-
-function verifyPaymentManual() {
-  // Déclencher une vérification manuelle immédiate
-  if (!s.pendingPayRef || !s.playerId) { toast('Aucun paiement en attente', '#ff4455'); return; }
-  $('payPanel').classList.add('hidden');
-  $('verifyPanel').classList.remove('hidden');
-  startPayVerification(s.pendingPayRef, null);
-  toast('Vérification en cours...', '#FFD700');
-}
-
-function cancelPaymentVerif() {
-  clearInterval(s.payVerifyIv);
-  $('verifyPanel').classList.add('hidden');
-  $('payPanel').classList.remove('hidden');
-  $('payStatus').textContent = '';
-  $('payStatus').className = 'pay-status';
-  setLoading('payBtn', false, 'PAYER AVEC MOBILE MONEY');
-  $('payBtn').disabled = false;
-}
-
-function afterPaid() {
-  s.paid = true;
-  $('payPanel').classList.add('hidden');
-  $('verifyPanel').classList.add('hidden');
-  $('phaseMsg').textContent = 'Paiement confirmé — attendez le signal !';
-  localStorage.removeItem('otm_pay_ref');
-  toast('Paiement confirmé ! Vous êtes prêt à jouer.', '#00ff88');
-  connectWS();
-  // Rafraîchir le solde
-  loadWallet();
-}
-
-// ─── REJOINDRE UNE PARTIE ─────────────────────────────────────────────────────
+// ─── REJOINDRE + PAIEMENT AUTOMATIQUE ─────────────────────────────────────────
 async function joinGame() {
+  if(s.wallet<500){toast('Solde insuffisant ! Rechargez votre compte.','#ff4455');showPage('pageDeposit');return;}
+  setLoading('btnJoin',true,'TRAITEMENT...');
+  $('joinErr').textContent='';
   try {
-    const r = await fetch(BASE + '/api/join', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({account_id: s.accountId})
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.detail);
-    s.playerId = d.player_id;
-    s.myGrp = d.group;
+    const r=await fetch(BASE+'/api/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account_id:s.accountId})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    s.playerId=d.player_id; s.myGrp=d.group; s.paid=true;
+    s.wallet=d.new_balance; updateWalletUI();
     applyState(d.state);
-    localStorage.setItem('otm_session', JSON.stringify({
-      playerId: d.player_id, accountId: s.accountId,
-      name: s.myName, group: d.group
-    }));
     $('joinPanel').classList.add('hidden');
-    $('payPanel').classList.remove('hidden');
-    $('grpNote').textContent = d.group_label + ' — payez pour jouer';
-    toast('Groupe assigné : ' + d.group_label, '#4488ff');
-  } catch(e) {
-    toast(e.message || 'Erreur', '#ff4455');
-  }
+    $('phaseMsg').textContent='Mise payée ✓ — attendez le signal !';
+    toast('500 FCFA déduits — Bonne chance !','#FFD700');
+    connectWS();
+  } catch(e){$('joinErr').textContent=e.message;}
+  setLoading('btnJoin',false,'PAYER ET JOUER — 500 FCFA');
 }
 
-// ─── WEBSOCKET ────────────────────────────────────────────────────────────────
+// ─── WEBSOCKET ─────────────────────────────────────────────────────────────────
 function connectWS() {
-  if (!s.playerId) return;
-  if (s.ws && s.ws.readyState < 2) return;
-  const ws = new WebSocket(WS_BASE + '/ws/' + s.playerId);
-  s.ws = ws;
-  ws.onopen = () => {
-    $('dot').classList.add('ok');
-    s._ping = setInterval(() => ws.readyState === 1 && ws.send(JSON.stringify({action:'ping'})), 20000);
-  };
-  ws.onmessage = e => handleMsg(JSON.parse(e.data));
-  ws.onclose = () => {
-    $('dot').classList.remove('ok');
-    clearInterval(s._ping);
-    setTimeout(() => connectWS(), 3000);
-  };
+  if(!s.playerId) return;
+  if(s.ws&&s.ws.readyState<2) return;
+  const ws=new WebSocket(WS_BASE+'/ws/'+s.playerId);
+  s.ws=ws;
+  ws.onopen=()=>{$('dot').classList.add('ok');s._ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({action:'ping'})),20000);};
+  ws.onmessage=e=>handleMsg(JSON.parse(e.data));
+  ws.onclose=()=>{$('dot').classList.remove('ok');clearInterval(s._ping);setTimeout(()=>connectWS(),3000);};
 }
 
-// ─── CLIC ULTRA-RAPIDE ────────────────────────────────────────────────────────
-let _clickSent = false;
+// ─── CLIC ──────────────────────────────────────────────────────────────────────
+let _clickSent=false;
 function fastClick(e) {
   e.preventDefault();
-  if (s.phase !== 'active' || s.clicked || _clickSent) return;
-  if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
+  if(s.phase!=='active'||s.clicked||_clickSent) return;
   _sendClick();
 }
 function doClick() {
-  if (_clickSent) return;
-  if (s.phase !== 'active' || s.clicked) return;
-  if (!s.paid) { toast('Payez la mise pour jouer !', '#ff4455'); return; }
+  if(_clickSent||s.phase!=='active'||s.clicked) return;
   _sendClick();
 }
 function _sendClick() {
-  _clickSent = true; s.clicked = true;
-  $('clickBtn').disabled = true; $('clickBtn').textContent = '⚡';
-  if (s.ws && s.ws.readyState === 1) {
+  _clickSent=true; s.clicked=true;
+  $('clickBtn').disabled=true; $('clickBtn').innerHTML='⚡ <span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
+  if(s.ws&&s.ws.readyState===1) {
     s.ws.send(JSON.stringify({action:'click'}));
   } else {
-    fetch(BASE + '/api/click', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({player_id: s.playerId})
-    }).then(r=>r.json()).then(d => handleMsg({type:'click_result',...d})).catch(()=>{});
+    fetch(BASE+'/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({player_id:s.playerId})})
+      .then(r=>r.json()).then(d=>handleMsg({type:'click_result',...d})).catch(()=>{});
   }
-  setTimeout(() => { _clickSent = false; }, 500);
+  setTimeout(()=>{_clickSent=false;},500);
 }
 
 // ─── MESSAGES WS ──────────────────────────────────────────────────────────────
@@ -1015,93 +864,97 @@ function handleMsg(msg) {
   switch(msg.type) {
     case 'connected':
       applyState(msg.state);
-      if (msg.paid) afterPaid();
       break;
     case 'pong': break;
-    case 'payment_confirmed':
-      afterPaid();
-      break;
+
     case 'deposit_confirmed':
-      // Mise à jour solde en temps réel
-      s.wallet = msg.new_balance || s.wallet;
+      s.wallet=msg.new_balance||s.wallet;
       updateWalletUI();
-      closeDeposit();
-      toast(msg.message || 'Dépôt confirmé !', '#00ff88');
+      toast(msg.message||'Dépôt confirmé !','#00ff88');
       confetti();
       break;
+
     case 'prize_sent':
-      toast(msg.message, '#00ff88');
-      loadWallet(); // Rafraîchir le solde après gain
+      s.wallet=msg.new_balance||s.wallet;
+      updateWalletUI();
+      toast(msg.message||'Gain crédité !','#FFD700');
       break;
-    case 'prize_error':
-      toast(msg.message, '#ff4455');
-      break;
+
     case 'countdown':
-      s.phase = 'countdown'; s.round = msg.round;
-      $('roundNum').textContent = msg.round;
-      $('timer').textContent = '00:0' + msg.seconds;
-      $('timer').className = 'timer active';
-      $('phaseMsg').textContent = 'Lancement dans ' + msg.seconds + 's — préparez-vous !';
-      $('clickBtn').disabled = true;
+      s.phase='countdown'; s.round=msg.round;
+      $('roundNum').textContent=msg.round;
+      $('timer').textContent='0'+msg.seconds;
+      $('timer').className='timer countdown-mode';
+      $('phaseMsg').textContent='⚡ Lancement dans '+msg.seconds+'s — préparez-vous !';
+      $('clickBtn').disabled=true;
+      $('tbar').style.width='100%';
       break;
+
     case 'round_start':
-      s.phase = 'active'; s.round = msg.round; s.roundDuration = msg.duration;
-      s.roundStart = performance.now(); s.remaining = msg.duration;
-      s.clicked = false; _clickSent = false;
-      s.winners = []; s.myRank = -1;
-      $('winPanel').style.display = 'block';
-      $('wList').innerHTML = ''; $('wCount').textContent = '0/50';
-      $('clickBtn').disabled = !s.paid;
-      $('clickBtn').textContent = s.paid ? 'TOUCHER POUR GAGNER' : 'PAYEZ POUR JOUER';
-      $('clickBtn').style.background = 'linear-gradient(135deg,#FFD700,#FFA500)';
+      s.phase='active'; s.round=msg.round; s.roundDuration=msg.duration;
+      s.roundStart=performance.now(); s.remaining=msg.duration;
+      s.clicked=false; _clickSent=false; s.winners=[];
+      $('winPanel').style.display='block';
+      $('wList').innerHTML=''; $('wCount').textContent='0/50';
+      $('winnersCountBadge').textContent='0/50';
+      $('clickBtn').disabled=!s.paid;
+      $('clickBtn').innerHTML='TOUCHER POUR GAGNER<span class="winners-count-badge" id="winnersCountBadge">0/50</span>';
+      $('clickBtn').style.background='linear-gradient(135deg,#FFD700,#FFA500)';
+      $('phaseMsg').textContent=s.paid?'🔥 GO ! Cliquez maintenant !':'Rejoignez pour le prochain round';
       startLocalTick();
       break;
+
     case 'tick':
-      s.remaining = msg.remaining;
+      s.remaining=msg.remaining;
       renderTimer(msg.remaining);
-      $('phaseMsg').textContent = msg.winners_count < 50
-        ? msg.winners_count + ' gagnant' + (msg.winners_count > 1 ? 's' : '') + ' — soyez rapide !'
-        : '50 gagnants confirmés !';
+      const wc=msg.winners_count||s.winners.length;
+      $('phaseMsg').textContent=wc<50?'🏆 '+wc+' gagnant'+(wc>1?'s':'')+' — soyez rapide !':'✅ 50 gagnants confirmés !';
+      const badge=$('winnersCountBadge');
+      if(badge) badge.textContent=wc+'/50';
       break;
+
     case 'winner_added':
       addWinner(msg.winner);
       break;
+
     case 'round_end':
-      s.phase = 'ended';
+      s.phase='ended';
       clearInterval(s.tickIv);
-      $('timer').textContent = '00:0'; $('timer').className = 'timer';
-      $('clickBtn').disabled = true;
-      $('phaseMsg').textContent = s.myRank > 0
-        ? 'Félicitations ! Rang #' + s.myRank + ' — gain en cours d\'envoi !'
-        : 'Round ' + msg.round + ' terminé. ' + msg.total_winners + ' gagnants.';
-      if (s.paid) {
-        setTimeout(() => {
-          s.paid = false; _clickSent = false;
-          $('joinPanel').classList.remove('hidden');
-        }, 8000);
+      $('timer').textContent='00:0';
+      $('timer').className='timer';
+      $('tbar').style.width='0%';
+      $('clickBtn').disabled=true;
+      if(s.myRank>0) {
+        $('phaseMsg').textContent='🏆 Félicitations ! Rang #'+s.myRank+' — Gain crédité !';
+      } else if(s.paid && !s.clicked) {
+        $('phaseMsg').textContent='⏱ Trop lent ! Retentez votre chance.';
+      } else {
+        $('phaseMsg').textContent='Round '+msg.round+' terminé. '+msg.total_winners+' gagnants.';
       }
+      s.paid=false; s.playerId=null; _clickSent=false;
+      loadWallet();
+      setTimeout(()=>{
+        $('joinPanel').classList.remove('hidden');
+        $('phaseMsg').textContent='Rechargez et rejoignez la prochaine partie !';
+      },8000);
       break;
+
     case 'click_result':
-      if (msg.ok) {
-        s.myRank = msg.rank;
-        toast('GAGNÉ ! Rang #' + msg.rank + ' — ' + fmt(msg.prize) + ' FCFA en route !', '#FFD700');
+      if(msg.ok) {
+        s.myRank=msg.rank;
+        const prizeStr=fmt(msg.prize);
+        toast('🏆 GAGNÉ ! Rang #'+msg.rank+' — '+prizeStr+' FCFA !','#FFD700');
         confetti();
-        $('clickBtn').textContent = '✓ #' + msg.rank;
-        $('clickBtn').style.background = 'linear-gradient(135deg,#00ff88,#00aa55)';
-        $('clickBtn').disabled = true;
-        loadWallet();
-      } else if (msg.reason === 'not_paid') {
-        s.clicked = false; _clickSent = false;
-        toast('Payez la mise d\'abord !', '#ff4455');
-        $('payPanel').classList.remove('hidden');
-        $('clickBtn').disabled = false;
-        $('clickBtn').textContent = 'TOUCHER POUR GAGNER';
-      } else if (msg.reason === 'too_late') {
-        toast('Trop tard ! 50 gagnants déjà trouvés.', '#ff4455');
-      } else if (msg.reason === 'round_not_active') {
-        s.clicked = false; _clickSent = false;
-        $('clickBtn').disabled = false;
-        $('clickBtn').textContent = 'TOUCHER POUR GAGNER';
+        $('clickBtn').innerHTML='✓ Rang #'+msg.rank+' — '+prizeStr+' FCFA<span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
+        $('clickBtn').style.background='linear-gradient(135deg,#00ff88,#00aa55)';
+        $('clickBtn').disabled=true;
+      } else if(msg.reason==='too_late') {
+        toast('Trop tard ! 50 gagnants déjà trouvés.','#ff4455');
+        $('clickBtn').innerHTML='❌ Trop tard<span class="winners-count-badge" id="winnersCountBadge">50/50</span>';
+      } else if(msg.reason==='round_not_active') {
+        s.clicked=false; _clickSent=false;
+        $('clickBtn').disabled=false;
+        $('clickBtn').innerHTML='TOUCHER POUR GAGNER<span class="winners-count-badge" id="winnersCountBadge">'+s.winners.length+'/50</span>';
       }
       break;
   }
@@ -1110,166 +963,214 @@ function handleMsg(msg) {
 // ─── TIMER ────────────────────────────────────────────────────────────────────
 function startLocalTick() {
   clearInterval(s.tickIv);
-  s.tickIv = setInterval(() => {
-    if (s.phase !== 'active') return;
-    const rem = Math.max(0, s.roundDuration - (performance.now() - s.roundStart) / 1000);
+  s.tickIv=setInterval(()=>{
+    if(s.phase!=='active') return;
+    const rem=Math.max(0,s.roundDuration-(performance.now()-s.roundStart)/1000);
     renderTimer(rem);
-    if (rem <= 0) clearInterval(s.tickIv);
-  }, 16);
+    if(rem<=0) clearInterval(s.tickIv);
+  },16);
 }
 function renderTimer(rem) {
-  const ss = Math.floor(rem), ds = Math.floor((rem - ss) * 10);
-  $('timer').textContent = (ss < 10 ? '0' : '') + ss + ':' + ds;
-  $('tbar').style.width = ((rem / (s.roundDuration || 30)) * 100) + '%';
-  $('timer').className = 'timer' + (rem <= 10 ? ' danger' : ' active');
+  const ss=Math.floor(rem), ds=Math.floor((rem-ss)*10);
+  $('timer').textContent=(ss<10?'0':'')+ss+':'+ds;
+  $('tbar').style.width=((rem/(s.roundDuration||30))*100)+'%';
+  $('timer').className='timer'+(rem<=8?' danger':' active');
 }
 
 // ─── WINNERS ──────────────────────────────────────────────────────────────────
 function addWinner(w) {
   s.winners.push(w);
-  const li = document.createElement('div'); li.className = 'witem';
-  const isMe = s.myName && w.name.startsWith(s.myName);
-  if (isMe) { li.style.background = '#0d1f0d'; li.style.border = '0.5px solid #00ff88'; }
-  const rc = w.rank===1?'g':w.rank===2?'s':w.rank===3?'b':'o';
-  li.innerHTML = '<span class="wrank ' + rc + '">#' + w.rank + '</span>'
-    + '<span class="wname">' + w.name + '</span>'
-    + '<span class="wtime">+' + (+w.time).toFixed(3) + 's</span>'
-    + '<span class="wprize">' + fmt(w.prize) + ' F</span>';
-  $('wList').appendChild(li); $('wList').scrollTop = 9999;
-  $('wCount').textContent = s.winners.length + '/50';
+  const li=document.createElement('div'); li.className='witem';
+  const isMe=s.myName&&w.name.trim().startsWith(s.myName.trim());
+  if(isMe){li.style.background='#0d1f0d';li.style.border='.5px solid #00ff88';}
+  const rc=w.rank===1?'g':w.rank===2?'s':w.rank===3?'b':'o';
+  li.innerHTML='<span class="wrank '+rc+'">#'+w.rank+'</span>'
+    +'<span class="wname">'+(isMe?'🌟 ':'')+w.name.trim()+'</span>'
+    +'<span class="wtime">+'+parseFloat(w.time).toFixed(2)+'s</span>'
+    +'<span class="wprize">'+fmt(w.prize)+' F</span>';
+  $('wList').appendChild(li); $('wList').scrollTop=9999;
+  $('wCount').textContent=s.winners.length+'/50';
+  const badge=$('winnersCountBadge');
+  if(badge) badge.textContent=s.winners.length+'/50';
 }
 
-// ─── GRILLE GROUPES ──────────────────────────────────────────────────────────
+// ─── GROUPES ──────────────────────────────────────────────────────────────────
 function buildGrid() {
-  const g = $('grpGrid'); g.innerHTML = '';
-  for (let i = 0; i < 10; i++) {
-    const d = document.createElement('div');
-    d.id = 'gp' + i;
-    d.className = 'group-pill' + (i === s.myGrp ? ' active' : '');
-    d.innerHTML = 'G-' + (i+1) + '<br><span style="font-size:9px;color:' + (i===s.myGrp?'#00ff88':'#444') + '">' + fmt(s.groups[i]) + '</span>';
+  const g=$('grpGrid'); g.innerHTML='';
+  for(let i=0;i<10;i++) {
+    const d=document.createElement('div');
+    d.id='gp'+i;
+    d.className='group-pill'+(i===s.myGrp?' active':'');
+    d.innerHTML='G-'+(i+1)+'<br><span style="font-size:9px;color:'+(i===s.myGrp?'#00ff88':'#444')+'">'+fmt(s.groups[i])+'</span>';
     g.appendChild(d);
   }
 }
-function refreshStats() {
-  $('totalPlayers').textContent = fmt(s.players);
-  const ag = Math.max(1, Math.ceil(s.players / 100000));
-  $('totalGroups').textContent = ag;
-  $('grpBadge').textContent = ag + ' groupe' + (ag > 1 ? 's' : '');
-  for (let i = 0; i < 10; i++) {
-    const d = $('gp' + i); if (!d) continue;
-    const me = i === s.myGrp;
-    d.className = 'group-pill' + (me ? ' active' : s.groups[i] >= 100000 ? ' full' : '');
-    d.innerHTML = 'G-' + (i+1) + '<br><span style="font-size:9px;color:' + (me?'#00ff88':s.groups[i]>=100000?'#333':'#444') + '">' + fmt(s.groups[i]) + '</span>';
-  }
-}
 function applyState(st) {
-  s.players = st.total_players; s.groups = st.groups; s.round = st.round;
-  $('roundNum').textContent = st.round;
-  refreshStats();
+  s.players=st.total_players; s.groups=st.groups||Array(10).fill(0); s.round=st.round;
+  $('roundNum').textContent=st.round;
+  $('totalPlayers').textContent=fmt(s.players);
+  const ag=Math.max(1,Math.ceil(s.players/100000));
+  $('totalGroups').textContent=ag;
+  $('grpBadge').textContent=ag+' groupe'+(ag>1?'s':'');
+  buildGrid();
+}
+
+// ─── HISTORIQUE ───────────────────────────────────────────────────────────────
+async function loadHistory() {
+  try {
+    const r=await fetch(BASE+'/api/history/'+s.accountId+'?limit=100');
+    if(!r.ok) return;
+    const d=await r.json();
+    s.historyData=d.history||[];
+    // Stats résumé
+    $('hGamesPlayed').textContent=s.gamesPlayed;
+    $('hGamesWon').textContent=s.gamesWon;
+    $('hTotalSpent').textContent=fmt(s.totalSpent)+' F';
+    $('hTotalGains').textContent=fmt(s.totalGains)+' F';
+    renderHistory();
+  } catch(e){}
+}
+
+function filterHistory(f, btn) {
+  s.historyFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHistory();
+}
+
+function renderHistory() {
+  const list=$('historyList');
+  let data=s.historyData;
+  if(s.historyFilter!=='all') data=data.filter(h=>h.result===s.historyFilter);
+  if(!data.length) {
+    list.innerHTML='<div class="empty-state"><div>📋</div><p>Aucune partie dans cette catégorie</p></div>';
+    return;
+  }
+  list.innerHTML=data.map(h=>{
+    const icons={win:'🏆',loss:'❌',too_late:'⏱'};
+    const labels={win:'Victoire','loss':'Défaite',too_late:'Trop tard'};
+    const date=new Date(h.timestamp*1000);
+    const dateStr=date.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const rankStr=h.rank?'Rang #'+h.rank:'—';
+    return `<div class="hitem ${h.result}">
+      <div class="hitem-icon">${icons[h.result]||'?'}</div>
+      <div class="hitem-info">
+        <div class="hitem-round">Round ${h.round} · ${rankStr}</div>
+        <div class="hitem-result ${h.result}">${labels[h.result]||h.result}</div>
+        <div class="hitem-date">${dateStr}</div>
+      </div>
+      <div class="hitem-prize">
+        ${h.prize>0?`<div class="hitem-prize-val">+${fmt(h.prize)} F</div>`:'<div style="color:#555577;font-size:14px">+0 F</div>'}
+        <div class="hitem-mise">-${fmt(h.mise)} F</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── PROFIL ───────────────────────────────────────────────────────────────────
+async function loadProfil() {
+  try {
+    const r=await fetch(BASE+'/api/profile/'+s.accountId);
+    if(!r.ok) return;
+    const d=await r.json();
+    s.wallet=d.wallet||0; s.totalGains=d.total_gains||0;
+    s.totalSpent=d.total_spent||0; s.gamesPlayed=d.games_played||0;
+    s.gamesWon=d.games_won||0;
+    updateWalletUI();
+
+    const initials=(d.name||'?').substring(0,2).toUpperCase();
+    $('profilAvatar').textContent=initials;
+    $('profilName').textContent=d.name;
+    $('profilEmail').textContent=d.email;
+    const since=new Date(d.member_since*1000).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    $('profilSince').textContent='Membre depuis le '+since;
+    $('profilWallet').textContent=fmt(d.wallet)+' FCFA';
+    $('profilGains').textContent=fmt(d.total_gains)+' FCFA';
+    $('profilGames').textContent=d.games_played+' partie'+(d.games_played>1?'s':'');
+    $('profilWinRate').textContent=d.win_rate+'%';
+
+    // Résultat net
+    const net=d.net_result||0;
+    const box=$('netResultBox');
+    box.className='net-result '+(net>=0?'pos':'neg');
+    $('netResultVal').textContent=(net>=0?'+':'')+fmt(net)+' FCFA';
+    $('netResultVal').style.color=net>=0?'#00ff88':'#ff4455';
+
+    // Pré-remplir édition
+    $('editName').value=d.name;
+    $('editPhone').value=(d.phone||'').replace(/^\+237/,'');
+  } catch(e){}
+}
+
+async function saveProfile() {
+  const name=$('editName').value.trim();
+  const phone=$('editPhone').value.trim();
+  $('editErr').textContent='';
+  if(!name){$('editErr').textContent='Pseudo requis';return;}
+  setLoading('btnEditSave',true,'ENREGISTREMENT...');
+  try {
+    const r=await fetch(BASE+'/api/profile/'+s.accountId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone:phone?'+237'+phone.replace(/^0/,''):undefined})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    s.myName=d.name; s.myPhone=d.phone||s.myPhone;
+    $('displayName').textContent=s.myName;
+    $('profilName').textContent=s.myName;
+    $('profilAvatar').textContent=s.myName.substring(0,2).toUpperCase();
+    const saved=localStorage.getItem('otm_account');
+    if(saved){const a=JSON.parse(saved);a.name=s.myName;a.phone=s.myPhone;localStorage.setItem('otm_account',JSON.stringify(a));}
+    toast('Profil mis à jour !','#00ff88');
+  } catch(e){$('editErr').textContent=e.message;}
+  setLoading('btnEditSave',false,'ENREGISTRER LES MODIFICATIONS');
+}
+
+async function changePassword() {
+  const old=$('editOldPass').value, nw=$('editNewPass').value, nw2=$('editNewPass2').value;
+  $('editPassErr').textContent='';
+  if(!old){$('editPassErr').textContent='Ancien mot de passe requis';return;}
+  if(nw.length<6){$('editPassErr').textContent='Nouveau mot de passe trop court';return;}
+  if(nw!==nw2){$('editPassErr').textContent='Mots de passe différents';return;}
+  setLoading('btnChangePass',true,'MODIFICATION...');
+  try {
+    const r=await fetch(BASE+'/api/profile/'+s.accountId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,password:nw})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'Erreur');
+    $('editOldPass').value=''; $('editNewPass').value=''; $('editNewPass2').value='';
+    toast('Mot de passe modifié !','#00ff88');
+  } catch(e){$('editPassErr').textContent=e.message;}
+  setLoading('btnChangePass',false,'CHANGER LE MOT DE PASSE');
 }
 
 // ─── CONFETTI ─────────────────────────────────────────────────────────────────
 function confetti() {
-  const box = $('cbox');
-  const cols = ['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
-  for (let i = 0; i < 80; i++) {
-    const p = document.createElement('div'); const sz = Math.random()*9+4;
-    p.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';
+  const box=$('cbox');
+  const cols=['#FFD700','#FFA500','#00ff88','#4488ff','#ff4455','#fff','#cc44ff'];
+  for(let i=0;i<80;i++) {
+    const p=document.createElement('div'); const sz=Math.random()*9+4;
+    p.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[~~(Math.random()*cols.length)]+';border-radius:'+(Math.random()>.5?'50%':'3px')+';left:'+(Math.random()*100)+'%;top:-10px;animation:fall '+(Math.random()*2+1.5)+'s linear '+(Math.random()*.5)+'s forwards';
     box.appendChild(p); setTimeout(()=>p.remove(),4500);
   }
 }
 
-// ─── INIT JEU ─────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────────────────────
 async function initGame() {
   buildGrid();
   try {
-    const r = await fetch(BASE + '/api/state');
+    const r=await fetch(BASE+'/api/state');
     applyState(await r.json());
-  } catch(e) {}
-
-  // Restaurer session de jeu
-  const sess = localStorage.getItem('otm_session');
-  if (sess) {
-    try {
-      const sd = JSON.parse(sess);
-      if (sd.accountId === s.accountId && sd.playerId) {
-        s.playerId = sd.playerId;
-        s.myGrp    = sd.group;
-        $('joinPanel').classList.add('hidden');
-        $('payPanel').classList.remove('hidden');
-        // Pré-remplir tel si dispo
-        if (sd.phone) {
-          const local = sd.phone.replace(/^237/, '');
-          $('payPhone').value = local;
-        }
-        // Vérifier si en attente de vérification de paiement
-        const payRef = localStorage.getItem('otm_pay_ref');
-        if (payRef) {
-          try {
-            const pr = JSON.parse(payRef);
-            if (pr.playerId === s.playerId) {
-              s.pendingPayRef = pr.ref;
-              // Re-lancer vérification silencieuse
-              startPayVerification(pr.ref, null);
-            }
-          } catch(e) {}
-        }
-      }
-    } catch(e) {}
-  }
-
-  // Callback retour depuis NotchPay
-  const p = new URLSearchParams(window.location.search);
-  if (p.get('payment') === 'success') {
-    history.replaceState({}, '', '/');
-    const sess2 = localStorage.getItem('otm_session');
-    if (sess2) {
-      try {
-        const sd = JSON.parse(sess2);
-        s.playerId = sd.playerId; s.myGrp = sd.group;
-        s.paid = true;
-        afterPaid();
-      } catch(e) {}
-    }
-    toast('Paiement confirmé ! Prêt à jouer.', '#00ff88');
-  } else if (p.get('payment') === 'failed') {
-    history.replaceState({}, '', '/');
-    toast('Paiement échoué. Réessayez.', '#ff4455');
-  }
-
-  // Callback retour depuis dépôt
-  if (p.get('deposit') === 'success') {
-    history.replaceState({}, '', '/');
-    localStorage.removeItem('otm_deposit_pending');
-    loadWallet();
-    toast('Dépôt confirmé ! Votre solde a été mis à jour.', '#00ff88');
-    confetti();
-  } else if (p.get('deposit') === 'failed') {
-    history.replaceState({}, '', '/');
-    toast('Dépôt échoué. Réessayez.', '#ff4455');
-  }
+  } catch(e){}
+  $('joinPanel').classList.remove('hidden');
+  setInterval(loadWallet,30000); // Rafraîchir le solde toutes les 30s
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 (function boot() {
-  const ageOk    = localStorage.getItem('otm_age_ok');
-  const policyOk = localStorage.getItem('otm_policy_ok');
-  const p        = new URLSearchParams(window.location.search);
-  const resetTok = p.get('reset_token');
-
-  if (resetTok) {
-    window._resetToken = resetTok;
-    history.replaceState({}, '', '/');
-    showOverlay('overlayAuth');
-    switchTab('reset');
-    return;
-  }
-  if (!ageOk) { showOverlay('overlayAge'); return; }
-  if (!policyOk) { showOverlay('overlayPolicy'); return; }
-  const saved = localStorage.getItem('otm_account');
-  if (saved) {
-    try { const acc = JSON.parse(saved); afterLogin(acc); return; } catch(e) {}
-  }
+  const p=new URLSearchParams(window.location.search);
+  const rt=p.get('reset_token');
+  if(rt){window._resetToken=rt;history.replaceState({},'','/');showOverlay('overlayAuth');switchTab('reset');return;}
+  if(!localStorage.getItem('otm_age_ok')){showOverlay('overlayAge');return;}
+  if(!localStorage.getItem('otm_policy_ok')){showOverlay('overlayPolicy');return;}
+  const saved=localStorage.getItem('otm_account');
+  if(saved){try{afterLogin(JSON.parse(saved));return;}catch(e){}}
   showOverlay('overlayAuth');
 })();
 </script>
